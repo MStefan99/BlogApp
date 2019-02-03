@@ -19,7 +19,7 @@ def login():
         credentials = c.execute('SELECT * from Credentials').fetchall()
         for user_credentials in credentials:
             if request.cookies.get("MSTID") == user_credentials[2]:
-                return redirect('/account', code=302)
+                return redirect('/account/', code=302)
 
     return render_template('login.html')
 
@@ -32,7 +32,7 @@ def register():
         credentials = c.execute('SELECT * from Credentials').fetchall()
         for user_credentials in credentials:
             if request.cookies.get("MSTID") == user_credentials[2]:
-                return redirect('/account', code=302)
+                return redirect('/account/', code=302)
 
     return render_template('register.html')
 
@@ -75,7 +75,8 @@ def register_processor():
     else:
         n = 30
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
-        c.execute('''INSERT INTO Credentials (Login, Password, CookieID) VALUES(?, ?, ?)''', (username, password0, cookie_id))
+        c.execute('''INSERT INTO Credentials (Login, Password, CookieID) VALUES(?, ?, ?)''',
+                  (username, password0, cookie_id))
         database.commit()
         resp = make_response(render_template("success.html", code=1))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24)
@@ -84,7 +85,7 @@ def register_processor():
 
 @app.route('/logout/')
 def logout():
-    resp = make_response(render_template('select.html'))
+    resp = make_response(redirect('/', code=302))
     resp.set_cookie("MSTID", "Bye!", expires=0)
     return resp
 
