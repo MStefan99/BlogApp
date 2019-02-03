@@ -26,6 +26,14 @@ def login():
 
 @app.route('/register/')
 def register():
+    if request.cookies.get("MSTID"):
+        database = sqlite3.connect("credentials.sqlite")
+        c = database.cursor()
+        credentials = c.execute('SELECT * from Credentials').fetchall()
+        for user_credentials in credentials:
+            if request.cookies.get("MSTID") == user_credentials[2]:
+                return render_template('success.html', code=2, username=user_credentials[0])
+
     return render_template('register.html')
 
 
