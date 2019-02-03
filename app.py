@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, redirect
 import random
 import string
 import sqlite3
@@ -19,7 +19,7 @@ def login():
         credentials = c.execute('SELECT * from Credentials').fetchall()
         for user_credentials in credentials:
             if request.cookies.get("MSTID") == user_credentials[2]:
-                return render_template('success.html', code=2, username=user_credentials[0])
+                return redirect('/account', code=302)
 
     return render_template('login.html')
 
@@ -32,12 +32,12 @@ def register():
         credentials = c.execute('SELECT * from Credentials').fetchall()
         for user_credentials in credentials:
             if request.cookies.get("MSTID") == user_credentials[2]:
-                return render_template('success.html', code=2, username=user_credentials[0])
+                return redirect('/account', code=302)
 
     return render_template('register.html')
 
 
-@app.route('/login_processor', methods=["POST"])
+@app.route('/login_processor/', methods=["POST"])
 def login_processor():
     username = request.form.get("login")
     password = request.form.get("password")
@@ -54,7 +54,7 @@ def login_processor():
     return render_template('error.html', code=2)
 
 
-@app.route("/register_processor", methods=["POST"])
+@app.route("/register_processor/", methods=["POST"])
 def register_processor():
     username = request.form.get("login")
     password0 = request.form.get("password0")
@@ -82,11 +82,21 @@ def register_processor():
         return resp
 
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     resp = make_response(render_template('select.html'))
     resp.set_cookie("MSTID", "Bye!", expires=0)
     return resp
+
+
+@app.route('/account/')
+def account():
+    database = sqlite3.connect("credentials.sqlite")
+    c = database.cursor()
+    credentials = c.execute('SELECT * from Credentials').fetchall()
+    for user_credentials in credentials:
+        if request.cookies.get("MSTID") == user_credentials[2]:
+            return render_template('account.html', username=user_credentials[0])
 
 
 if __name__ == '__main__':
