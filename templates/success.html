@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+    {% block content %}
+            {% if code == 0 %}
+                Login successful!
+            {% elif code == 1 %}
+                Registration successful!
+            {% elif code == 2 %}
+                Already logged in as {{ username }}. <br>
+                <a href="/logout">Logout</a>
+            {% endif %}
+    {% endblock %}

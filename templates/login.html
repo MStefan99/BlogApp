@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+            <form action="/login_processor" method="post">
+                <label for=loginField>Username</label><br>
+                <input type="text" name="login" id="loginField" placeholder="Enter username"><br>
+                <label for=passwordField>Password</label><br>
+                <input type="password" name="password" id="passwordField" placeholder="Password"><br>
+                <button type="submit">Submit</button><br>
+            </form>
+
+    {% endblock %}

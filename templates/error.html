@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% if code == 0 %}
+        Username already exists.
+    {% elif code == 1 %}
+        Please fill in all the fields.
+    {% elif code == 2 %}
+        Wrong username or password.
+    {% elif code == 3 %}
+        Passwords do not match.
+    {% endif %}
+{% endblock %}
