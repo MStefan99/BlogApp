@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>MStefan99 login</title>
-</head>
-<body>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+        <!-- WARNING: Google analythics disabled for development purposes. Enable when needed!
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-{% block content %}
-{% endblock %}
-
-</body>
+            gtag('config', 'UA-126259429-1');
+        </script>
+        -->
+        <!-- WARNING: Favicon missing! -->
+        <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
+        <meta name="description" content=""> <!-- TODO: fill in the description -->
+        <meta name="theme-color" content="#3B3940">
+        <meta name="author" content="Annushka project">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Annushka Project Blog</title>
+    </head>
+    <body>
+        {% block account %}
+        {% endblock %}
+        {% block login %}
+        {% endblock %}
+    </body>
 </html>

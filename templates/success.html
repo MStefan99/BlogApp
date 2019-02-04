@@ -1,10 +1,27 @@
 {% extends 'layout.html' %}
-    {% block content %}
+
+    {% block login %}
+        <div class = login>
             {% if code == 0 %}
-                Login successful!
-                <a href="/account/">Go to your account</a>
+                <div class="login-message">
+                    Login successful!
+                    <a class="login-link" href="/account/">
+                        <p>
+                            Go to your account
+                        </p>
+                    </a>
+                </div>
             {% elif code == 1 %}
-                Registration successful!
-                <a href="/account/">Go to your account</a>
+                <p>
+                    <div class="login-link">
+                        Registration successful!
+                    </div>
+                </p>
+                <a class="login" href="/account/">
+                    <p>
+                        Go to your account
+                    </p>
+                </a>
             {% endif %}
+        </div>
     {% endblock %}

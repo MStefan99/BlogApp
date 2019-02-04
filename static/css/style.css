@@ -1,0 +1,121 @@
+:root{
+    --main-color: #3B3940;
+    --secondary-color: #29272e;
+    --scrollbar-color: #343039;
+    --secondary-shadow: rgba(18, 16, 23, 0.61);
+    --accent-color: #f6941d;
+    --accent-hover: #ffb433;
+    --text-hover: #9b9b9b;
+    font-family: sans-serif;
+    background: var(--main-color);
+}
+
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.login{
+    position: absolute;
+    padding: 10vh 10vw;
+    border: #9b9b9b solid 2px;
+    border-radius: 2vmax;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--secondary-color);
+}
+
+.login > a, .login > a:visited, .login-link{
+    color: white;
+    text-align: center;
+}
+
+.login-message{
+    font-weight: 600;
+    padding: 2vh 2vw;
+    background-color: #c1c1c1;
+    border-radius: 10px;
+}
+
+form{
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.form-section{
+    margin: 1vh;
+    position: relative;
+}
+
+.form-section > label{
+    color: black;
+}
+
+.form-section::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title-login-label{
+    font-weight: 700;
+}
+
+button{
+    float: right;
+    border: #9b9b9b 2px solid;
+    background: #b3b3b3;
+    color: black;
+}
+
+button:hover{
+    border: #808080 2px solid;
+    background: #9b9b9b;
+    color: black;
+}
+
+button:active{
+    border: #414141 2px solid;
+    background: #5b5b5b;
+    color: white;
+}
+
+.input-field{
+    background: white;
+    border: lightgrey 1px solid;
+    margin: 5px 0;
+}
+
+label{
+    color: white;
+    padding: 1vh 0;
+}
+
+.header{
+    background-color: #584b4f;
+    height: 5vh;
+    margin: 0 0 2vh 0;
+}
+
+.nav-block-right{
+    float: right;
+    height: inherit;
+    list-style-type: none;
+    overflow: hidden;
+}
+
+.nav-block-right > li{
+    float: right;
+}
+
+.nav-button{
+    color: white;
+    margin: 0 2vw;
+}
+
+.main{
+    margin: 0 10vw;
+    color: white;
+}

@@ -1,13 +1,25 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-    {% if code == 0 %}
-        Username already exists.
-    {% elif code == 1 %}
-        Please fill in all the fields.
-    {% elif code == 2 %}
-        Wrong username or password.
-    {% elif code == 3 %}
-        Passwords do not match.
-    {% endif %}
-{% endblock %}
+    {% block login %}
+        <div class = login>
+            <div class="login-message">
+                {% if code == 0 %}
+                    <p>
+                        Username already exists.
+                    </p>
+                {% elif code == 1 %}
+                    <p>
+                        Please fill in all the fields.
+                    </p>
+                {% elif code == 2 %}
+                    <p>
+                        Wrong username or password.
+                    </p>
+                {% elif code == 3 %}
+                    <p>
+                        Passwords do not match.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}

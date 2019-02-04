@@ -1,6 +1,16 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-    <a href="/login/">Login</a><br>
-    <a href="/register/">Register</a>
-{% endblock %}
+    {% block login %}
+        <div class = login>
+            <a href="/login/">
+                <p>
+                    Login
+                </p>
+            </a>
+            <a href="/register/">
+                <p>
+                    Register
+                </p>
+            </a>
+        </div>
+    {% endblock %}
