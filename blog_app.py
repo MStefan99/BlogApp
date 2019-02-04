@@ -8,32 +8,23 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
+    if request.cookies.get("MSTID"):
+        database = sqlite3.connect("./database/db.sqlite")
+        c = database.cursor()
+        credentials = c.execute('SELECT * from Credentials').fetchall()
+        for user_credentials in credentials:
+            if request.cookies.get("MSTID") == user_credentials[2]:
+                return redirect('/account/', code=302)
     return render_template('select.html')
 
 
 @app.route('/login/')
 def login():
-    if request.cookies.get("MSTID"):
-        database = sqlite3.connect("credentials.sqlite")
-        c = database.cursor()
-        credentials = c.execute('SELECT * from Credentials').fetchall()
-        for user_credentials in credentials:
-            if request.cookies.get("MSTID") == user_credentials[2]:
-                return redirect('/account/', code=302)
-
     return render_template('login.html')
 
 
 @app.route('/register/')
 def register():
-    if request.cookies.get("MSTID"):
-        database = sqlite3.connect("credentials.sqlite")
-        c = database.cursor()
-        credentials = c.execute('SELECT * from Credentials').fetchall()
-        for user_credentials in credentials:
-            if request.cookies.get("MSTID") == user_credentials[2]:
-                return redirect('/account/', code=302)
-
     return render_template('register.html')
 
 
@@ -41,7 +32,7 @@ def register():
 def login_processor():
     username = request.form.get("login")
     password = request.form.get("password")
-    database = sqlite3.connect("credentials.sqlite")
+    database = sqlite3.connect("./database/db.sqlite")
     c = database.cursor()
     credentials = c.execute('SELECT * from Credentials').fetchall()
 
@@ -59,7 +50,7 @@ def register_processor():
     username = request.form.get("login")
     password0 = request.form.get("password0")
     password1 = request.form.get("password1")
-    database = sqlite3.connect("credentials.sqlite")
+    database = sqlite3.connect("./database/db.sqlite")
     c = database.cursor()
 
     credentials = c.execute('SELECT Login from Credentials').fetchall()
@@ -92,7 +83,7 @@ def logout():
 
 @app.route('/account/')
 def account():
-    database = sqlite3.connect("credentials.sqlite")
+    database = sqlite3.connect("./database/db.sqlite")
     c = database.cursor()
     credentials = c.execute('SELECT * from Credentials').fetchall()
     for user_credentials in credentials:
