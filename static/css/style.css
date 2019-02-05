@@ -20,7 +20,7 @@ body{
     padding: 10vh 10vw;
     border: #9b9b9b solid 2px;
     border-radius: 2vmax;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: var(--secondary-color);
@@ -41,25 +41,33 @@ body{
 form{
     background: white;
     border-radius: 10px;
-    padding: 10px;
+    padding: 5vh 7vw;
 }
 
 .form-section{
-    margin: 1vh;
+    margin: .5vh auto 1.5vh;
+    padding: 0;
     position: relative;
 }
 
+.form-section-title{
+    margin: 0 0 1vh;
+    text-decoration: underline;
+}
+
 .form-section > label{
+    display: block;
+    padding: 0;
     color: black;
 }
 
-.form-section::after {
+.form-section::after{
   content: "";
   clear: both;
   display: table;
 }
 
-.title-login-label{
+.form-title{
     font-weight: 700;
 }
 
@@ -96,7 +104,12 @@ label{
 .header{
     background-color: #584b4f;
     height: 5vh;
-    margin: 0 0 2vh 0;
+    margin: 0;
+}
+
+.logo-image{
+    float: left;
+    height: inherit;
 }
 
 .nav-block-right{
@@ -104,18 +117,46 @@ label{
     height: inherit;
     list-style-type: none;
     overflow: hidden;
+    padding: 0;
+    margin: 0 1vw 0 0;
 }
 
 .nav-block-right > li{
+    height: inherit;
     float: right;
+    margin: 0 1vw;
 }
 
 .nav-button{
     color: white;
-    margin: 0 2vw;
+}
+
+.nav-element{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .main{
-    margin: 0 10vw;
+    margin: 3vh 5vw;
     color: white;
+}
+
+a, a:visited{
+    text-decoration: inherit;
+    color: white;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+}
+
+.button{
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 1vmin;
+    margin: 1vh 1vw;
 }

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
     {% block login %}
-        <div class = login>
+        <div class=login>
             {% if code == 0 %}
                 <div class="login-message">
                     Login successful!
@@ -17,6 +17,15 @@
                     <a class="login-link" href="/account/">
                         <p>
                             Go to your account
+                        </p>
+                    </a>
+                </div>
+            {% elif code == 2 %}
+                <div class="login-message">
+                    Changed your data successfully!
+                    <a class="login-link" href="/account/">
+                        <p>
+                            Go back to your account
                         </p>
                     </a>
                 </div>

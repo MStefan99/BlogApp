@@ -27,7 +27,7 @@ Then open the database and execute this setup script:
 ````
 create table Credentials
 (
-    Login VARCHAR(255) not null
+    Username VARCHAR(255) not null
         constraint Credentials_pk
             primary key,
     Password VARCHAR(255) not null,

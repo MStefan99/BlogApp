@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
     {% block login %}
-        <div class = login>
+        <div class=login>
             <div class="login-message">
                 {% if code == 0 %}
                     <p>
@@ -18,6 +18,10 @@
                 {% elif code == 3 %}
                     <p>
                         Passwords do not match.
+                    </p>
+                {% elif code == 4 %}
+                    <p>
+                        Emails do not match.
                     </p>
                 {% endif %}
             </div>

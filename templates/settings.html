@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+    {% block main %}
+        <form action="/settings_processor/" class="popup-form" method="post">
+                <div class="form-section">
+                    <label class=form-title>Settings</label>
+                </div>
+                <div class="form-section">
+                    <label class="form-section-title">Change your email</label>
+                    <label>New email</label>
+                    <input type="text" name="email" class="input-field" autocomplete="email" placeholder="Enter your new email">
+                    <label>Confirm new email</label>
+                    <input type="text" name="repeat-email" class="input-field" autocomplete="email" placeholder="Confirm your new email">
+                </div>
+                <div class="form-section">
+                    <label class="form-section-title">Change your username</label>
+                    <label>New username</label>
+                    <input type="text" name="username" class="input-field" autocomplete="username" placeholder="Enter your new username">
+                </div>
+                <div class="form-section">
+                    <label class="form-section-title">Change your password</label>
+                    <label>New password</label>
+                    <input type="password" name="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your new password">
+                    <label>Repeat new password</label>
+                    <input type="password" name="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your new password">
+                </div>
+                <div class="form-section">
+                    <label>You can fill only th fields you need to change</label>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        <br>
+        <a style="margin: 2vh 5vw;" href="/delete/">Delete your account</a>
+    {% endblock %}

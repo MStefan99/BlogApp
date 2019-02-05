@@ -1,14 +1,16 @@
 {% extends 'layout.html' %}
 
-    {% block account %}
-        <div class="header">
+    {% block header_menu %}
             <ul class="nav-block-right">
-                <li>
-                   <a id = "logout" class = "nav-button" href="/logout/">Logout</a>
+                <li class="nav-element">
+                   <a id="logout" class="nav-button" href="/logout/">Logout</a>
+                </li>
+                <li class="nav-element">
+                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
                 </li>
             </ul>
-        </div>
-        <div class="main">
-          {{ username }}, welcome to your account!<br>
-        </div>
+    {% endblock %}
+
+    {% block main %}
+      {{ username }}, welcome to your account!<br>
     {% endblock %}
