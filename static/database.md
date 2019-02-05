@@ -27,17 +27,21 @@ Then open the database and execute this setup script:
 ````
 create table Credentials
 (
-  Login    VARCHAR(255) not null
-    constraint Credentials_pk
-      primary key,
-  Password VARCHAR(255) not null,
-  CookieID VARCHAR(255)  not null,
-  Email    VARCHAR(255)
+    Login VARCHAR(255) not null
+        constraint Credentials_pk
+            primary key,
+    Password VARCHAR(255) not null,
+    CookieID VARCHAR(255) not null,
+    Email VARCHAR(255),
+    Admin BOOLEAN default FALSE not null
 );
 
 create unique index Credentials_CookieID_uindex
-  on Credentials (CookieID);
+    on Credentials (CookieID);
+
+create unique index Credentials_Email_uindex
+    on Credentials (Email);
 
 create unique index Credentials_Login_uindex
-  on Credentials (Login);
+    on Credentials (Login);
 ````
