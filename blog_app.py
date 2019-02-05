@@ -41,10 +41,10 @@ def login_processor():
         return render_template('error.html', code=1)
 
     for user_credentials in credentials:
-        user_found = username == user_credentials[0] or username == user_credentials[3]
+        user_found = username.lower() == user_credentials[0].lower() or username == user_credentials[3]
         if user_found and pbkdf2_sha512.verify(current_password, user_credentials[1]):
             resp = make_response(render_template('success.html', code=0))
-            resp.set_cookie('MSTID', user_credentials[2], max_age=60*60*24)
+            resp.set_cookie('MSTID', user_credentials[2], max_age=60*60*24*30)
             return resp
 
     return render_template('error.html', code=2)
@@ -86,7 +86,7 @@ def register_processor():
                   (username, password_hash, cookie_id, email))
         database.commit()
         resp = make_response(render_template('success.html', code=1))
-        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24)
+        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
 
 
@@ -141,6 +141,7 @@ def settings_processor():
         return render_template('error.html', code=0)
 
     if username:
+        # noinspection PyUnboundLocalVariable
         c.execute('UPDATE Credentials SET Username = ? WHERE Username = ?', (username, old_username))
         database.commit()
 
@@ -156,7 +157,7 @@ def settings_processor():
                   (password_hash, cookie_id, old_username))
         database.commit()
         resp = make_response(render_template('success.html', code=2))
-        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24)
+        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
 
     return render_template('success.html', code=2)
@@ -177,6 +178,7 @@ def delete_confirm():
         if request.cookies.get('MSTID') == user_credentials[2]:
             username = user_credentials[0]
 
+    # noinspection PyUnboundLocalVariable
     c.execute('DELETE FROM Credentials WHERE Username = ?', (username,))
     database.commit()
     return redirect('/', code=302)
