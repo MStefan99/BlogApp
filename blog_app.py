@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, make_response, redirect
+from passlib.hash import pbkdf2_sha256
 import random
 import string
 import sqlite3
@@ -37,7 +38,7 @@ def login_processor():
     credentials = c.execute('SELECT * from Credentials').fetchall()
 
     for user_credentials in credentials:
-        if username == user_credentials[0] and password == user_credentials[1]:
+        if username == user_credentials[0] and pbkdf2_sha256.verify(password, user_credentials[1]):
             resp = make_response(render_template('success.html', code=0))
             resp.set_cookie("MSTID", user_credentials[2], max_age=60*60*24)
             return resp
@@ -64,10 +65,11 @@ def register_processor():
         return render_template('error.html', code=3)
 
     else:
-        n = 30
+        n = 255
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+        password_hash = pbkdf2_sha256.encrypt(password0, rounds=200000, salt_size=16)
         c.execute('''INSERT INTO Credentials (Login, Password, CookieID) VALUES(?, ?, ?)''',
-                  (username, password0, cookie_id))
+                  (username, password_hash, cookie_id))
         database.commit()
         resp = make_response(render_template("success.html", code=1))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24)
