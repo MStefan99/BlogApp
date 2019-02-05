@@ -31,7 +31,7 @@ create table Credentials
     constraint Credentials_pk
       primary key,
   Password VARCHAR(255) not null,
-  CookieID VARCHAR(50)  not null,
+  CookieID VARCHAR(255)  not null,
   Email    VARCHAR(255)
 );
 
