@@ -12,16 +12,14 @@
                     </a>
                 </div>
             {% elif code == 1 %}
-                <p>
-                    <div class="login-link">
-                        Registration successful!
-                    </div>
-                </p>
-                <a class="login" href="/account/">
-                    <p>
-                        Go to your account
-                    </p>
-                </a>
+                <div class="login-message">
+                    Registration successful!
+                    <a class="login-link" href="/account/">
+                        <p>
+                            Go to your account
+                        </p>
+                    </a>
+                </div>
             {% endif %}
         </div>
     {% endblock %}
