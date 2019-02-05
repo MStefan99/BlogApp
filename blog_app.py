@@ -81,7 +81,7 @@ def register_processor():
     else:
         n = 255
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
-        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=500000, salt_size=64)
+        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         c.execute('INSERT INTO Credentials (Username, Password, CookieID, Email) VALUES(?, ?, ?, ?)',
                   (username, password_hash, cookie_id, email))
         database.commit()
@@ -149,7 +149,7 @@ def settings_processor():
         database.commit()
 
     if new_password:
-        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=500000, salt_size=64)
+        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         n = 255
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
         c.execute('UPDATE Credentials SET Password = ?, CookieID = ? WHERE Username = ?',
