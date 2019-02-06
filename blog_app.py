@@ -12,7 +12,7 @@ def hello_world():
     if request.cookies.get('MSTID'):
         database = sqlite3.connect('./database/db.sqlite')
         c = database.cursor()
-        credentials = c.execute('SELECT * from Credentials').fetchall()
+        credentials = c.execute('SELECT * from Users').fetchall()
 
         # Redirecting logged in users
         for user_credentials in credentials:
@@ -37,7 +37,7 @@ def login_processor():
     current_password = request.form.get('current-password')
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Credentials').fetchall()
+    credentials = c.execute('SELECT * from Users').fetchall()
     user_found = False
 
     if not username or not current_password:
@@ -64,7 +64,7 @@ def register_processor():
     email = request.form.get('email')
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Credentials').fetchall()
+    credentials = c.execute('SELECT * from Users').fetchall()
 
     username_exists = username in [user_credentials[0] for user_credentials in credentials]
     email_exists = email in [user_credentials[3] for user_credentials in credentials]
@@ -83,7 +83,7 @@ def register_processor():
         n = 255
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
-        c.execute('INSERT INTO Credentials (Username, Password, CookieID, Email) VALUES(?, ?, ?, ?)',
+        c.execute('INSERT INTO Users (Username, Password, CookieID, Email) VALUES(?, ?, ?, ?)',
                   (username, password_hash, cookie_id, email))
         database.commit()
         resp = make_response(render_template('success.html', code='register_success'))
@@ -102,7 +102,7 @@ def logout():
 def account():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Credentials').fetchall()
+    credentials = c.execute('SELECT * from Users').fetchall()
     for user_credentials in credentials:
         if request.cookies.get('MSTID') == user_credentials[2]:
             return render_template('account.html', username=user_credentials[0])
@@ -124,7 +124,7 @@ def settings_processor():
 
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Credentials').fetchall()
+    credentials = c.execute('SELECT * from Users').fetchall()
 
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
@@ -150,18 +150,18 @@ def settings_processor():
         return render_template('error.html', code='email_exists')
 
     if username:
-        c.execute('UPDATE Credentials SET Username = ? WHERE Username = ?', (username, old_username))
+        c.execute('UPDATE Users SET Username = ? WHERE Username = ?', (username, old_username))
         database.commit()
 
     if email:
-        c.execute('UPDATE Credentials SET Email = ? WHERE Username = ?', (email, old_username))
+        c.execute('UPDATE Users SET Email = ? WHERE Username = ?', (email, old_username))
         database.commit()
 
     if new_password:
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         n = 255
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
-        c.execute('UPDATE Credentials SET Password = ?, CookieID = ? WHERE Username = ?',
+        c.execute('UPDATE Users SET Password = ?, CookieID = ? WHERE Username = ?',
                   (password_hash, cookie_id, old_username))
         database.commit()
         resp = make_response(render_template('success.html', code='edit_success'))
@@ -180,7 +180,7 @@ def delete():
 def delete_confirm():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Credentials').fetchall()
+    credentials = c.execute('SELECT * from Users').fetchall()
     username = None
 
     for user_credentials in credentials:
@@ -191,7 +191,7 @@ def delete_confirm():
     if not username:
         return redirect('/logout/', code=302)
 
-    c.execute('DELETE FROM Credentials WHERE Username = ?', (username,))
+    c.execute('DELETE FROM Users WHERE Username = ?', (username,))
     database.commit()
     return redirect('/', code=302)
 
