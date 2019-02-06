@@ -3,23 +3,31 @@
     {% block login %}
         <div class=login>
             <div class="login-message">
-                {% if code == 0 %}
+                {% if code == 'username_exists' %}
                     <p>
-                        Username or email already exists.
+                        Username already exists.
                     </p>
-                {% elif code == 1 %}
+                {% elif code == 'email_exists' %}
+                    <p>
+                        Email already exists.
+                    </p>
+                {% elif code == 'form_not_filled' %}
                     <p>
                         Please fill in all the fields.
                     </p>
-                {% elif code == 2 %}
+                {% elif code == 'wrong_login' %}
                     <p>
-                        Wrong username or password.
+                        Username or email does not exist.
                     </p>
-                {% elif code == 3 %}
+                {% elif code == 'wrong_password' %}
+                    <p>
+                        Wrong password.
+                    </p>
+                {% elif code == 'passwords_do_not_match' %}
                     <p>
                         Passwords do not match.
                     </p>
-                {% elif code == 4 %}
+                {% elif code == 'emails_do_not_match' %}
                     <p>
                         Emails do not match.
                     </p>

@@ -13,6 +13,8 @@ def hello_world():
         database = sqlite3.connect('./database/db.sqlite')
         c = database.cursor()
         credentials = c.execute('SELECT * from Credentials').fetchall()
+
+        # Redirecting logged in users
         for user_credentials in credentials:
             if request.cookies.get('MSTID') == user_credentials[2]:
                 return redirect('/account/', code=302)
@@ -36,18 +38,22 @@ def login_processor():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
     credentials = c.execute('SELECT * from Credentials').fetchall()
+    user_found = False
 
     if not username or not current_password:
-        return render_template('error.html', code=1)
+        return render_template('error.html', code='form_not_filled')
 
     for user_credentials in credentials:
         user_found = username.lower() == user_credentials[0].lower() or username == user_credentials[3]
         if user_found and pbkdf2_sha512.verify(current_password, user_credentials[1]):
-            resp = make_response(render_template('success.html', code=0))
+            resp = make_response(render_template('success.html', code='login_success'))
             resp.set_cookie('MSTID', user_credentials[2], max_age=60*60*24*30)
             return resp
 
-    return render_template('error.html', code=2)
+    if not user_found:
+        return render_template('error.html', code='wrong_login')
+
+    return render_template('error.html', code='wrong_password')
 
 
 @app.route('/register_processor/', methods=['POST'])
@@ -64,19 +70,14 @@ def register_processor():
     email_exists = email in [user_credentials[3] for user_credentials in credentials]
     form_filled = username and new_password and repeat_new_password and email
 
-    print(username)
-    print(new_password)
-    print(repeat_new_password)
-    print(email)
-
     if not form_filled:
-        return render_template('error.html', code=1)
-
-    elif username_exists or email_exists:
-        return render_template('error.html', code=0)
-
+        return render_template('error.html', code='form_not_filled')
+    elif username_exists:
+        return render_template('error.html', code='username_exists')
+    elif email_exists:
+        return render_template('error.html', code=email_exists)
     elif new_password != repeat_new_password:
-        return render_template('error.html', code=3)
+        return render_template('error.html', code='passwords_do_not_match')
 
     else:
         n = 255
@@ -85,7 +86,7 @@ def register_processor():
         c.execute('INSERT INTO Credentials (Username, Password, CookieID, Email) VALUES(?, ?, ?, ?)',
                   (username, password_hash, cookie_id, email))
         database.commit()
-        resp = make_response(render_template('success.html', code=1))
+        resp = make_response(render_template('success.html', code='register_success'))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
 
@@ -128,20 +129,27 @@ def settings_processor():
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
     username_exists = username in [user_credentials[0] for user_credentials in credentials]
+    email_exists = email in [user_credentials[3] for user_credentials in credentials]
+    old_username = None
 
     for user_credentials in credentials:
         if request.cookies.get('MSTID') == user_credentials[2]:
             old_username = user_credentials[0]
 
+    # Redirecting user to login page if he logged out
+    if not old_username:
+        return redirect('/logout/', code=302)
+
     if not new_password_check:
-        return render_template('error.html', code=3)
+        return render_template('error.html', code='passwords_do_not_match')
     elif not email_check:
-        return render_template('error.html', code=4)
+        return render_template('error.html', code='emails_do_not_match')
     elif username_exists:
-        return render_template('error.html', code=0)
+        return render_template('error.html', code='username_exists')
+    elif email_exists:
+        return render_template('error.html', code='email_exists')
 
     if username:
-        # noinspection PyUnboundLocalVariable
         c.execute('UPDATE Credentials SET Username = ? WHERE Username = ?', (username, old_username))
         database.commit()
 
@@ -156,11 +164,11 @@ def settings_processor():
         c.execute('UPDATE Credentials SET Password = ?, CookieID = ? WHERE Username = ?',
                   (password_hash, cookie_id, old_username))
         database.commit()
-        resp = make_response(render_template('success.html', code=2))
+        resp = make_response(render_template('success.html', code='edit_success'))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
 
-    return render_template('success.html', code=2)
+    return render_template('success.html', code='edit_success')
 
 
 @app.route('/delete/')
@@ -173,12 +181,16 @@ def delete_confirm():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
     credentials = c.execute('SELECT * from Credentials').fetchall()
+    username = None
 
     for user_credentials in credentials:
         if request.cookies.get('MSTID') == user_credentials[2]:
             username = user_credentials[0]
 
-    # noinspection PyUnboundLocalVariable
+    # Redirecting user to login page if he logged out
+    if not username:
+        return redirect('/logout/', code=302)
+
     c.execute('DELETE FROM Credentials WHERE Username = ?', (username,))
     database.commit()
     return redirect('/', code=302)

@@ -15,7 +15,11 @@
         <!-- WARNING: Favicon missing! -->
         <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
         <meta name="description" content=""> <!-- TODO: fill in the description -->
+    {% if request.path == '/post/' %}
+        <meta name="theme-color" content={{ theme_color if theme_color != null else "#3B3940"}}>
+    {% else %}
         <meta name="theme-color" content="#3B3940">
+    {% endif %}
         <meta name="author" content="Annushka project">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

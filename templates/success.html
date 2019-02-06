@@ -2,7 +2,7 @@
 
     {% block login %}
         <div class=login>
-            {% if code == 0 %}
+            {% if code == 'login_success' %}
                 <div class="login-message">
                     Login successful!
                     <a class="login-link" href="/account/">
@@ -11,7 +11,7 @@
                         </p>
                     </a>
                 </div>
-            {% elif code == 1 %}
+            {% elif code == 'register_success' %}
                 <div class="login-message">
                     Registration successful!
                     <a class="login-link" href="/account/">
@@ -20,7 +20,7 @@
                         </p>
                     </a>
                 </div>
-            {% elif code == 2 %}
+            {% elif code == 'edit_success' %}
                 <div class="login-message">
                     Changed your data successfully!
                     <a class="login-link" href="/account/">
