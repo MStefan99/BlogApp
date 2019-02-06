@@ -12,10 +12,10 @@ def hello_world():
     if request.cookies.get('MSTID'):
         database = sqlite3.connect('./database/db.sqlite')
         c = database.cursor()
-        credentials = c.execute('SELECT * from Users').fetchall()
+        users = c.execute('SELECT * from Users').fetchall()
 
         # Redirecting logged in users
-        for user_credentials in credentials:
+        for user_credentials in users:
             if request.cookies.get('MSTID') == user_credentials[2]:
                 return redirect('/account/', code=302)
     return render_template('select.html')
@@ -37,13 +37,13 @@ def login_processor():
     current_password = request.form.get('current-password')
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Users').fetchall()
+    users = c.execute('SELECT * from Users').fetchall()
     user_found = False
 
     if not username or not current_password:
         return render_template('error.html', code='form_not_filled')
 
-    for user_credentials in credentials:
+    for user_credentials in users:
         user_found = username.lower() == user_credentials[0].lower() or username == user_credentials[3]
         if user_found and pbkdf2_sha512.verify(current_password, user_credentials[1]):
             resp = make_response(render_template('success.html', code='login_success'))
@@ -64,10 +64,10 @@ def register_processor():
     email = request.form.get('email')
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Users').fetchall()
+    users = c.execute('SELECT * from Users').fetchall()
 
-    username_exists = username in [user_credentials[0] for user_credentials in credentials]
-    email_exists = email in [user_credentials[3] for user_credentials in credentials]
+    username_exists = username in [user_credentials[0] for user_credentials in users]
+    email_exists = email in [user_credentials[3] for user_credentials in users]
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
@@ -102,8 +102,8 @@ def logout():
 def account():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Users').fetchall()
-    for user_credentials in credentials:
+    users = c.execute('SELECT * from Users').fetchall()
+    for user_credentials in users:
         if request.cookies.get('MSTID') == user_credentials[2]:
             return render_template('account.html', username=user_credentials[0])
     return redirect('/logout/', code=302)
@@ -124,15 +124,15 @@ def settings_processor():
 
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Users').fetchall()
+    users = c.execute('SELECT * from Users').fetchall()
 
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
-    username_exists = username in [user_credentials[0] for user_credentials in credentials]
-    email_exists = email in [user_credentials[3] for user_credentials in credentials]
+    username_exists = username in [user_credentials[0] for user_credentials in users]
+    email_exists = email in [user_credentials[3] for user_credentials in users]
     old_username = None
 
-    for user_credentials in credentials:
+    for user_credentials in users:
         if request.cookies.get('MSTID') == user_credentials[2]:
             old_username = user_credentials[0]
 
@@ -180,10 +180,10 @@ def delete():
 def delete_confirm():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    credentials = c.execute('SELECT * from Users').fetchall()
+    users = c.execute('SELECT * from Users').fetchall()
     username = None
 
-    for user_credentials in credentials:
+    for user_credentials in users:
         if request.cookies.get('MSTID') == user_credentials[2]:
             username = user_credentials[0]
 
@@ -194,6 +194,27 @@ def delete_confirm():
     c.execute('DELETE FROM Users WHERE Username = ?', (username,))
     database.commit()
     return redirect('/', code=302)
+
+
+@app.route('/posts/')
+def posts():
+    database = sqlite3.connect('./database/db.sqlite')
+    c = database.cursor()
+    blog_posts = c.execute('SELECT * FROM Posts')
+    return render_template('posts.html', posts=blog_posts)
+
+
+@app.route('/post/', methods=['GET'])
+def post():
+    post_link = request.args.get('post')
+
+    database = sqlite3.connect('./database/db.sqlite')
+    c = database.cursor()
+    blog_posts = c.execute('SELECT * FROM Posts')
+
+    for blog_post in blog_posts:
+        if blog_post[6] == post_link:
+            return render_template('post.html', theme_color=blog_post[5], post=blog_post)
 
 
 if __name__ == '__main__':

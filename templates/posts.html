@@ -1,0 +1,39 @@
+
+{% extends 'layout.html' %}
+
+    {% block header_menu %}
+            <ul class="nav-block-right">
+                <li class="nav-element">
+                   <a id="logout" class="nav-button" href="/logout/">Sign out</a>
+                </li>
+                <li class="nav-element">
+                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
+                </li>
+            <li class="nav-element">
+                    <a id="account" class="nav-button" href="/account/">Settings</a>
+                </li>
+            </ul>
+    {% endblock %}
+
+    {% block main %}
+        {% for post in posts %}
+            <a href="{{ '/post/?post=' + post[6] }}">
+                <div class="post">
+                    <div class="posts-title">
+                        <p>{{ post[1] }}</p><br>
+                    </div>
+                    <div class="posts-tagline">
+                        <p>{{ post[2] }}</p>
+                    </div>
+                    <div class="posts-date">
+                        <p>{{ post[8] }}</p>
+                    </div>
+                    <div class="posts-author">
+                        <p>{{ post[7] }}</p>
+                    </div>
+                    <img src="{{ post[3] }}" class="post-image">
+                </div>
+            </a>
+        {% endfor %}
+
+    {% endblock %}
