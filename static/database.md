@@ -73,7 +73,8 @@ create table Favourites
 			references Users,
 	Post_ID INTEGER not null
 		constraint Favourites_Posts_ID_fk
-			references Posts
+			references Posts,
+	Date_Added TEXT default '1970-01-01 00:00:00' not null
 );
 
 create unique index Favourites_Post_ID_uindex

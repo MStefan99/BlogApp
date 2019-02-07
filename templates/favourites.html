@@ -11,11 +11,16 @@
                     <a id="account" class="nav-button" href="/account/">Account</a>
                 </li>
                 <li class="nav-element">
-                    <a id="Favourites" class="nav-button" href="/favourites/">Favourites</a>
+                    <a id="posts" class="nav-button" href="/posts/">Posts</a>
                 </li>
             </ul>
     {% endblock %}
     {% block main %}
+        {% if code=='no_posts' %}
+            <p>
+                You have no saved posts.
+            </p>
+        {% endif %}
         {% for post in posts %}
             <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/?post=' + post[6] }}">
                 <div class="posts" style="background-color: {{ post[5] }}">

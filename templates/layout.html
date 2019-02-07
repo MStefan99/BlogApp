@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
         <!-- WARNING: Google analythics disabled for development purposes. Enable when needed!
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
@@ -26,16 +26,16 @@
         <title>Annushka Project Blog</title>
     </head>
     <body>
-        <div class="header">
+        <header>
             <div id="logo-image">
             </div>
             {% block header_menu %}
             {% endblock %}
-        </div>
-        <div class="main">
+        </header>
+        <main>
             {% block main %}
             {% endblock %}
-        </div>
+        </main>
         {% block login %}
         {% endblock %}
     </body>

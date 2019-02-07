@@ -1,6 +1,4 @@
-
 {% extends 'layout.html' %}
-
     {% block header_menu %}
             <ul class="nav-block-right">
                 <li class="nav-element">
@@ -9,32 +7,42 @@
                 <li class="nav-element">
                     <a id="settings" class="nav-button" href="/settings/">Settings</a>
                 </li>
-            <li class="nav-element">
-                    <a id="account" class="nav-button" href="/account/">Settings</a>
+                <li class="nav-element">
+                    <a id="account" class="nav-button" href="/account/">Account</a>
+                </li>
+                <li class="nav-element">
+                    <a id="Favourites" class="nav-button" href="/favourites/">Favourites</a>
                 </li>
             </ul>
     {% endblock %}
-
     {% block main %}
             <div class="post">
-                <img src="{{ post[4] }}" class="post-splash">
-                <div class="post-title">
+                <div id="post-splash" style="background-color: {{ post[5] }}">
+                    <img src="{{ post[4] }}" id="post-splash-image" alt="Post thumbnail">
+                </div>
+                {% if is_favourite %}
+                    <div id="post-save" onclick="post_favourites({{ '"/del_post/?post=' + post[0]|string +'"' }})">Remove from favourites</div>
+                {% else %}
+                    <div id="post-save" onclick="post_favourites({{ '"/add_post/?post=' + post[0]|string +'"' }})">Save to favourites</div>
+                {% endif %}
+                <div id="post-title">
                     <p>{{ post[1] }}</p><br>
                 </div>
-                <div class="post-tagline">
+                <div id="post-tagline">
                     <p>{{ post[2] }}</p>
                 </div>
-                <div class="post-date">
+                <div id="post-date">
                     <p>{{ post[8] }}</p>
                 </div>
-                <div class="post-author">
+                <div id="post-author">
                     <p>{{ post[7] }}</p>
                 </div>
-                <div class="post-content">
+                <div id="post-content">
                     <p>{{ post[9] }}</p>
                 </div>
-                <div class="post-tags">
-                    <p>{{ post[10] }}</p> <!-- TODO: make tags clickable -->
+                <div id="post-tags">
+                    <p>{{ post[10] }}</p> <!-- TODO: make tags clickable and searchable -->
                 </div>
             </div>
+        <script src="{{url_for('static', filename='javascript/favourites.js')}}"></script>
     {% endblock %}

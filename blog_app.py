@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
+import datetime
 import random
 import string
 import sqlite3
@@ -15,8 +16,8 @@ def hello_world():
         users = c.execute('SELECT * from Users').fetchall()
 
         # Redirecting logged in users
-        for user_credentials in users:
-            if request.cookies.get('MSTID') == user_credentials[2]:
+        for user in users:
+            if request.cookies.get('MSTID') == user[2]:
                 return redirect('/account/', code=302)
     return render_template('select.html')
 
@@ -43,11 +44,11 @@ def login_processor():
     if not username or not current_password:
         return render_template('error.html', code='form_not_filled')
 
-    for user_credentials in users:
-        user_found = username.lower() == user_credentials[0].lower() or username == user_credentials[3]
-        if user_found and pbkdf2_sha512.verify(current_password, user_credentials[1]):
+    for user in users:
+        user_found = username.lower() == user[0].lower() or username == user[3]
+        if user_found and pbkdf2_sha512.verify(current_password, user[1]):
             resp = make_response(render_template('success.html', code='login_success'))
-            resp.set_cookie('MSTID', user_credentials[2], max_age=60*60*24*30)
+            resp.set_cookie('MSTID', user[2], max_age=60*60*24*30)
             return resp
         if user_found:
             break
@@ -68,8 +69,8 @@ def register_processor():
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
 
-    username_exists = username in [user_credentials[0] for user_credentials in users]
-    email_exists = email in [user_credentials[3] for user_credentials in users]
+    username_exists = username in [user[0] for user in users]
+    email_exists = email in [user[3] for user in users]
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
@@ -104,9 +105,9 @@ def account():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
-    for user_credentials in users:
-        if request.cookies.get('MSTID') == user_credentials[2]:
-            return render_template('account.html', username=user_credentials[0])
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            return render_template('account.html', username=user[0])
     return redirect('/logout/', code=302)
 
 
@@ -129,13 +130,13 @@ def settings_processor():
 
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
-    username_exists = username in [user_credentials[0] for user_credentials in users]
-    email_exists = email in [user_credentials[3] for user_credentials in users]
+    username_exists = username in [user[0] for user in users]
+    email_exists = email in [user[3] for user in users]
     old_username = None
 
-    for user_credentials in users:
-        if request.cookies.get('MSTID') == user_credentials[2]:
-            old_username = user_credentials[0]
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            old_username = user[0]
 
     # Redirecting user to login page if he logged out
     if not old_username:
@@ -183,9 +184,9 @@ def delete_confirm():
     users = c.execute('SELECT * from Users').fetchall()
     username = None
 
-    for user_credentials in users:
-        if request.cookies.get('MSTID') == user_credentials[2]:
-            username = user_credentials[0]
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            username = user[0]
 
     # Redirecting user to login page if he logged out
     if not username:
@@ -200,21 +201,78 @@ def delete_confirm():
 def posts():
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    blog_posts = c.execute('SELECT * FROM Posts')
+    blog_posts = c.execute('SELECT * FROM Posts').fetchall()
     return render_template('posts.html', posts=blog_posts)
 
 
-@app.route('/post/', methods=['GET'])
+@app.route('/post/')
 def post():
     post_link = request.args.get('post')
-
     database = sqlite3.connect('./database/db.sqlite')
     c = database.cursor()
-    blog_posts = c.execute('SELECT * FROM Posts')
+    blog_posts = c.execute('SELECT * FROM Posts').fetchall()
+    users = c.execute('SELECT * from Users').fetchall()
+
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            user_id = user[4]
 
     for blog_post in blog_posts:
         if blog_post[6] == post_link:
-            return render_template('post.html', theme_color=blog_post[5], post=blog_post)
+            is_favourite = bool(c.execute('SELECT * FROM Posts JOIN Favourites WHERE Favourites.Post_ID = Posts.ID '
+                                          'AND Favourites.User_ID = ? AND Post_ID = ?',
+                                          (user_id, blog_post[0])).fetchall())
+            return render_template('post.html', theme_color=blog_post[5], post=blog_post, is_favourite=is_favourite)
+
+
+@app.route('/favourites/')
+def favourites():
+    database = sqlite3.connect('./database/db.sqlite')
+    c = database.cursor()
+    users = c.execute('SELECT * from Users').fetchall()
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            user_id = user[4]
+    blog_posts = c.execute('SELECT * FROM Posts JOIN Favourites '
+                           'WHERE Favourites.Post_ID = Posts.ID and Favourites.User_ID = ?'
+                           'ORDER BY datetime(Favourites.Date_Added) DESC', (user_id,)).fetchall()
+    if not blog_posts:
+        return render_template('favourites.html', code='no_posts')
+
+    return render_template('favourites.html', posts=blog_posts)
+
+
+@app.route('/add_post/')
+def add_post():
+    post_id = request.args.get('post')
+    database = sqlite3.connect('./database/db.sqlite')
+    c = database.cursor()
+    users = c.execute('SELECT * from Users').fetchall()
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            user_id = user[4]
+            time = datetime.datetime.now()
+            c.execute('INSERT INTO Favourites(User_ID, Post_ID, Date_Added) VALUES (?, ?, ?)',
+                      (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S')))
+            database.commit()
+
+    return "Post added to favourites!"
+
+
+@app.route('/del_post/')
+def del_post():
+    post_id = request.args.get('post')
+    database = sqlite3.connect('./database/db.sqlite')
+    c = database.cursor()
+    users = c.execute('SELECT * from Users').fetchall()
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            user_id = user[4]
+            c.execute('DELETE FROM Favourites WHERE User_ID = ? AND Post_ID = ?',
+                      (user_id, post_id))
+            database.commit()
+
+    return "Post removed from favourites!"
 
 
 if __name__ == '__main__':
