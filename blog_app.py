@@ -49,6 +49,8 @@ def login_processor():
             resp = make_response(render_template('success.html', code='login_success'))
             resp.set_cookie('MSTID', user_credentials[2], max_age=60*60*24*30)
             return resp
+        if user_found:
+            break
 
     if not user_found:
         return render_template('error.html', code='wrong_login')
@@ -80,8 +82,7 @@ def register_processor():
         return render_template('error.html', code='passwords_do_not_match')
 
     else:
-        n = 255
-        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         c.execute('INSERT INTO Users (Username, Password, CookieID, Email) VALUES(?, ?, ?, ?)',
                   (username, password_hash, cookie_id, email))
@@ -159,8 +160,7 @@ def settings_processor():
 
     if new_password:
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
-        n = 255
-        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
+        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
         c.execute('UPDATE Users SET Password = ?, CookieID = ? WHERE Username = ?',
                   (password_hash, cookie_id, old_username))
         database.commit()
