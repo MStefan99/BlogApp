@@ -21,9 +21,9 @@
                     <img src="{{ post[4] }}" id="post-splash-image" alt="Post thumbnail">
                 </div>
                 {% if is_favourite %}
-                    <div id="post-save" onclick="post_favourites({{ '"/del_post/?post=' + post[0]|string +'"' }})">Remove from favourites</div>
+                    <p id="post-save" onclick="post_favourites({{ '"/del_post/?post=' + post[0]|string +'"' }})">Remove from favourites</p>
                 {% else %}
-                    <div id="post-save" onclick="post_favourites({{ '"/add_post/?post=' + post[0]|string +'"' }})">Save to favourites</div>
+                    <p id="post-save" onclick="post_favourites({{ '"/add_post/?post=' + post[0]|string +'"' }})">Save to favourites</p>
                 {% endif %}
                 <div id="post-title">
                     <p>{{ post[1] }}</p><br>
