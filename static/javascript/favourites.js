@@ -9,7 +9,7 @@ function add_to_favourites(post_id) {
     };
     xhttp.open("GET", "/add_post/?post=" + post_id, true);
     xhttp.send();
-    button.onclick = remove_from_favourites;
+    button.onclick = function() { remove_from_favourites(post_id) };
 }
 
 function remove_from_favourites(post_id) {
@@ -23,5 +23,5 @@ function remove_from_favourites(post_id) {
     };
     xhttp.open("GET", "/del_post/?post=" + post_id, true);
     xhttp.send();
-    button.onclick = add_to_favourites;
+    button.onclick = function() { add_to_favourites(post_id) };
 }

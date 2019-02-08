@@ -6,9 +6,9 @@
                 </div>
                 {% if request.cookies.get('MSTID') %}
                     {% if is_favourite %}
-                        <p id="post-save" onclick="remove_from_favourites({{post[0]|string}})">Remove from favourites</p>
+                        <p id="post-save" onclick="remove_from_favourites({{ post[0]|string }})">Remove from favourites</p>
                     {% else %}
-                        <p id="post-save" onclick="add_to_favourites({{post[0]|string}})">Save to favourites</p>
+                        <p id="post-save" onclick="add_to_favourites({{ post[0]|string }})">Save to favourites</p>
                     {% endif %}
                 {% else %}
                     <p>You need to <a id="post-save" href="/">sign in</a> to save posts</p>
