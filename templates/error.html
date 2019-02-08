@@ -30,6 +30,10 @@
                     <p>
                         Emails do not match.
                     </p>
+                {% elif code == 'logged_out' %}
+                    <p>
+                        You need to <a href="/">sign in</a> to view this page.
+                    </p>
                 {% endif %}
             </div>
         </div>

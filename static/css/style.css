@@ -181,11 +181,32 @@ a, a:visited{
     max-width: 100vw;
 }
 
-#post-save {
+#post-save{
     cursor: pointer;
     user-select: none;
 }
 
-#post-save:hover {
+#post-save:hover{
     text-decoration: underline;
+}
+
+#dev{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 1vh 0;
+    color: white;
+    background-color: #f22746;
+    width: 100vw;
+    min-height: 3vh;
+    max-height: fit-content;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    clear: both;
+    text-decoration: underline;
+    font-weight: 600;
 }

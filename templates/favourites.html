@@ -1,22 +1,6 @@
 {% extends 'layout.html' %}
-    {% block header_menu %}
-            <ul class="nav-block-right">
-                <li class="nav-element">
-                   <a id="logout" class="nav-button" href="/logout/">Sign out</a>
-                </li>
-                <li class="nav-element">
-                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
-                </li>
-                <li class="nav-element">
-                    <a id="account" class="nav-button" href="/account/">Account</a>
-                </li>
-                <li class="nav-element">
-                    <a id="posts" class="nav-button" href="/posts/">Posts</a>
-                </li>
-            </ul>
-    {% endblock %}
     {% block main %}
-        {% if code=='no_posts' %}
+        {% if code == 'no_posts' %}
             <p>
                 You have no saved posts.
             </p>

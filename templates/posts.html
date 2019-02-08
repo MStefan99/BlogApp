@@ -1,20 +1,4 @@
 {% extends 'layout.html' %}
-    {% block header_menu %}
-            <ul class="nav-block-right">
-                <li class="nav-element">
-                   <a id="logout" class="nav-button" href="/logout/">Sign out</a>
-                </li>
-                <li class="nav-element">
-                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
-                </li>
-                <li class="nav-element">
-                    <a id="account" class="nav-button" href="/account/">Account</a>
-                </li>
-                <li class="nav-element">
-                    <a id="Favourites" class="nav-button" href="/favourites/">Favourites</a>
-                </li>
-            </ul>
-    {% endblock %}
     {% block main %}
         {% for post in posts %}
             <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/?post=' + post[6] }}">

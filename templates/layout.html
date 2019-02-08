@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
-        <!-- WARNING: Google analythics disabled for development purposes. Enable when needed!
+        <!-- WARNING: Google analytics disabled for development purposes. Enable when needed!
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
         <script>
             window.dataLayer=window.dataLayer || [];
@@ -29,8 +29,37 @@
         <header>
             <div id="logo-image">
             </div>
-            {% block header_menu %}
-            {% endblock %}
+            <ul class="nav-block-right">
+            {% if request.cookies.get('MSTID') %}
+                <li class="nav-element">
+                    <a id="logout" class="nav-button" href="/logout/">Sign out</a>
+                </li>
+            {% else %}
+                <li class="nav-element">
+                    <a id="logout" class="nav-button" href="/">Sign in</a>
+                </li>
+            {% endif %}
+            {% if request.path != '/settings/' %}
+                <li class="nav-element">
+                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
+                </li>
+            {% endif %}
+            {% if request.path != '/account/' %}
+                <li class="nav-element">
+                    <a id="account" class="nav-button" href="/account/">Account</a>
+                </li>
+            {% endif %}
+            {% if request.path != '/favourites/' %}
+                <li class="nav-element">
+                    <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
+                </li>
+            {% endif %}
+            {% if request.path != '/posts/' %}
+                <li class="nav-element">
+                    <a id="posts" class="nav-button" href="/posts/">Posts</a>
+                </li>
+            {% endif %}
+            </ul>
         </header>
         <main>
             {% block main %}
@@ -38,5 +67,9 @@
         </main>
         {% block login %}
         {% endblock %}
+        <div id="dev" onclick="{let dev = document.getElementById('dev'); dev.style.display = 'none';}">
+            WEBSITE IS CURRENTLY IN DEVELOPMENT STAGE.
+            ANY DATA CAN BE REMOVED AT ANY TIME, INCLUDING USER ACCOUNTS.
+            DEVELOPERS ARE NOT RESPONSIBLE IF ANY DATA IS LOST. CLICK TO HIDE ON THIS PAGE.</div>
     </body>
 </html>

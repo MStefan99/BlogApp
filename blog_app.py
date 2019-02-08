@@ -6,12 +6,13 @@ import string
 import sqlite3
 
 app = Flask(__name__)
+DATABASE = './database/db.sqlite'
 
 
 @app.route('/')
 def hello_world():
     if request.cookies.get('MSTID'):
-        database = sqlite3.connect('./database/db.sqlite')
+        database = sqlite3.connect(DATABASE)
         c = database.cursor()
         users = c.execute('SELECT * from Users').fetchall()
 
@@ -36,7 +37,7 @@ def register():
 def login_processor():
     username = request.form.get('login')
     current_password = request.form.get('current-password')
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
     user_found = False
@@ -65,7 +66,7 @@ def register_processor():
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
     email = request.form.get('email')
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
 
@@ -78,7 +79,7 @@ def register_processor():
     elif username_exists:
         return render_template('error.html', code='username_exists')
     elif email_exists:
-        return render_template('error.html', code=email_exists)
+        return render_template('error.html', code='email_exists')
     elif new_password != repeat_new_password:
         return render_template('error.html', code='passwords_do_not_match')
 
@@ -102,18 +103,24 @@ def logout():
 
 @app.route('/account/')
 def account():
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
     for user in users:
         if request.cookies.get('MSTID') == user[2]:
             return render_template('account.html', username=user[0])
-    return redirect('/logout/', code=302)
+    return render_template('error.html', code='logged_out')
 
 
 @app.route('/settings/')
 def settings():
-    return render_template('settings.html')
+    database = sqlite3.connect(DATABASE)
+    c = database.cursor()
+    users = c.execute('SELECT * from Users').fetchall()
+    for user in users:
+        if request.cookies.get('MSTID') == user[2]:
+            return render_template('settings.html')
+    return render_template('error.html', code='logged_out')
 
 
 @app.route('/settings_processor/', methods=['POST'])
@@ -124,7 +131,7 @@ def settings_processor():
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
 
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
 
@@ -132,14 +139,14 @@ def settings_processor():
     email_check = email == repeat_email
     username_exists = username in [user[0] for user in users]
     email_exists = email in [user[3] for user in users]
-    old_username = None
+    user_id = None
 
     for user in users:
         if request.cookies.get('MSTID') == user[2]:
-            old_username = user[0]
+            user_id = user[4]
 
     # Redirecting user to login page if he logged out
-    if not old_username:
+    if not user_id:
         return redirect('/logout/', code=302)
 
     if not new_password_check:
@@ -152,18 +159,18 @@ def settings_processor():
         return render_template('error.html', code='email_exists')
 
     if username:
-        c.execute('UPDATE Users SET Username = ? WHERE Username = ?', (username, old_username))
+        c.execute('UPDATE Users SET Username = ? WHERE ID = ?', (username, user_id))
         database.commit()
 
     if email:
-        c.execute('UPDATE Users SET Email = ? WHERE Username = ?', (email, old_username))
+        c.execute('UPDATE Users SET Email = ? WHERE ID = ?', (email, user_id))
         database.commit()
 
     if new_password:
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
-        c.execute('UPDATE Users SET Password = ?, CookieID = ? WHERE Username = ?',
-                  (password_hash, cookie_id, old_username))
+        c.execute('UPDATE Users SET Password = ?, CookieID = ? WHERE ID = ?',
+                  (password_hash, cookie_id, user_id))
         database.commit()
         resp = make_response(render_template('success.html', code='edit_success'))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
@@ -179,7 +186,7 @@ def delete():
 
 @app.route('/delete_confirm/')
 def delete_confirm():
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
     username = None
@@ -190,7 +197,7 @@ def delete_confirm():
 
     # Redirecting user to login page if he logged out
     if not username:
-        return redirect('/logout/', code=302)
+        return render_template('error.html', code='logged_out')
 
     c.execute('DELETE FROM Users WHERE Username = ?', (username,))
     database.commit()
@@ -199,7 +206,7 @@ def delete_confirm():
 
 @app.route('/posts/')
 def posts():
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     blog_posts = c.execute('SELECT * FROM Posts').fetchall()
     return render_template('posts.html', posts=blog_posts)
@@ -208,10 +215,11 @@ def posts():
 @app.route('/post/')
 def post():
     post_link = request.args.get('post')
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     blog_posts = c.execute('SELECT * FROM Posts').fetchall()
     users = c.execute('SELECT * from Users').fetchall()
+    user_id = None
 
     for user in users:
         if request.cookies.get('MSTID') == user[2]:
@@ -227,15 +235,19 @@ def post():
 
 @app.route('/favourites/')
 def favourites():
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
+    user_id = None
+
     for user in users:
         if request.cookies.get('MSTID') == user[2]:
             user_id = user[4]
     blog_posts = c.execute('SELECT * FROM Posts JOIN Favourites '
                            'WHERE Favourites.Post_ID = Posts.ID and Favourites.User_ID = ?'
                            'ORDER BY datetime(Favourites.Date_Added) DESC', (user_id,)).fetchall()
+    if not user_id:
+        return render_template('error.html', code='logged_out')
     if not blog_posts:
         return render_template('favourites.html', code='no_posts')
 
@@ -245,7 +257,7 @@ def favourites():
 @app.route('/add_post/')
 def add_post():
     post_id = request.args.get('post')
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
     for user in users:
@@ -256,13 +268,13 @@ def add_post():
                       (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S')))
             database.commit()
 
-    return "Post added to favourites!"
+    return "OK"
 
 
 @app.route('/del_post/')
 def del_post():
     post_id = request.args.get('post')
-    database = sqlite3.connect('./database/db.sqlite')
+    database = sqlite3.connect(DATABASE)
     c = database.cursor()
     users = c.execute('SELECT * from Users').fetchall()
     for user in users:
@@ -272,8 +284,15 @@ def del_post():
                       (user_id, post_id))
             database.commit()
 
-    return "Post removed from favourites!"
+    return 'OK'
+
+
+def unlock_db():
+    connection = sqlite3.connect(DATABASE)
+    connection.commit()
+    connection.close()
 
 
 if __name__ == '__main__':
+    unlock_db()
     app.run()
