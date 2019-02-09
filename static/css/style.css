@@ -203,6 +203,7 @@ a, a:visited{
     min-height: 3vh;
     max-height: fit-content;
     text-align: center;
+    font-size: 2vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
