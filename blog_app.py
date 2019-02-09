@@ -220,10 +220,9 @@ def posts():
     return render_template('posts.html', posts=blog_posts)
 
 
-@app.route('/post/')
-def post():
+@app.route('/post/<string:post_link>')
+def post(post_link):
     cursor = DATABASE.cursor()
-    post_link = request.args.get('post')
     cursor.execute('SELECT * FROM Posts')
     blog_posts = cursor.fetchall()
     cursor.execute('SELECT * from Users')

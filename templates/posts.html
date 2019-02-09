@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
     {% block main %}
         {% for post in posts %}
-            <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/?post=' + post[6] }}">
+            <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/' + post[6] }}">
                 <div class="posts" style="background-color: {{ post[5] }}">
                     <div class="posts-title">
                         <p>{{ post[1] }}</p><br>
