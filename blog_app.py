@@ -301,8 +301,8 @@ def check_username():
     users = cursor.fetchall()
 
     if username.lower() in [user[0].lower() for user in users]:
-        return '<p style="color: #f22746;">Username already taken</p>'
-    return '<p style="color: #2bf27f;">Username is free</p>'
+        return '<p class="error">Username already taken</p>'
+    return '<p class="ok">Username is free</p>'
 
 
 @app.route('/check_email/')
@@ -313,7 +313,7 @@ def check_email():
     users = cursor.fetchall()
 
     if email.lower() in [user[3].lower() for user in users]:
-        return '<p style="color: #f22746;">Email already exists</p>'
+        return '<p class="error">Email already exists</p>'
     return ''
 
 

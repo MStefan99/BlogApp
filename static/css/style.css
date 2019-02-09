@@ -26,9 +26,14 @@ body{
     background: var(--secondary-color);
 }
 
-.login > a, .login > a:visited, .login-link{
+.login a, .login a:visited, .login-link{
     color: white;
     text-align: center;
+}
+
+a.nav-button, main #posts-container a{
+    text-decoration: none;
+    color: white;
 }
 
 .login-message{
@@ -55,7 +60,7 @@ form{
     text-decoration: underline;
 }
 
-.form-section > label{
+.form-section label{
     display: block;
     padding: 0;
     color: black;
@@ -121,7 +126,7 @@ header{
     margin: 0 1vw 0 0;
 }
 
-.nav-block-right > li{
+.nav-block-right li{
     height: inherit;
     float: right;
     margin: 0 1vw;
@@ -139,11 +144,6 @@ header{
 
 main{
     margin: 3vh 5vw;
-    color: white;
-}
-
-a, a:visited{
-    text-decoration: inherit;
     color: white;
 }
 
@@ -192,6 +192,14 @@ a, a:visited{
 
 .credentials-check p{
     margin: 0;
+}
+
+.credentials-check .error{
+    color: #f22746;
+}
+
+.credentials-check .ok{
+    color: #2bf27f;
 }
 
 #dev{

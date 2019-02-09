@@ -1,22 +1,24 @@
 {% extends 'layout.html' %}
     {% block main %}
-        {% for post in posts %}
-            <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/' + post[6] }}">
-                <div class="posts" style="background-color: {{ post[5] }}">
-                    <div class="posts-title">
-                        <p>{{ post[1] }}</p><br>
+        <div id="posts-container">
+            {% for post in posts %}
+                <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/' + post[6] }}">
+                    <div class="posts" style="background-color: {{ post[5] }}">
+                        <div class="posts-title">
+                            <p>{{ post[1] }}</p><br>
+                        </div>
+                        <div class="posts-tagline">
+                            <p>{{ post[2] }}</p>
+                        </div>
+                        <div class="posts-date">
+                            <p>{{ post[8] }}</p>
+                        </div>
+                        <div class="posts-author">
+                            <p>{{ post[7] }}</p>
+                        </div>
+                        <img src="{{ post[3] }}" class="post-image" alt="Post icon">
                     </div>
-                    <div class="posts-tagline">
-                        <p>{{ post[2] }}</p>
-                    </div>
-                    <div class="posts-date">
-                        <p>{{ post[8] }}</p>
-                    </div>
-                    <div class="posts-author">
-                        <p>{{ post[7] }}</p>
-                    </div>
-                    <img src="{{ post[3] }}" class="post-image" alt="Post icon">
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        </div>
     {% endblock %}
