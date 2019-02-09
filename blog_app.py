@@ -3,19 +3,12 @@ from passlib.hash import pbkdf2_sha512
 import datetime
 import random
 import string
-import MySQLdb
+import psycopg2
 
 app = Flask(__name__)
 
-DATABASE = MySQLdb.connect(user='flask', password='MySQLPassword', autocommit=True)
-CURSOR = DATABASE.cursor()
-CURSOR.execute('CREATE DATABASE IF NOT EXISTS Blog DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;')
-DATABASE = MySQLdb.connect(user='flask', password='MySQLPassword',
-                           database='Blog', autocommit=True)
-CURSOR = DATABASE.cursor()
-c = DATABASE.cursor()
-for line in open('init.sql'):
-    c.execute(line)
+DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog')
+DATABASE.autocommit = True
 
 
 @app.route('/')
@@ -231,8 +224,8 @@ def post(post_link):
     for blog_post in blog_posts:
         if blog_post[6] == post_link:
             cursor.execute('SELECT * FROM Posts JOIN Favourites '
-                           'WHERE Favourites.Post_ID = Posts.ID '
-                           'AND Favourites.User_ID = %s AND Post_ID = %s',
+                           'ON (Favourites.Post_ID = Posts.ID '
+                           'AND Favourites.User_ID = %s AND Post_ID = %s)',
                            (user_id, blog_post[0]))
             is_favourite = bool(cursor.fetchall())
             cursor.close()
@@ -250,7 +243,7 @@ def favourites():
         if request.cookies.get('MSTID') == user[2]:
             user_id = user[4]
     cursor.execute('SELECT * FROM Posts JOIN Favourites '
-                   'WHERE Favourites.Post_ID = Posts.ID and Favourites.User_ID = %s '
+                   'ON (Favourites.Post_ID = Posts.ID and Favourites.User_ID = %s) '
                    'ORDER BY Favourites.Date_Added DESC', (user_id,))
     blog_posts = cursor.fetchall()
     cursor.close()
