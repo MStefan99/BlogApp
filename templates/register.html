@@ -7,11 +7,13 @@
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Email</label>
-                    <input type="text" name="email" class="input-field" autocomplete="email" placeholder="Enter your email"><br>
+                    <input type="text" name="email" class="input-field" autocomplete="email" placeholder="Enter your email" onkeyup="check_email(this)"><br>
+                    <div id="email-check" class="credentials-check"></div>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Username</label>
-                    <input type="text" name="username" class="input-field" autocomplete="username" placeholder="Enter your username"><br>
+                    <input type="text" name="username" class="input-field" autocomplete="username" placeholder="Enter your username" onkeyup="check_username(this)"><br>
+                    <div id="username-check" class="credentials-check"></div>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Password</label>
@@ -24,4 +26,5 @@
                 </div>
             </form>
         </div>
+        <script src="{{ url_for('static', filename='javascript/credentials_check.js') }}"></script>
     {% endblock %}

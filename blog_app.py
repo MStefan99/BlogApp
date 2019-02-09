@@ -44,7 +44,7 @@ def register():
 
 @app.route('/login_processor/', methods=['POST'])
 def login_processor():
-    username = request.form.get('login')
+    username = request.form.get('login').strip()
     current_password = request.form.get('current-password')
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
@@ -71,10 +71,10 @@ def login_processor():
 
 @app.route('/register_processor/', methods=['POST'])
 def register_processor():
-    username = request.form.get('username')
+    username = request.form.get('username').strip()
+    email = request.form.get('email').strip()
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
-    email = request.form.get('email')
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
@@ -97,7 +97,6 @@ def register_processor():
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         cursor.execute('INSERT INTO Users (Username, Password, CookieID, Email) VALUES(%s, %s, %s, %s)',
                        (username, password_hash, cookie_id, email))
-        DATABASE.commit()
         resp = make_response(render_template('success.html', code='register_success'))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
@@ -134,9 +133,9 @@ def settings():
 
 @app.route('/settings_processor/', methods=['POST'])
 def settings_processor():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    repeat_email = request.form.get('repeat-email')
+    username = request.form.get('username').strip()
+    email = request.form.get('email').strip()
+    repeat_email = request.form.get('repeat-email').strip()
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
     cursor = DATABASE.cursor()
@@ -168,18 +167,15 @@ def settings_processor():
 
     if username:
         cursor.execute('UPDATE Users SET Username = %s WHERE ID = %s', (username, user_id))
-        DATABASE.commit()
 
     if email:
         cursor.execute('UPDATE Users SET Email = %s WHERE ID = %s', (email, user_id))
-        DATABASE.commit()
 
     if new_password:
         password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
         cursor.execute('UPDATE Users SET Password = %s, CookieID = %s WHERE ID = %s',
-                       (password_hash, cookie_id, user_id))
-        DATABASE.commit()
+                       (password_hash, cookie_id, user_id)) 
         resp = make_response(render_template('success.html', code='edit_success'))
         resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
         return resp
@@ -197,18 +193,17 @@ def delete_confirm():
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
-    username = None
+    user_id = None
 
     for user in users:
         if request.cookies.get('MSTID') == user[2]:
-            username = user[0]
+            user_id = user[4]
 
     # Redirecting user to login page if he logged out
-    if not username:
+    if not user_id:
         return render_template('error.html', code='logged_out')
 
-    cursor.execute('DELETE FROM Users WHERE Username = %s', (username,))
-    DATABASE.commit()
+    cursor.execute('DELETE FROM Users WHERE ID = %s', (user_id,))
     return redirect('/', code=302)
 
 
@@ -276,8 +271,7 @@ def add_post():
             user_id = user[4]
             time = datetime.datetime.now()
             cursor.execute('INSERT INTO Favourites(User_ID, Post_ID, Date_Added) VALUES (%s, %s, %s)',
-                           (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S')))
-            DATABASE.commit()
+                           (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S'))) 
     cursor.close()
     return "OK"
 
@@ -292,10 +286,35 @@ def del_post():
         if request.cookies.get('MSTID') == user[2]:
             user_id = user[4]
             cursor.execute('DELETE FROM Favourites WHERE User_ID = %s AND Post_ID = %s',
-                           (user_id, post_id))
-            DATABASE.commit()
+                           (user_id, post_id)) 
     cursor.close()
     return 'OK'
+
+
+@app.route('/check_username/')
+def check_username():
+    username = request.args.get('username').strip()
+    if not username:
+        return ''
+    cursor = DATABASE.cursor()
+    cursor.execute('SELECT * from Users')
+    users = cursor.fetchall()
+
+    if username.lower() in [user[0].lower() for user in users]:
+        return '<p style="color: #f22746;">Username already taken</p>'
+    return '<p style="color: #2bf27f;">Username is free</p>'
+
+
+@app.route('/check_email/')
+def check_email():
+    email = request.args.get('email').strip()
+    cursor = DATABASE.cursor()
+    cursor.execute('SELECT * from Users')
+    users = cursor.fetchall()
+
+    if email.lower() in [user[3].lower() for user in users]:
+        return '<p style="color: #f22746;">Email already exists</p>'
+    return ''
 
 
 if __name__ == '__main__':

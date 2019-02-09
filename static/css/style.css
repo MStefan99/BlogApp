@@ -190,6 +190,10 @@ a, a:visited{
     text-decoration: underline;
 }
 
+.credentials-check p{
+    margin: 0;
+}
+
 #dev{
     position: fixed;
     left: 0;
