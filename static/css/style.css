@@ -95,6 +95,10 @@ button:active{
     color: white;
 }
 
+.button p{
+    color: white;
+}
+
 .input-field{
     background: white;
     border: lightgrey 1px solid;

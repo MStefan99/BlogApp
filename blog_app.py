@@ -3,14 +3,14 @@ from passlib.hash import pbkdf2_sha512
 import datetime
 import random
 import string
-import pymysql
+import MySQLdb
 
 app = Flask(__name__)
 
-DATABASE = pymysql.connect(user='flask', password='MySQLPassword', autocommit=True)
+DATABASE = MySQLdb.connect(user='flask', password='MySQLPassword', autocommit=True)
 CURSOR = DATABASE.cursor()
 CURSOR.execute('CREATE DATABASE IF NOT EXISTS Blog DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;')
-DATABASE = pymysql.connect(user='flask', password='MySQLPassword',
+DATABASE = MySQLdb.connect(user='flask', password='MySQLPassword',
                            database='Blog', autocommit=True)
 CURSOR = DATABASE.cursor()
 c = DATABASE.cursor()
@@ -235,6 +235,7 @@ def post(post_link):
                            'AND Favourites.User_ID = %s AND Post_ID = %s',
                            (user_id, blog_post[0]))
             is_favourite = bool(cursor.fetchall())
+            cursor.close()
             return render_template('post.html', theme_color=blog_post[5], post=blog_post, is_favourite=is_favourite)
 
 
@@ -252,6 +253,7 @@ def favourites():
                    'WHERE Favourites.Post_ID = Posts.ID and Favourites.User_ID = %s '
                    'ORDER BY Favourites.Date_Added DESC', (user_id,))
     blog_posts = cursor.fetchall()
+    cursor.close()
     if not user_id:
         return render_template('error.html', code='logged_out')
     if not blog_posts:
@@ -271,8 +273,7 @@ def add_post():
             user_id = user[4]
             time = datetime.datetime.now()
             cursor.execute('INSERT INTO Favourites(User_ID, Post_ID, Date_Added) VALUES (%s, %s, %s)',
-                           (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S'))) 
-    cursor.close()
+                           (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S')))
     return "OK"
 
 
@@ -299,6 +300,7 @@ def check_username():
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
+    cursor.close()
 
     if username.lower() in [user[0].lower() for user in users]:
         return '<p class="error">Username already taken</p>'
@@ -311,6 +313,7 @@ def check_email():
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
+    cursor.close()
 
     if email.lower() in [user[3].lower() for user in users]:
         return '<p class="error">Email already exists</p>'
