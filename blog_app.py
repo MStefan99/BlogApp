@@ -296,8 +296,8 @@ def check_username():
     cursor.close()
 
     if username.lower() in [user[0].lower() for user in users]:
-        return '<p class="error">Username already taken</p>'
-    return '<p class="ok">Username is free</p>'
+        return 'error;Username already taken'
+    return 'ok;Username is free'
 
 
 @app.route('/check_email/')
@@ -309,7 +309,7 @@ def check_email():
     cursor.close()
 
     if email.lower() in [user[3].lower() for user in users]:
-        return '<p class="error">Email already exists</p>'
+        return 'error;Email already exists'
     return ''
 
 

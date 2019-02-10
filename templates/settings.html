@@ -8,18 +8,17 @@
                 <div class="form-section">
                     <label class="form-section-title">Change your email</label>
                     <label>New email</label>
-                    <input type="text" name="email" id="email" class="input-field" autocomplete="email" placeholder="Enter your new email" onkeyup="check_email(this, 'email-check')">
-                    <div id="email-check" class="credentials-check"> </div>
+                    <input type="text" name="email" id="email" class="input-field" autocomplete="email" placeholder="Enter your new email">
+                    <p id="email-check" class="credentials-check"> </p>
                     <label>Confirm new email</label>
-                    <input type="text" name="repeat-email" id="repeat-email" class="input-field" autocomplete="email" placeholder="Confirm your new email"
-                           onkeyup="check_email_match(this, document.getElementById('email'), 'email-match-check')">
-                    <div id="email-match-check" class="credentials-check"></div>
+                    <input type="text" name="repeat-email" id="repeat-email" class="input-field" autocomplete="email" placeholder="Confirm your new email">
+                    <p id="email-match-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Change your username</label>
                     <label>New username</label>
-                    <input type="text" name="username" id="username" class="input-field" autocomplete="username" placeholder="Enter your new username" onkeyup="check_username(this, 'username-check')">
-                    <div id="username-check" class="credentials-check"></div>
+                    <input type="text" name="username" id="username" class="input-field" autocomplete="username" placeholder="Enter your new username">
+                    <p id="username-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Change your password</label>
@@ -27,6 +26,7 @@
                     <input type="password" name="new-password" id="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your new password">
                     <label>Repeat new password</label>
                     <input type="password" name="repeat-new-password" id="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your new password">
+                    <p id="repeat-new-password-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
                     <label>You can fill only the fields you need to change</label>
