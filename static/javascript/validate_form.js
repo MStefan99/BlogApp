@@ -1,4 +1,3 @@
-
 //  Input fields
 let email = document.getElementById("email");
 let repeat_email = document.getElementById("repeat-email"); 
@@ -8,17 +7,20 @@ let repeat_new_password = document.getElementById("repeat-new-password");
 let form = document.getElementById("form");
 let submit = document.getElementById("submit-button");
 
+
 // Feedback elements
 let email_msg = document.getElementById("email-check");
 let repeat_email_msg = document.getElementById("email-match-check");
 let username_msg = document.getElementById("username-check");
 let repeat_new_password_msg = document.getElementById("repeat-new-password-check");
 
+
 // Setting check variables
 var email_ok = true;
 var email_match_ok = true;
 var username_ok = true;
 var password_match_ok = true;
+
 
 // Setting listeners
 try {
@@ -67,17 +69,34 @@ try {
     console.log("No password fields, continuing...");
 }
 
+
+// Disable sending directly using submit button
+submit.addEventListener("click",function(e) {
+    e.preventDefault();
+    submit.classList.add("disabled");
+    submit.innerText = "Sending, please wait...";
+    if (validate_all()) {
+        submit_form();
+    } else {
+        submit.innerText = "Submit";
+    }
+});
+
+
+// Disable submitting directly using Enter key
 form.onkeypress = function(e) {
     let key = e.key;
     if (key === "Enter") {
         e.preventDefault();
-        validate_form();
+        if (validate_all()) {
+            submit_form();
+        }
     }
 };
 
 
 //Check functions
-function check_username(element, element_to_set) {
+function check_username(element, element_to_set, async = true) {
     element.value = element.value.trim().replace(/\s+/g, '');
     if (!element.value.trim()) {
         element_to_set.innerHTML = "";
@@ -94,12 +113,12 @@ function check_username(element, element_to_set) {
                 validate_form();
             }
         };
-        xhttp.open("GET", "/check_username/?username=" + element.value, true);
+        xhttp.open("GET", "/check_username/?username=" + element.value, async);
         xhttp.send();
     }
 }
 
-function check_email(element, element_to_set) {
+function check_email(element, element_to_set, async = true) {
     element.value = element.value.trim().replace(/\s+/g, '');
     if (!element.value) {
         element_to_set.innerHTML = "";
@@ -116,7 +135,7 @@ function check_email(element, element_to_set) {
                 validate_form();
             }
         };
-        xhttp.open("GET", "/check_email/?email=" + element.value, true);
+        xhttp.open("GET", "/check_email/?email=" + element.value, async);
         xhttp.send();
     }
 }
@@ -155,10 +174,9 @@ function check_password_match(element1, element2, element_to_set) {
     validate_form();
 }
 
+
 // Enabling or disabling form submission
 function validate_form() {
-    console.log("email_ok: " + email_ok + "\n " + "email_match_ok: " + email_match_ok + "\n " + "username_ok: " +
-        username_ok + "\n " + "password_match_ok: " + password_match_ok + "\n ");
 
     if (!email_ok || !email_match_ok || !username_ok || !password_match_ok) {
         submit.classList.add("disabled");
@@ -166,5 +184,23 @@ function validate_form() {
     } else {
         submit.classList.remove("disabled");
         return true;
+    }
+}
+
+function validate_all() {
+    check_username(username, username_msg, false);
+    check_email(email, email_msg, false);
+    check_password_match(new_password, repeat_new_password, repeat_new_password_msg);
+    try {
+        check_email_match(email, repeat_email, repeat_email_msg);
+    } catch (e) {
+        console.log("Failed to validate field. " + e);
+    }
+    return !(!email_ok || !email_match_ok || !username_ok || !password_match_ok);
+}
+
+function submit_form() {
+    if (validate_all()) {
+        form.submit();
     }
 }
