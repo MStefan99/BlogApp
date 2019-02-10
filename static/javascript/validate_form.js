@@ -22,7 +22,7 @@ var password_match_ok = true;
 
 // Setting listeners
 try {
-    ["keyup", "paste"].forEach(function(event) {
+    ["keyup", "paste", "load"].forEach(function(event) {
         email.addEventListener(event, function () {
             check_email(email, email_msg);
         });
@@ -32,7 +32,7 @@ try {
 }
 
 try {
-    ["keyup", "paste"].forEach(function(event) {
+    ["keyup", "paste", "load"].forEach(function(event) {
         repeat_email.addEventListener(event, function () {
             check_email_match(email, repeat_email, repeat_email_msg);
         });
@@ -45,7 +45,7 @@ try {
 }
 
 try {
-    ["keyup", "paste"].forEach(function(event) {
+    ["keyup", "paste", "load"].forEach(function(event) {
         username.addEventListener(event, function () {
             check_username(username, username_msg);
         });
@@ -55,7 +55,7 @@ try {
 }
 
 try {
-    ["keyup", "paste"].forEach(function(event) {
+    ["keyup", "paste", "load"].forEach(function(event) {
         new_password.addEventListener(event, function () {
             check_password_match(new_password, repeat_new_password, repeat_new_password_msg);
         });
@@ -79,16 +79,11 @@ form.onkeypress = function(e) {
 //Check functions
 function check_username(element, element_to_set) {
     element.value = element.value.trim().replace(/\s+/g, '');
-    if (element.value.trim() === "") {
+    if (!element.value.trim()) {
         element_to_set.innerHTML = "";
-        if (element.classList.contains("optional")) {
-            username_ok = true;
-            validate_form();
-        } else {
-            username_ok = false;
-            validate_form();
-        }
-    }  else {
+        username_ok = !element.hasAttribute('required');
+        validate_form();
+    } else {
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -101,21 +96,15 @@ function check_username(element, element_to_set) {
         };
         xhttp.open("GET", "/check_username/?username=" + element.value, true);
         xhttp.send();
-        return username_msg.classList.contains("ok");
     }
 }
 
 function check_email(element, element_to_set) {
     element.value = element.value.trim().replace(/\s+/g, '');
-    if (element.value === "") {
+    if (!element.value) {
         element_to_set.innerHTML = "";
-        if (element.classList.contains("optional")) {
-            email_ok = true;
-            validate_form();
-        } else {
-            email_ok = false;
-            validate_form();
-        }
+        email_ok = !element.hasAttribute('required');
+        validate_form();
     } else {
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -129,14 +118,13 @@ function check_email(element, element_to_set) {
         };
         xhttp.open("GET", "/check_email/?email=" + element.value, true);
         xhttp.send();
-        return email_msg.classList.contains("ok");
     }
 }
 
 function check_email_match(element1, element2, element_to_set) {
-    if (element1.value === "" && element1.classList.contains("optional") &&
-            element2.value === "" && element2.classList.contains("optional")) {
-        email_match_ok = true;
+    if (!element1.value && element1.hasAttribute('required') &&
+            !element2.value && element2.hasAttribute('required')) {
+        email_match_ok = false;
     } else if (element1.value !== element2.value) {
         element_to_set.innerHTML = "Emails do not match";
         element_to_set.className = "credentials-check error";
@@ -149,17 +137,17 @@ function check_email_match(element1, element2, element_to_set) {
 }
 
 function check_password_match(element1, element2, element_to_set) {
-    if (element1.value === "" && element1.classList.contains("optional") &&
-            element2.value === "" && element2.classList.contains("optional")) {
-        password_match_ok = true;
+    if (!element1.value && element1.hasAttribute('required') &&
+            !element2.value && element2.hasAttribute('required')) {
+        element_to_set.innerHTML = "";
+        password_match_ok = false;
+    } else if (!element1.value.trim() && !element2.value.trim()) {
+        element_to_set.innerHTML = "";
     } else if (element1.value !== element2.value) {
         element_to_set.innerHTML = "Passwords do not match";
         element_to_set.className = "credentials-check error";
         password_match_ok = false;
-    } else if (element1.value.trim() === "" || element2.value.trim() === "") {
-        element_to_set.innerHTML = "";
-        password_match_ok = false;
-    } else if (element1.value === element2.value && element1.value.trim() !== "" && element2.value.trim() !== "") {
+    } else if (element1.value === element2.value) {
         element_to_set.innerHTML = "Passwords match";
         element_to_set.className = "credentials-check ok";
         password_match_ok = true;
