@@ -95,6 +95,14 @@ button:active {
     color: white;
 }
 
+button.disabled, button.disabled:hover, button.disabled:active {
+    cursor: pointer;
+    pointer-events: none;
+    border: #808080 2px solid;
+    background: #9b9b9b;
+    color: dimgray;
+}
+
 .button p {
     color: white;
 }
@@ -188,6 +196,7 @@ main {
 #post-save {
     cursor: pointer;
     user-select: none;
+    color: white;
 }
 
 #post-save:hover {

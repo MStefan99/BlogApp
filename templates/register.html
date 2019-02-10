@@ -1,31 +1,31 @@
 {% extends 'layout.html' %}
     {% block login %}
         <div class=login>
-            <form action="/register_processor/" class="popup-form" method="post">
+            <form action="/register_processor/" id="form" class="popup-form" method="post">
                 <div class="form-section">
                     <label class=form-title>Sign up</label>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Email</label>
-                    <input type="text" name="email" id="email" class="input-field" autocomplete="email" placeholder="Enter your email"><br>
+                    <input type="text" name="email" id="email" class="input-field" autocomplete="email" placeholder="Enter your email" required><br>
                     <p id="email-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Username</label>
-                    <input type="text" name="username" id="username" class="input-field" autocomplete="username" placeholder="Enter your username"><br>
+                    <input type="text" name="username" id="username" class="input-field" autocomplete="username" placeholder="Enter your username" required><br>
                     <p id="username-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
                     <label class="form-section-title">Password</label>
-                    <input type="password" name="new-password" id="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your password"><br>
+                    <input type="password" name="new-password" id="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your password" required><br>
                     <label>Repeat password</label>
-                    <input type="password" name="repeat-new-password" id="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your password"><br>
+                    <input type="password" name="repeat-new-password" id="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your password" required><br>
                     <p id="repeat-new-password-check" class="credentials-check"></p>
                 </div>
                 <div class="form-section">
-                    <button type="submit">Submit</button><br>
+                    <button id="submit-button">Submit</button><br>
                 </div>
             </form>
         </div>
-        <script src="{{ url_for('static', filename='javascript/credentials_check.js') }}"></script>
+        <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
     {% endblock %}

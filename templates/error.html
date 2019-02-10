@@ -34,6 +34,10 @@
                     <p>
                         You need to <a href="/">sign in</a> to view this page.
                     </p>
+                {% elif code == 'spaces_not_allowed' %}
+                    <p>
+                        Using spaces is not allowed in username or email.
+                    </p>
                 {% endif %}
             </div>
         </div>

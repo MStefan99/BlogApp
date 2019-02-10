@@ -64,8 +64,8 @@ def login_processor():
 
 @app.route('/register_processor/', methods=['POST'])
 def register_processor():
-    username = request.form.get('username').strip()
-    email = request.form.get('email').strip()
+    username = request.form.get('username')
+    email = request.form.get('email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
     cursor = DATABASE.cursor()
@@ -84,6 +84,8 @@ def register_processor():
         return render_template('error.html', code='email_exists')
     elif new_password != repeat_new_password:
         return render_template('error.html', code='passwords_do_not_match')
+    elif ' ' in username or ' ' in email:
+        return render_template('error.html', code='spaces_not_allowed')
 
     else:
         cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
@@ -126,9 +128,9 @@ def settings():
 
 @app.route('/settings_processor/', methods=['POST'])
 def settings_processor():
-    username = request.form.get('username').strip()
-    email = request.form.get('email').strip()
-    repeat_email = request.form.get('repeat-email').strip()
+    username = request.form.get('username')
+    email = request.form.get('email')
+    repeat_email = request.form.get('repeat-email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
     cursor = DATABASE.cursor()
@@ -157,6 +159,8 @@ def settings_processor():
         return render_template('error.html', code='username_exists')
     elif email_exists:
         return render_template('error.html', code='email_exists')
+    elif (username and ' ' in username) or (email and ' ' in email):
+        return render_template('error.html', code='spaces_not_allowed')
 
     if username:
         cursor.execute('UPDATE Users SET Username = %s WHERE ID = %s', (username, user_id))
@@ -310,7 +314,7 @@ def check_email():
 
     if email.lower() in [user[3].lower() for user in users]:
         return 'error;Email already exists'
-    return ''
+    return 'ok;'
 
 
 if __name__ == '__main__':
