@@ -29,7 +29,11 @@
                     <p>{{ post[9] }}</p>
                 </div>
                 <div id="post-tags">
-                    <p>{{ post[10] }}</p> <!-- TODO: make tags clickable and searchable -->
+                    {% for tag in tags %}
+                        <div id="tag">
+                            <a href="{{ '/search/&q=' + tag[1:] }}">{{ tag }}</a> <!-- TODO: make tags clickable and searchable -->
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         <script src="{{url_for('static', filename='javascript/favourites.js')}}"></script>
