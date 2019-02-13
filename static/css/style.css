@@ -111,7 +111,7 @@ button.disabled, button.disabled:hover, button.disabled:active {
 }
 
 .input-field {
-    background: var(--background-color);
+    background: var(--main-color);
     border: lightgrey 1px solid;
     margin: 5px 0;
 }
@@ -119,6 +119,18 @@ button.disabled, button.disabled:hover, button.disabled:active {
 label {
     color: var(--text-color);
     padding: 1vh 0;
+}
+
+.credentials-check {
+    margin: 0;
+}
+
+.credentials-check.error {
+    color: #f22746;
+}
+
+.credentials-check.ok {
+    color: #2bf27f;
 }
 
 header {
@@ -173,6 +185,31 @@ main {
     color: var(--text-color);
 }
 
+#posts-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+
+.posts {
+    margin: 2vh 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.posts-title p {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.posts-tagline p {
+    font-size: 1.5rem;
+    font-style: italic;
+    text-decoration: var(--text-secondary) dashed underline;
+    font-weight: 700;
+}
+
 .post {
     margin: 0;
 }
@@ -197,20 +234,29 @@ main {
     align-items: flex-start;
 }
 
+#post-info, .posts-info {
+    padding: 3vh 3vw;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+
 #post-title, #post-tagline, #post-author, #post-date {
     color: var(--text-secondary);
 }
 
-#post-title p, #post-tagline p,  #post-author p, #post-date p{
+#post-title p, #post-tagline p,  #post-author p, #post-date p, .posts-title p, .posts-tagline p {
     margin: 0;
 }
 
-#post-title p{
+#post-title p {
     font-size: 4rem;
     font-weight: 700;
 }
 
-#post-tagline p{
+#post-tagline p {
     font-size: 2rem;
     font-style: italic;
     text-decoration: var(--text-secondary) dashed underline;
@@ -233,18 +279,6 @@ main {
 
 #tag {
     display: inline-block;
-}
-
-.credentials-check {
-    margin: 0;
-}
-
-.credentials-check.error {
-    color: #f22746;
-}
-
-.credentials-check.ok {
-    color: #2bf27f;
 }
 
 #dev {

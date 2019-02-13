@@ -11,7 +11,7 @@ DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blo
 DATABASE.autocommit = True
 
 
-@app.route('/')
+@app.route('/select/')
 def hello_world():
     if request.cookies.get('MSTID'):
         cursor = DATABASE.cursor()
@@ -204,6 +204,7 @@ def delete_confirm():
     return redirect('/', code=302)
 
 
+@app.route('/')
 @app.route('/posts/')
 def posts():
     cursor = DATABASE.cursor()
