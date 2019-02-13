@@ -194,7 +194,7 @@ main {
 .posts {
     margin: 2vh 0;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: space-between;
 }
 
@@ -218,13 +218,13 @@ main {
     display: flex;
     flex-flow: row wrap-reverse;
     justify-content: space-around;
-    height: 30vh;
     width: inherit;
     margin: 2vh -2vw;
+    overflow-x: hidden;
 }
 
 #post-splash-image {
-    height: inherit;
+    height: 30vh;
 }
 
 #post-info {
@@ -301,4 +301,5 @@ main {
     clear: both;
     text-decoration: underline;
     font-weight: 600;
+    opacity: .7;
 }
