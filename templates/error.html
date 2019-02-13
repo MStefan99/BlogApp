@@ -2,43 +2,27 @@
     {% block login %}
         <div class=login>
             <div class="login-message">
-                {% if code == 'username_exists' %}
-                    <p>
-                        Username already exists.
-                    </p>
-                {% elif code == 'email_exists' %}
-                    <p>
-                        Email already exists.
-                    </p>
-                {% elif code == 'form_not_filled' %}
-                    <p>
-                        Please fill in all the fields.
-                    </p>
-                {% elif code == 'wrong_login' %}
-                    <p>
-                        Username or email does not exist.
-                    </p>
-                {% elif code == 'wrong_password' %}
-                    <p>
-                        Wrong password.
-                    </p>
-                {% elif code == 'passwords_do_not_match' %}
-                    <p>
-                        Passwords do not match.
-                    </p>
-                {% elif code == 'emails_do_not_match' %}
-                    <p>
-                        Emails do not match.
-                    </p>
-                {% elif code == 'logged_out' %}
-                    <p>
-                        You need to <a href="/">sign in</a> to view this page.
-                    </p>
-                {% elif code == 'spaces_not_allowed' %}
-                    <p>
-                        Using spaces is not allowed in username or email.
-                    </p>
-                {% endif %}
+                <p>
+                    {% if code == 'username_exists' %}
+                            Username already exists.
+                    {% elif code == 'email_exists' %}
+                            Email already exists.
+                    {% elif code == 'form_not_filled' %}
+                            Please fill in all the fields.
+                    {% elif code == 'wrong_login' %}
+                            Username or email does not exist.
+                    {% elif code == 'wrong_password' %}
+                            Wrong password.
+                    {% elif code == 'passwords_do_not_match' %}
+                            Passwords do not match.
+                    {% elif code == 'emails_do_not_match' %}
+                            Emails do not match.
+                    {% elif code == 'logged_out' %}
+                            You need to <a href="/select/">sign in</a> to view this page.
+                    {% elif code == 'spaces_not_allowed' %}
+                            Using spaces is not allowed in username or email.
+                    {% endif %}
+                </p>
             </div>
         </div>
     {% endblock %}

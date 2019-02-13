@@ -1,33 +1,22 @@
 {% extends 'layout.html' %}
     {% block login %}
         <div class=login>
-            {% if code == 'login_success' %}
-                <div class="login-message">
-                    Login successful!
-                    <a class="login-link" href="/account/">
-                        <p>
-                            Go to your account
-                        </p>
-                    </a>
-                </div>
-            {% elif code == 'register_success' %}
-                <div class="login-message">
-                    Registration successful!
-                    <a class="login-link" href="/account/">
-                        <p>
-                            Go to your account
-                        </p>
-                    </a>
-                </div>
-            {% elif code == 'edit_success' %}
-                <div class="login-message">
-                    Changed your data successfully!
-                    <a class="login-link" href="/account/">
-                        <p>
-                            Go back to your account
-                        </p>
-                    </a>
-                </div>
-            {% endif %}
+            <div class="login-message">
+                <p>
+                    {% if code == 'login_success' %}
+                            Login successful!
+                    {% elif code == 'register_success' %}
+                            Registration successful!
+                    {% elif code == 'edit_success' %}
+                            Changed your data successfully!
+
+                    {% endif %}
+                </p>
+                <a class="login-link" href="/account/">
+                    <p>
+                        Go back to your account
+                    </p>
+                </a>
+            </div>
         </div>
     {% endblock %}
