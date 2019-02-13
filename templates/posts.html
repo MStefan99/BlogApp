@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
     {% block main %}
+        <div id="page-title">
+            <p>
+                Posts
+            </p>
+        </div>
         <div id="posts-container">
             {% for post in posts %}
                 <a id="{{ 'post' + post[0]|string }}" href="{{ '/post/' + post[6] }}">

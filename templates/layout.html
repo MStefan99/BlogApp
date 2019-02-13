@@ -27,9 +27,8 @@
     </head>
     <body>
         <header>
-            <div id="logo-image">
-            </div>
-            <ul class="nav-block-right">
+            <a id="logo-image" class="nav-button" href="/posts/">galera.dev</a>
+            <ul class="nav-block">
             {% if request.cookies.get('MSTID') %}
                 <li class="nav-element">
                     <a id="logout" class="nav-button" href="/logout/">Sign out</a>
@@ -52,11 +51,6 @@
             {% if request.path != '/favourites/' %}
                 <li class="nav-element">
                     <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
-                </li>
-            {% endif %}
-            {% if request.path != '/posts/' %}
-                <li class="nav-element">
-                    <a id="posts" class="nav-button" href="/posts/">Posts</a>
                 </li>
             {% endif %}
             </ul>
