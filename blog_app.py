@@ -261,9 +261,9 @@ def favourites():
     return render_template('favourites.html', posts=blog_posts)
 
 
-@app.route('/add_post/')
+@app.route('/add_post/', methods=["POST"])
 def add_post():
-    post_id = request.args.get('post')
+    post_id = request.form.get('post')
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
@@ -276,9 +276,9 @@ def add_post():
     return "OK"
 
 
-@app.route('/del_post/')
+@app.route('/del_post/', methods=["POST"])
 def del_post():
-    post_id = request.args.get('post')
+    post_id = request.form.get('post')
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
@@ -291,9 +291,9 @@ def del_post():
     return 'OK'
 
 
-@app.route('/check_username/')
+@app.route('/check_username/', methods=["POST"])
 def check_username():
-    username = request.args.get('username').strip()
+    username = request.form.get('username').strip()
     if not username:
         return ''
     cursor = DATABASE.cursor()
@@ -306,9 +306,9 @@ def check_username():
     return 'ok;Username is free'
 
 
-@app.route('/check_email/')
+@app.route('/check_email/', methods=["POST"])
 def check_email():
-    email = request.args.get('email').strip()
+    email = request.form.get('email').strip()
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * from Users')
     users = cursor.fetchall()
@@ -317,6 +317,17 @@ def check_email():
     if email.lower() in [user[3].lower() for user in users]:
         return 'error;Email already exists'
     return 'ok;'
+
+
+@app.route('/check_email/', methods=["GET"])
+@app.route('/check_username/', methods=["GET"])
+@app.route('/add_post/', methods=["GET"])
+@app.route('/del-post/', methods=["GET"])
+@app.route('/register_processor/', methods=["GET"])
+@app.route('/login_processor/', methods=["GET"])
+@app.route('/settings_processor/', methods=["GET"])
+def wrong_route():
+    return render_template('error.html', code='wrong_route')
 
 
 if __name__ == '__main__':

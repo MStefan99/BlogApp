@@ -4,23 +4,26 @@
             <div class="login-message">
                 <p>
                     {% if code == 'username_exists' %}
-                            Username already exists.
+                        Username already exists.
                     {% elif code == 'email_exists' %}
-                            Email already exists.
+                        Email already exists.
                     {% elif code == 'form_not_filled' %}
-                            Please fill in all the fields.
+                        Please fill in all the fields.
                     {% elif code == 'wrong_login' %}
-                            Username or email does not exist.
+                        Username or email does not exist.
                     {% elif code == 'wrong_password' %}
-                            Wrong password.
+                        Wrong password.
                     {% elif code == 'passwords_do_not_match' %}
-                            Passwords do not match.
+                        Passwords do not match.
                     {% elif code == 'emails_do_not_match' %}
-                            Emails do not match.
+                        Emails do not match.
                     {% elif code == 'logged_out' %}
-                            You need to <a href="/select/">sign in</a> to view this page.
+                        You need to <a href="/select/">sign in</a> to view this page.
                     {% elif code == 'spaces_not_allowed' %}
-                            Using spaces is not allowed in username or email.
+                        Using spaces is not allowed in username or email.
+                    {% elif code == 'wrong_route' %}
+                        Oops! This page doesn't do anything by itself, but you can always visit our
+                        <a href="/">homepage</a>!
                     {% endif %}
                 </p>
             </div>

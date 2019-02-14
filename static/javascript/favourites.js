@@ -7,8 +7,9 @@ function add_to_favourites(post_id) {
             "Remove  from favourites";
        }
     };
-    xhttp.open("GET", "/add_post/?post=" + post_id, true);
-    xhttp.send();
+    xhttp.open("POST", "/add_post/", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send("post=" + post_id);
     button.onclick = function() { remove_from_favourites(post_id) };
 }
 
@@ -21,7 +22,8 @@ function remove_from_favourites(post_id) {
             "Save to favourites";
        }
     };
-    xhttp.open("GET", "/del_post/?post=" + post_id, true);
-    xhttp.send();
+    xhttp.open("POST", "/del_post/", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send("post=" + post_id);
     button.onclick = function() { add_to_favourites(post_id) };
 }
