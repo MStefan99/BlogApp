@@ -234,7 +234,7 @@ def post(post_link):
                            (user_id, blog_post[0]))
             is_favourite = bool(cursor.fetchall())
             cursor.close()
-            return render_template('post.html', theme_color=blog_post[5], post=blog_post, is_favourite=is_favourite,
+            return render_template('post.html', post=blog_post, is_favourite=is_favourite,
                                    tags=blog_post[10].split(","))
 
 

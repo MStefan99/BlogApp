@@ -15,10 +15,10 @@
         <!-- WARNING: Favicon missing! -->
         <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
         <meta name="description" content=""> <!-- TODO: fill in the description -->
-    {% if request.path == '/post/' %}
-        <meta name="theme-color" content={{ theme_color if theme_color != null else "#3B3940"}}>
+    {% if '/post/' in request.path %}
+        <meta name="theme-color" content={{ post[5] if post[5] != null else "#39d3e3"}}>
     {% else %}
-        <meta name="theme-color" content="#3B3940">
+        <meta name="theme-color" content="#39d3e3">
     {% endif %}
         <meta name="author" content="Annushka project">
         <meta charset="utf-8">
