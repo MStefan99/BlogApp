@@ -106,6 +106,13 @@ button.disabled, button.disabled:hover, button.disabled:active {
     color: dimgray;
 }
 
+.button {
+    margin: 2vh .8vw;
+    padding: .5vh .5vw;
+    border-radius: 1rem;
+    text-decoration: none;
+}
+
 .button p {
     color: var(--text-secondary);
 }
