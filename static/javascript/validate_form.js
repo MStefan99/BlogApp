@@ -113,8 +113,9 @@ function check_username(element, element_to_set, async = true) {
                 validate_form();
             }
         };
-        xhttp.open("GET", "/check_username/?username=" + element.value, async);
-        xhttp.send();
+        xhttp.open("POST", "/check_username/", async);
+        xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhttp.send("username=" + element.value);
     }
 }
 
@@ -135,8 +136,9 @@ function check_email(element, element_to_set, async = true) {
                 validate_form();
             }
         };
-        xhttp.open("GET", "/check_email/?email=" + element.value, async);
-        xhttp.send();
+        xhttp.open("POST", "/check_email/", async);
+        xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhttp.send("email=" + element.value);
     }
 }
 
