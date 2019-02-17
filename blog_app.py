@@ -94,7 +94,7 @@ def account():
     user = get_user()
     
     if user:
-        return render_template('account.html', username=user.username)
+        return render_template('account.html', user=user)
     return render_template('error.html', code='logged_out')
 
 
@@ -198,6 +198,30 @@ def favourites():
     return render_template('favourites.html', posts=favourites)
 
 
+@app.route('/verify/')
+def verify():
+    key = request.args.get('key')
+    if verify_email(key):
+        return render_template('success.html', code='verification_success')
+    else:
+        return render_template('error.html', code='verification_failed')
+
+
+# Error routes
+
+@app.route('/check_email/', methods=["GET"])
+@app.route('/check_username/', methods=["GET"])
+@app.route('/add_post/', methods=["GET"])
+@app.route('/del-post/', methods=["GET"])
+@app.route('/register_processor/', methods=["GET"])
+@app.route('/login_processor/', methods=["GET"])
+@app.route('/settings_processor/', methods=["GET"])
+def wrong_route():
+    return render_template('error.html', code='wrong_route')
+
+
+# Internal routes
+
 @app.route('/add_post/', methods=["POST"])
 def add_post():
     user = get_user()
@@ -237,17 +261,6 @@ def e_exists():
     if check_email(email):
         return 'error;Email already exists'
     return 'ok;'
-
-
-@app.route('/check_email/', methods=["GET"])
-@app.route('/check_username/', methods=["GET"])
-@app.route('/add_post/', methods=["GET"])
-@app.route('/del-post/', methods=["GET"])
-@app.route('/register_processor/', methods=["GET"])
-@app.route('/login_processor/', methods=["GET"])
-@app.route('/settings_processor/', methods=["GET"])
-def wrong_route():
-    return render_template('error.html', code='wrong_route')
 
 
 if __name__ == '__main__':

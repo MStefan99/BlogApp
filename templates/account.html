@@ -5,5 +5,10 @@
                 Your account
             </p>
         </div>
-        {{ username }}, welcome to your account!<br>
+        {{ user.username }}, welcome to your account!<br>
+        {% if not user.verified %}
+            <p style="color: indianred">
+                Your email address ({{ user.email }}) is not verified yet!
+            </p>
+        {% endif %}
     {% endblock %}
