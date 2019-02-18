@@ -2,10 +2,10 @@ from email_template import get_text
 import email.message
 import smtplib
 
-SMTP_ADDRESS = 'in-v3.mailjet.com'
+SMTP_ADDRESS = 'email-smtp.us-west-2.amazonaws.com'
 SMTP_PORT = 587
-SMTP_USERNAME = 'c6878f9f1439d09c4966715dc49577f1'
-SMTP_PASSWORD = '3b02bb383693698006e94ed6d1b287f1'
+SMTP_USERNAME = 'AKIAILKJYPL2KJUEH42Q'
+SMTP_PASSWORD = 'BKodb/aRE+tSJXolb7DVRl4SU7CHqTP0aVeodr6pLDe0'
 
 
 def send_mail(address, username, link, template):

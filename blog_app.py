@@ -74,7 +74,7 @@ def register_processor():
         return render_template('error.html', code='spaces_not_allowed')
 
     else:
-        cookie_id = generate_cookie_id()
+        cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
         resp = make_response(render_template('success.html', code='register_success'))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60*60*24*30)
@@ -142,7 +142,7 @@ def settings_processor():
         update_user(user, email=email)
 
     if new_password:
-        cookie_id = generate_cookie_id()
+        cookie_id = generate_hash()
         update_user(user, new_password=new_password, cookie_id=cookie_id)
         resp = make_response(render_template('success.html', code='edit_success'))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60*60*24*30)

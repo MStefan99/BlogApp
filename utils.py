@@ -13,15 +13,14 @@ DATABASE.autocommit = True
 COOKIE_NAME = 'MSTID'
 
 
-def generate_cookie_id():
+def generate_hash():
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
                    for _ in range(255))
 
 
 def add_new_user(username, email, new_password, cookie_id):
     cursor = DATABASE.cursor()
-    link = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
-                   for _ in range(255))
+    link = generate_hash()
 
     password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
     cursor.execute('INSERT INTO users (username, password, cookieid, email, verification_link) '
@@ -34,8 +33,13 @@ def update_user(user, **kwargs):
     cursor = DATABASE.cursor()
     if 'username' in kwargs:
         cursor.execute('UPDATE users SET username = %s WHERE id = %s', (kwargs['username'], user.id))
+        user.username = kwargs['username']
+
     if 'email' in kwargs:
-        cursor.execute('UPDATE users SET email = %s WHERE id = %s', (kwargs['email'], user.id))
+        link = generate_hash()
+        cursor.execute('UPDATE users SET email = %s, verification_link = %s WHERE id = %s', (kwargs['email'], link, user.id))
+        send_mail(kwargs['email'], user.username, link, 'email_changed')
+
     if 'new_password' and 'cookie_id' in kwargs:
         password_hash = pbkdf2_sha512.encrypt(kwargs['new_password'], rounds=200000, salt_size=64)
         cursor.execute('UPDATE users SET password = %s, cookieid = %s WHERE id = %s',
