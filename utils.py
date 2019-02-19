@@ -37,7 +37,8 @@ def update_user(user, **kwargs):
 
     if 'email' in kwargs:
         link = generate_hash()
-        cursor.execute('UPDATE users SET email = %s, verification_link = %s WHERE id = %s', (kwargs['email'], link, user.id))
+        cursor.execute('UPDATE users SET email = %s, verification_link = %s, verified = FALSE '
+                       'WHERE id = %s', (kwargs['email'], link, user.id))
         send_mail(kwargs['email'], user.username, link, 'email_changed')
 
     if 'new_password' and 'cookie_id' in kwargs:
