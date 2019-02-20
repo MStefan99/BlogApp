@@ -34,6 +34,13 @@ def find_user_by_login(login):
     return user
 
 
+def find_user_by_recover_key(key):
+    cursor = DATABASE.cursor()
+    cursor.execute('SELECT * FROM users WHERE recovery_link = %s', (key,))
+    user = cursor.fetchone()
+    return user
+
+
 def check_username(username):
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * FROM users WHERE lower(username) = lower(%s)', (username,))

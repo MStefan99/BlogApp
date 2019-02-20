@@ -107,6 +107,43 @@ def settings():
     return render_template('error.html', code='logged_out')
 
 
+@app.route('/recover_create/')
+def recover_create():
+    return render_template('recover-create.html')
+
+
+@app.route('/recover/')
+def recover():
+    key = request.args.get('key')
+    return render_template('recover.html', key=key)
+
+
+@app.route('/recover_create_processor/', methods=["POST"])
+def recover_create_processor():
+    login = request.form.get('login')
+    user = find_user_by_login(login)
+    recover_create(user)
+    return render_template('success.html')
+
+
+@app.route('/recover_processor/', methods=["POST"])
+def recover_processor():
+    key = request.form.get('key')
+    user = find_user_by_recover_key(key)
+    new_password = request.form.get('new-password')
+    repeat_new_password = request.form.get('repeat-new-password')
+
+    new_password_check = new_password == repeat_new_password
+    if not new_password_check:
+        return render_template('error.html', code='passwords_do_not_match')
+    else:
+        cookie_id = generate_hash()
+        update_user(user, new_password=new_password, cookie_id=cookie_id)
+        resp = make_response(render_template('success.html', code='edit_success'))
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
+        return resp
+
+
 @app.route('/settings_processor/', methods=['POST'])
 def settings_processor():
     username = request.form.get('username')

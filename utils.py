@@ -56,6 +56,13 @@ def password_correct(user, password):
     return pbkdf2_sha512.verify(password, user.password)
 
 
+def recover_create(user):
+    cursor = DATABASE.cursor()
+    link = generate_hash()
+    cursor.execute('UPDATE users SET recovery_link = %s WHERE id = %s', (link, user.id))
+    send_mail(user.email, user.username, link, 'password-recovery')
+
+
 def check_cookie():
     cookie_id = request.cookies.get('MSTID')
     if cookie_id:
