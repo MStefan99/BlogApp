@@ -50,7 +50,8 @@ def check_username(username):
 
 def check_email(email):
     cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s)', (email,))
+    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s) OR '
+                   'lower(verified_email) = lower(%s)', (email, email))
     user = cursor.fetchone()
     return exists(user)
 

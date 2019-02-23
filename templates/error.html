@@ -10,7 +10,7 @@
                     {% elif code == 'form_not_filled' %}
                         Please fill in all the fields.
                     {% elif code == 'wrong_login' %}
-                        Username or email does not exist.
+                        Username or email not found.
                     {% elif code == 'wrong_password' %}
                         Wrong password.
                     {% elif code == 'passwords_do_not_match' %}
@@ -28,6 +28,8 @@
                         Something went wrong. <br><br>
                         Your email may already be verified, <br>
                         but if not, try again or change the email.
+                    {% elif code == 'user_not_found' %}
+                        User not found.
                     {% endif %}
                 </p>
             </div>

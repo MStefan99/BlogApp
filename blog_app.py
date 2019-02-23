@@ -12,7 +12,7 @@ DATABASE.autocommit = True
 @app.route('/select/')
 def select():
     cookie_id = request.cookies.get(COOKIE_NAME)
-    
+
     if cookie_id:
         user = find_user_by_cookie(cookie_id)
         if user:
@@ -43,7 +43,7 @@ def login_processor():
 
     if user and password_correct(user, current_password):
         resp = make_response(render_template('success.html', code='login_success'))
-        resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60*60*24*30)
+        resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
         return resp
 
     if not user:
@@ -57,7 +57,7 @@ def register_processor():
     username = request.form.get('username')
     email = request.form.get('email')
     new_password = request.form.get('new-password')
-    repeat_new_password = request.form.get('repeat-new-password')    
+    repeat_new_password = request.form.get('repeat-new-password')
     username_exists = check_username(username)
     email_exists = check_email(email)
     form_filled = username and new_password and repeat_new_password and email
@@ -77,7 +77,7 @@ def register_processor():
         cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
         resp = make_response(render_template('success.html', code='register_success'))
-        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60*60*24*30)
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
@@ -85,14 +85,14 @@ def register_processor():
 def logout():
     resp = make_response(redirect('/select/', code=302))
     resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
-    
+
     return resp
 
 
 @app.route('/account/')
 def account():
     user = get_user()
-    
+
     if user:
         return render_template('account.html', user=user)
     return render_template('error.html', code='logged_out')
@@ -101,7 +101,7 @@ def account():
 @app.route('/settings/')
 def settings():
     user = get_user()
-    
+
     if user:
         return render_template('settings.html')
     return render_template('error.html', code='logged_out')
@@ -122,8 +122,11 @@ def recover():
 def recover_create_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
-    recover_create(user)
-    return render_template('success.html')
+    if user:
+        create_recover_link(user)
+        return render_template('success.html', code='recover_create_success')
+    else:
+        return render_template('error.html', code='wrong_login')
 
 
 @app.route('/recover_processor/', methods=["POST"])
@@ -134,14 +137,19 @@ def recover_processor():
     repeat_new_password = request.form.get('repeat-new-password')
 
     new_password_check = new_password == repeat_new_password
-    if not new_password_check:
-        return render_template('error.html', code='passwords_do_not_match')
+    if user:
+        if not new_password:
+            return render_template('error.html', code='form_not_filled')
+        elif not new_password_check:
+            return render_template('error.html', code='passwords_do_not_match')
+        else:
+            cookie_id = generate_hash()
+            update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
+            resp = make_response(render_template('success.html', code='edit_success'))
+            resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
+            return resp
     else:
-        cookie_id = generate_hash()
-        update_user(user, new_password=new_password, cookie_id=cookie_id)
-        resp = make_response(render_template('success.html', code='edit_success'))
-        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
-        return resp
+        return render_template('error.html', code='user_not_found')
 
 
 @app.route('/settings_processor/', methods=['POST'])
@@ -151,7 +159,7 @@ def settings_processor():
     repeat_email = request.form.get('repeat-email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
-    
+
     user = get_user()
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
@@ -182,7 +190,7 @@ def settings_processor():
         cookie_id = generate_hash()
         update_user(user, new_password=new_password, cookie_id=cookie_id)
         resp = make_response(render_template('success.html', code='edit_success'))
-        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60*60*24*30)
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
     return render_template('success.html', code='edit_success')
@@ -200,7 +208,7 @@ def delete_confirm():
     if not user:
         return render_template('error.html', code='logged_out')
     delete_user(user)
-    
+
     return redirect('/logout/', code=302)
 
 
@@ -208,7 +216,7 @@ def delete_confirm():
 @app.route('/posts/')
 def posts():
     posts = get_posts()
-    
+
     return render_template('posts.html', posts=posts)
 
 
@@ -217,7 +225,7 @@ def post(post_link):
     user = get_user()
     post = find_post_by_link(post_link)
     is_favourite = check_favourite(user, post)
-    
+
     return render_template('post.html', post=post, is_favourite=is_favourite,
                            tags=post.tags.split(","))
 
@@ -226,7 +234,7 @@ def post(post_link):
 def favourites():
     user = get_user()
     favourites = get_favourites(user)
-    
+
     if not user:
         return render_template('error.html', code='logged_out')
     if not favourites:
@@ -264,7 +272,7 @@ def add_post():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
-    
+
     save_post(user, post)
     return "OK"
 
@@ -274,7 +282,7 @@ def del_post():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
-    
+
     remove_post(user, post)
     return "OK"
 
@@ -282,7 +290,7 @@ def del_post():
 @app.route('/check_username/', methods=["POST"])
 def u_exists():
     username = request.form.get('username').strip()
-    
+
     if not username:
         return ''
 
