@@ -34,6 +34,13 @@ def find_user_by_login(login):
     return user
 
 
+def find_user_by_recover_key(key):
+    cursor = DATABASE.cursor()
+    cursor.execute('SELECT * FROM users WHERE recovery_link = %s', (key,))
+    user = cursor.fetchone()
+    return user
+
+
 def check_username(username):
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * FROM users WHERE lower(username) = lower(%s)', (username,))
@@ -43,7 +50,8 @@ def check_username(username):
 
 def check_email(email):
     cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s)', (email,))
+    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s) OR '
+                   'lower(verified_email) = lower(%s)', (email, email))
     user = cursor.fetchone()
     return exists(user)
 
