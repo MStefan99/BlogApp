@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+    {% block login %}
+        <form action="/recover_create_processor/" class="popup-form" method="post">
+            <div class="form-section">
+                <label class="form-title">Forgot your password? Don't worry, this happens to us all!</label>
+            </div>
+            <div class="form-section">
+                <label class="form-section-title">Just enter your username or email in the field below and we will send you a recovery link.</label>
+                <input type="text" name="login" id="login" class="input-field" autocomplete="email" placeholder="Enter your username or email" required><br>
+            </div>
+            <div class="form-section">
+                <button id="submit-button">Submit</button><br>
+            </div>
+        </form>
+    {% endblock %}
