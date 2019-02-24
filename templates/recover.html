@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
     {% block login %}
-        <form action="/recover_processor/" class="popup-form" method="post">
+        <form action="/recover_processor/" class="popup-form validated" method="post">
             <div class="form-section">
                 <label class="form-title">Create your new password</label>
             </div>
@@ -16,4 +16,5 @@
                 <button id="submit-button">Submit</button><br>
             </div>
         </form>
+        <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
     {% endblock %}
