@@ -1,29 +1,47 @@
 {% extends 'layout.html' %}
-    {% block main %}
-        <div id="page-title">
-            <p>
-                Posts
-            </p>
-        </div>
-        <div id="posts-container">
-            {% for post in posts %}
-                <a class="posts" id="{{ 'post' + post[0]|string }}" href="{{ '/post/' + post[6] }}" style="background-color: {{ post[5] }}">
-                    <div class="posts-info">
-                         <div class="posts-title">
-                            <p>{{ post[1] }}</p>
-                        </div>
-                        <div class="posts-tagline">
-                            <p>{{ post[2] }}</p>
-                        </div>
-                        <div class="posts-date">
-                            <p>{{ post[9] }}</p>
-                        </div>
-                        <div class="posts-author">
-                            <p>{{ post[7] }}</p>
-                        </div>
+{% block main %}
+    <div id="page-title">
+        <p>
+            Posts
+        </p>
+    </div>
+    <div id="posts-container">
+        {% for post in posts %}
+            <a class="posts" id="{{ 'post' + post.id|string }}" href="{{ '/post/' + post.link }}"
+               style="background-color: {{ post[5] }}">
+                <div class="posts-info">
+                    <div class="posts-title">
+                        <p>{{ post.title }}</p>
                     </div>
-                    <img src="{{ post[3] }}" class="post-image" alt="Post icon">
-                </a>
+                    <div class="posts-tagline">
+                        <p>{{ post.tagline }}</p>
+                    </div>
+                    <div class="posts-date">
+                        <p>{{ post.date }}</p>
+                    </div>
+                    <div class="posts-author">
+                        <p>{{ post.author }}</p>
+                    </div>
+                </div>
+                <img src="{{ post.image }}" class="post-image" alt="Post icon">
+            </a>
+        {% endfor %}
+    </div>
+    {% if pages_number > 0 %}
+        <div id="page-selector">
+            {% if current_page > 0 %}
+                <a href="/posts/?page={{ current_page - 1 }}">Previous page</a>
+            {% endif %}
+            {% for page in range(0, pages_number) %}
+                {% if current_page != page %}
+                    <a href="/posts/?page={{ page }}">{{ page + 1 }}</a>
+                {% else %}
+                    <p>{{ page + 1 }}</p>
+                {% endif %}
             {% endfor %}
+            {% if current_page < pages_number - 1 %}
+                <a href="/posts/?page={{ current_page + 1 }}">Next page</a>
+            {% endif %}
         </div>
-    {% endblock %}
+    {% endif %}
+{% endblock %}

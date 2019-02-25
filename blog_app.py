@@ -1,27 +1,24 @@
-from flask import Flask, render_template, request, make_response, redirect
-from passlib.hash import pbkdf2_sha512
-import datetime
-import random
-import string
-import psycopg2
+from flask import Flask, render_template
+from utils import *
+from search import *
 
 app = Flask(__name__)
 
-DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog')
+DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
+                            cursor_factory=psycopg2.extras.NamedTupleCursor)
 DATABASE.autocommit = True
 
 
 @app.route('/select/')
-def hello_world():
-    if request.cookies.get('MSTID'):
-        cursor = DATABASE.cursor()
-        cursor.execute('SELECT * from Users')
-        users = cursor.fetchall()
+def select():
+    cookie_id = request.cookies.get(COOKIE_NAME)
 
-        # Redirecting logged in users
-        for user in users:
-            if request.cookies.get('MSTID') == user[2]:
-                return redirect('/account/', code=302)
+    if cookie_id:
+        user = find_user_by_cookie(cookie_id)
+        if user:
+            return redirect('/account/', code=302)
+        return redirect('/logout/', code=302)
+
     return render_template('select.html')
 
 
@@ -37,26 +34,19 @@ def register():
 
 @app.route('/login_processor/', methods=['POST'])
 def login_processor():
-    username = request.form.get('login').strip()
+    login = request.form.get('login').strip()
     current_password = request.form.get('current-password')
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    user_found = False
+    user = find_user_by_login(login)
 
-    if not username or not current_password:
+    if not login or not current_password:
         return render_template('error.html', code='form_not_filled')
 
-    for user in users:
-        user_found = username.lower() == user[0].lower() or username == user[3]
-        if user_found and pbkdf2_sha512.verify(current_password, user[1]):
-            resp = make_response(render_template('success.html', code='login_success'))
-            resp.set_cookie('MSTID', user[2], max_age=60*60*24*30)
-            return resp
-        if user_found:
-            break
+    if user and password_correct(user, current_password):
+        resp = make_response(render_template('success.html', code='login_success'))
+        resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
+        return resp
 
-    if not user_found:
+    if not user:
         return render_template('error.html', code='wrong_login')
 
     return render_template('error.html', code='wrong_password')
@@ -68,12 +58,8 @@ def register_processor():
     email = request.form.get('email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-
-    username_exists = username in [user[0] for user in users]
-    email_exists = email in [user[3] for user in users]
+    username_exists = check_username(username)
+    email_exists = check_email(email)
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
@@ -88,42 +74,82 @@ def register_processor():
         return render_template('error.html', code='spaces_not_allowed')
 
     else:
-        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
-        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
-        cursor.execute('INSERT INTO Users (Username, Password, CookieID, Email) VALUES(%s, %s, %s, %s)',
-                       (username, password_hash, cookie_id, email))
+        cookie_id = generate_hash()
+        add_new_user(username, email, new_password, cookie_id)
         resp = make_response(render_template('success.html', code='register_success'))
-        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
 @app.route('/logout/')
 def logout():
-    resp = make_response(redirect('/', code=302))
-    resp.set_cookie('MSTID', 'Bye!', expires=0)
+    resp = make_response(redirect('/select/', code=302))
+    resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
+
     return resp
 
 
 @app.route('/account/')
 def account():
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            return render_template('account.html', username=user[0])
+    user = get_user()
+
+    if user:
+        return render_template('account.html', user=user)
     return render_template('error.html', code='logged_out')
 
 
 @app.route('/settings/')
 def settings():
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            return render_template('settings.html')
+    user = get_user()
+
+    if user:
+        return render_template('settings.html')
     return render_template('error.html', code='logged_out')
+
+
+@app.route('/recover_create/')
+def recover_create():
+    return render_template('recover-create.html')
+
+
+@app.route('/recover/')
+def recover():
+    key = request.args.get('key')
+    return render_template('recover.html', key=key)
+
+
+@app.route('/recover_create_processor/', methods=["POST"])
+def recover_create_processor():
+    login = request.form.get('login')
+    user = find_user_by_login(login)
+    if user:
+        create_recover_link(user)
+        return render_template('success.html', code='recover_create_success')
+    else:
+        return render_template('error.html', code='wrong_login')
+
+
+@app.route('/recover_processor/', methods=["POST"])
+def recover_processor():
+    key = request.form.get('key')
+    user = find_user_by_recover_key(key)
+    new_password = request.form.get('new-password')
+    repeat_new_password = request.form.get('repeat-new-password')
+
+    new_password_check = new_password == repeat_new_password
+    if user:
+        if not new_password:
+            return render_template('error.html', code='form_not_filled')
+        elif not new_password_check:
+            return render_template('error.html', code='passwords_do_not_match')
+        else:
+            cookie_id = generate_hash()
+            update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
+            resp = make_response(render_template('success.html', code='edit_success'))
+            resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
+            return resp
+    else:
+        return render_template('error.html', code='user_not_found')
 
 
 @app.route('/settings_processor/', methods=['POST'])
@@ -133,22 +159,14 @@ def settings_processor():
     repeat_email = request.form.get('repeat-email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
 
+    user = get_user()
     new_password_check = new_password == repeat_new_password
     email_check = email == repeat_email
-    username_exists = username in [user[0] for user in users]
-    email_exists = email in [user[3] for user in users]
-    user_id = None
+    username_exists = check_username(username)
+    email_exists = check_email(email)
 
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-
-    # Redirecting user to login page if he logged out
-    if not user_id:
+    if not user:
         return redirect('/logout/', code=302)
 
     if not new_password_check:
@@ -163,18 +181,16 @@ def settings_processor():
         return render_template('error.html', code='spaces_not_allowed')
 
     if username:
-        cursor.execute('UPDATE Users SET Username = %s WHERE ID = %s', (username, user_id))
+        update_user(user, username=username)
 
     if email:
-        cursor.execute('UPDATE Users SET Email = %s WHERE ID = %s', (email, user_id))
+        update_user(user, email=email)
 
     if new_password:
-        password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
-        cookie_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(255))
-        cursor.execute('UPDATE Users SET Password = %s, CookieID = %s WHERE ID = %s',
-                       (password_hash, cookie_id, user_id)) 
+        cookie_id = generate_hash()
+        update_user(user, new_password=new_password, cookie_id=cookie_id)
         resp = make_response(render_template('success.html', code='edit_success'))
-        resp.set_cookie('MSTID', cookie_id, max_age=60*60*24*30)
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
     return render_template('success.html', code='edit_success')
@@ -187,134 +203,140 @@ def delete():
 
 @app.route('/delete_confirm/')
 def delete_confirm():
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    user_id = None
+    user = get_user()
 
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-
-    # Redirecting user to login page if he logged out
-    if not user_id:
+    if not user:
         return render_template('error.html', code='logged_out')
+    delete_user(user)
 
-    cursor.execute('DELETE FROM Users WHERE ID = %s', (user_id,))
-    return redirect('/', code=302)
+    return redirect('/logout/', code=302)
 
 
 @app.route('/')
 @app.route('/posts/')
 def posts():
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM Posts ORDER BY Date DESC')
-    blog_posts = cursor.fetchall()
-    return render_template('posts.html', posts=blog_posts)
+    posts = get_posts()
+    current_page = request.args.get('page')
+
+    if not current_page:
+        current_page = 0
+    else:
+        current_page = int(current_page)
+    pages_number = len(posts) // 10 + 1
+
+    if len(posts) > 10:
+        posts = posts[current_page * 10:current_page * 10 + 10]
+
+    return render_template('posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
 @app.route('/post/<string:post_link>')
 def post(post_link):
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM Posts')
-    blog_posts = cursor.fetchall()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    user_id = None
+    user = get_user()
+    post = find_post_by_link(post_link)
+    is_favourite = check_favourite(user, post)
 
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-
-    for blog_post in blog_posts:
-        if blog_post[6] == post_link:
-            cursor.execute('SELECT * FROM Posts JOIN Favourites '
-                           'ON (Favourites.Post_ID = Posts.ID '
-                           'AND Favourites.User_ID = %s AND Post_ID = %s)',
-                           (user_id, blog_post[0]))
-            is_favourite = bool(cursor.fetchall())
-            cursor.close()
-            return render_template('post.html', post=blog_post, is_favourite=is_favourite,
-                                   tags=blog_post[10].split(","))
+    return render_template('post.html', post=post, is_favourite=is_favourite,
+                           tags=post.tags.split(","))
 
 
 @app.route('/favourites/')
 def favourites():
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    user_id = None
-
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-    cursor.execute('SELECT * FROM Posts JOIN Favourites '
-                   'ON (Favourites.Post_ID = Posts.ID and Favourites.User_ID = %s) '
-                   'ORDER BY Favourites.Date_Added DESC', (user_id,))
-    blog_posts = cursor.fetchall()
-    cursor.close()
-    if not user_id:
+    user = get_user()
+    if not user:
         return render_template('error.html', code='logged_out')
-    if not blog_posts:
+
+    posts = get_favourites(user)
+    if not posts:
         return render_template('favourites.html', code='no_posts')
+    current_page = request.args.get('page')
 
-    return render_template('favourites.html', posts=blog_posts)
+    if not current_page:
+        current_page = 0
+    else:
+        current_page = int(current_page)
+    pages_number = len(posts) // 10 + 1
+
+    if len(posts) > 10:
+        posts = posts[current_page * 10:current_page * 10 + 10]
+    print(pages_number)
+
+    return render_template('favourites.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
-@app.route('/add_post/')
+@app.route('/verify/')
+def verify():
+    key = request.args.get('key')
+    if verify_email(key):
+        return render_template('success.html', code='verification_success')
+    else:
+        return render_template('error.html', code='verification_failed')
+
+
+# Error routes
+
+@app.route('/check_email/', methods=["GET"])
+@app.route('/check_username/', methods=["GET"])
+@app.route('/add_post/', methods=["GET"])
+@app.route('/del-post/', methods=["GET"])
+@app.route('/register_processor/', methods=["GET"])
+@app.route('/login_processor/', methods=["GET"])
+@app.route('/settings_processor/', methods=["GET"])
+def wrong_route():
+    return render_template('error.html', code='wrong_route')
+
+
+# Internal routes
+
+@app.route('/add_post/', methods=["POST"])
 def add_post():
-    post_id = request.args.get('post')
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-            time = datetime.datetime.now()
-            cursor.execute('INSERT INTO Favourites(User_ID, Post_ID, Date_Added) VALUES (%s, %s, %s)',
-                           (user_id, post_id, time.strftime('%Y-%m-%d %H:%M:%S')))
+    user = get_user()
+    post_id = request.form.get('post')
+    post = find_post_by_id(post_id)
+
+    save_post(user, post)
     return "OK"
 
 
-@app.route('/del_post/')
+@app.route('/del_post/', methods=["POST"])
 def del_post():
-    post_id = request.args.get('post')
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    for user in users:
-        if request.cookies.get('MSTID') == user[2]:
-            user_id = user[4]
-            cursor.execute('DELETE FROM Favourites WHERE User_ID = %s AND Post_ID = %s',
-                           (user_id, post_id)) 
-    cursor.close()
-    return 'OK'
+    user = get_user()
+    post_id = request.form.get('post')
+    post = find_post_by_id(post_id)
+
+    remove_post(user, post)
+    return "OK"
 
 
-@app.route('/check_username/')
-def check_username():
-    username = request.args.get('username').strip()
+@app.route('/check_username/', methods=["POST"])
+def u_exists():
+    username = request.form.get('username').strip()
+
     if not username:
         return ''
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    cursor.close()
 
-    if username.lower() in [user[0].lower() for user in users]:
+    if check_username(username):
         return 'error;Username already taken'
     return 'ok;Username is free'
 
 
-@app.route('/check_email/')
-def check_email():
-    email = request.args.get('email').strip()
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * from Users')
-    users = cursor.fetchall()
-    cursor.close()
+@app.route('/check_login/', methods=["POST"])
+def l_exists():
+    login = request.form.get('login').strip()
 
-    if email.lower() in [user[3].lower() for user in users]:
+    if not login:
+        return ''
+
+    if check_login(login):
+        return 'ok;'
+    return 'error;User not found'
+
+
+@app.route('/check_email/', methods=["POST"])
+def e_exists():
+    email = request.form.get('email').strip()
+
+    if check_email(email):
         return 'error;Email already exists'
     return 'ok;'
 
