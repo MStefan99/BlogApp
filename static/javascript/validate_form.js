@@ -8,7 +8,6 @@ class form {
     password_match_ok = true;
     required_ok = true;
 
-
     constructor(element) {
         this.form_element = element;
     }
@@ -261,6 +260,7 @@ class form {
         }
         this.validate_form();
     }
+
 
     check_required(required_msg) {
         this.required_ok = true;

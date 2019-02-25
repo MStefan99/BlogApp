@@ -27,4 +27,21 @@
             </a>
         {% endfor %}
     </div>
+    {% if pages_number > 0 %}
+        <div id="page-selector">
+            {% if current_page > 0 %}
+                <a href="/posts/?page={{ current_page - 1 }}">Previous page</a>
+            {% endif %}
+            {% for page in range(0, pages_number) %}
+                {% if current_page != page %}
+                    <a href="/posts/?page={{ page }}">{{ page + 1 }}</a>
+                {% else %}
+                    <p>{{ page + 1 }}</p>
+                {% endif %}
+            {% endfor %}
+            {% if current_page < pages_number %}
+                <a href="/posts/?page={{ current_page + 1 }}">Next page</a>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
