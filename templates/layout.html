@@ -1,73 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
-        <!-- WARNING: Google analytics disabled for development purposes. Enable when needed!
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
-        <script>
-            window.dataLayer=window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- WARNING: Google analytics disabled for development purposes. Enable when needed!
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
+    <script>
+        window.dataLayer=window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-            gtag('config', 'UA-126259429-1');
-        </script>
-        -->
-        <!-- WARNING: Favicon missing! -->
-        <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
-        <meta name="description" content=""> <!-- TODO: fill in the description -->
+        gtag('config', 'UA-126259429-1');
+    </script>
+    -->
+    <!-- WARNING: Favicon missing! -->
+    <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
+    <meta name="description" content=""> <!-- TODO: fill in the description -->
     {% if '/post/' in request.path %}
-        <meta name="theme-color" content={{ post.theme_color if post.theme_color != null else "#39d3e3"}}>
+        <meta name="theme-color" content={{ post.theme_color if post.theme_color != null else "#39d3e3" }}>
     {% else %}
         <meta name="theme-color" content="#39d3e3">
     {% endif %}
-        <meta name="author" content="Annushka project">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Annushka Project Blog</title>
-    </head>
-    <body>
-        <header>
-            <a id="logo-image" class="nav-button" href="/">galera.dev</a>
-            <ul class="nav-block">
-            {% if request.cookies.get('MSTID') %}
-                <li class="nav-element">
-                    <a id="logout" class="nav-button" href="/logout/">Sign out</a>
-                </li>
-            {% else %}
-                <li class="nav-element">
-                    <a id="logout" class="nav-button" href="/select/">Sign in</a>
-                </li>
-            {% endif %}
-            {% if request.path != '/settings/' %}
-                <li class="nav-element">
-                    <a id="settings" class="nav-button" href="/settings/">Settings</a>
-                </li>
-            {% endif %}
-            {% if request.path != '/account/' %}
-                <li class="nav-element">
-                    <a id="account" class="nav-button" href="/account/">Account</a>
-                </li>
-            {% endif %}
-            {% if request.path != '/favourites/' %}
-                <li class="nav-element">
-                    <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
-                </li>
-            {% endif %}
-            </ul>
-        </header>
-        <main>
-            {% block main %}
-            {% endblock %}
-        </main>
-        {% block login %}
-        {% endblock %}
-        <div id="dev" onclick="{let dev = document.getElementById('dev'); dev.style.display = 'none';}">
-            WEBSITE IS CURRENTLY IN DEVELOPMENT STAGE.
-            ANY DATA CAN BE REMOVED AT ANY TIME, INCLUDING USER ACCOUNTS.
-            DEVELOPERS ARE NOT RESPONSIBLE IF ANY DATA IS LOST. CLICK TO HIDE ON THIS PAGE.</div>
-        <footer>
-            {% block footer %}
-            {% endblock %}
-        </footer>
-    </body>
+    <meta name="author" content="Annushka project">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annushka Project Blog</title>
+</head>
+<body>
+<header>
+    <a id="logo-image" class="nav-button" href="/">galera.dev</a>
+    <ul class="nav-block">
+        {% if request.cookies.get('MSTID') %}
+            <li class="nav-element">
+                <a id="logout" class="nav-button" href="/logout/">Sign out</a>
+            </li>
+        {% else %}
+            <li class="nav-element">
+                <a id="logout" class="nav-button" href="/select/">Sign in</a>
+            </li>
+        {% endif %}
+        {% if request.path != '/settings/' %}
+            <li class="nav-element">
+                <a id="settings" class="nav-button" href="/settings/">Settings</a>
+            </li>
+        {% endif %}
+        {% if request.path != '/account/' %}
+            <li class="nav-element">
+                <a id="account" class="nav-button" href="/account/">Account</a>
+            </li>
+        {% endif %}
+        {% if request.path != '/favourites/' %}
+            <li class="nav-element">
+                <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
+            </li>
+        {% endif %}
+    </ul>
+</header>
+<main>
+    {% block main %}
+    {% endblock %}
+</main>
+{% block login %}
+{% endblock %}
+<div id="dev" onclick="{let dev = document.getElementById('dev'); dev.style.display = 'none';}">
+    WEBSITE IS CURRENTLY IN DEVELOPMENT STAGE.
+    ANY DATA CAN BE REMOVED AT ANY TIME, INCLUDING USER ACCOUNTS.
+    DEVELOPERS ARE NOT RESPONSIBLE IF ANY DATA IS LOST. CLICK TO HIDE ON THIS PAGE.
+</div>
+<footer>
+    {% block footer %}
+    {% endblock %}
+</footer>
+</body>
 </html>

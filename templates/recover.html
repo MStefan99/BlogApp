@@ -1,19 +1,25 @@
 {% extends 'layout.html' %}
-    {% block login %}
-        <form action="/recover_processor/" class="popup-form" method="post">
-            <div class="form-section">
-                <label class="form-title">Create your new password</label>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title">Password</label>
-                <input type="password" name="new-password" id="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your password" required><br>
-                <label>Repeat password</label>
-                <input type="password" name="repeat-new-password" id="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your password" required><br>
-                <p id="repeat-new-password-check" class="credentials-check"></p>
-            </div>
-            <input name="key" style="display: none" value="{{ key }}"><br>
-            <div class="form-section">
-                <button id="submit-button">Submit</button><br>
-            </div>
-        </form>
-    {% endblock %}
+{% block login %}
+    <form action="/recover_processor/" class="popup-form validated" method="post">
+        <div class="form-section">
+            <label class="form-title">Create your new password</label>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title required">Password</label>
+            <input type="password" name="new-password" class="input-field new-password realtime-validate"
+                   autocomplete="new-password" placeholder="Enter your password" required>
+            <label>Repeat password</label>
+            <input type="password" name="repeat-new-password" class="input-field repeat-new-password realtime-validate"
+                   autocomplete="new-password" placeholder="Repeat your password" required>
+            <p class="credentials-check repeat-new-password-check"></p>
+        </div>
+        <input name="key" style="display: none" value="{{ key }}">
+        <div class="form-section">
+            <button type="submit">Submit</button>
+        </div>
+        <div class="form-section">
+            <p class="credentials-check required-check"></p>
+        </div>
+    </form>
+    <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+{% endblock %}

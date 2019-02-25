@@ -1,7 +1,7 @@
 from email_template import get_email_text
 from mailer import *
 
-EMAIL_ENABLED = True
+EMAIL_ENABLED = False
 SMTP_ADDRESS = '192.168.1.8'
 SMTP_PORT = 3598
 

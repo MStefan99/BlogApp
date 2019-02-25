@@ -19,6 +19,14 @@ def find_user_by_name(username):
     return user
 
 
+def find_user_by_email(email):
+    cursor = DATABASE.cursor()
+    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s) OR '
+                   'lower(verified_email) = lower(%s)', (email, email))
+    user = cursor.fetchone()
+    return user
+
+
 def find_user_by_cookie(cookie_id):
     cursor = DATABASE.cursor()
     cursor.execute('SELECT * FROM users WHERE cookieid = %s', (cookie_id,))
@@ -29,7 +37,8 @@ def find_user_by_cookie(cookie_id):
 def find_user_by_login(login):
     login = login.lower()
     cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM users WHERE lower(username) = lower(%s) or lower(email) = lower(%s)', (login, login))
+    cursor.execute('SELECT * FROM users WHERE lower(username) = lower(%s) or '
+                   'lower(email) = lower(%s)', (login, login))
     user = cursor.fetchone()
     return user
 
@@ -42,17 +51,17 @@ def find_user_by_recover_key(key):
 
 
 def check_username(username):
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM users WHERE lower(username) = lower(%s)', (username,))
-    user = cursor.fetchone()
+    user = find_user_by_name(username)
+    return exists(user)
+
+
+def check_login(login):
+    user = find_user_by_login(login)
     return exists(user)
 
 
 def check_email(email):
-    cursor = DATABASE.cursor()
-    cursor.execute('SELECT * FROM users WHERE lower(email) = lower(%s) OR '
-                   'lower(verified_email) = lower(%s)', (email, email))
-    user = cursor.fetchone()
+    user = find_user_by_email(email)
     return exists(user)
 
 

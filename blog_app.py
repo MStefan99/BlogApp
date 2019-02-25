@@ -299,6 +299,18 @@ def u_exists():
     return 'ok;Username is free'
 
 
+@app.route('/check_login/', methods=["POST"])
+def l_exists():
+    login = request.form.get('login').strip()
+
+    if not login:
+        return ''
+
+    if check_login(login):
+        return 'ok;'
+    return 'error;User not found'
+
+
 @app.route('/check_email/', methods=["POST"])
 def e_exists():
     email = request.form.get('email').strip()

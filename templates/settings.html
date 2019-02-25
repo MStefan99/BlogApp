@@ -1,42 +1,47 @@
 {% extends 'layout.html' %}
-    {% block main %}
-        <div id="page-title">
-            <p>
-                Settings
-            </p>
+{% block main %}
+    <div id="page-title">
+        <p>
+            Settings
+        </p>
+    </div>
+    <form action="/settings_processor/" class="form validated" method="post">
+        <div class="form-section">
+            <label class=form-title>Settings</label>
         </div>
-        <form action="/settings_processor/" id="form" class="popup-form" method="post">
-            <div class="form-section">
-                <label class=form-title>Settings</label>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title">Change your email</label>
-                <label>New email</label>
-                <input type="text" name="email" id="email" class="input-field" autocomplete="email" placeholder="Enter your new email">
-                <p id="email-check" class="credentials-check"> </p>
-                <label>Confirm new email</label>
-                <input type="text" name="repeat-email" id="repeat-email" class="input-field" autocomplete="email" placeholder="Confirm your new email">
-                <p id="email-match-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title">Change your username</label>
-                <label>New username</label>
-                <input type="text" name="username" id="username" class="input-field" autocomplete="username" placeholder="Enter your new username">
-                <p id="username-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title">Change your password</label>
-                <label>New password</label>
-                <input type="password" name="new-password" id="new-password" class="input-field" autocomplete="new-password" placeholder="Enter your new password">
-                <label>Repeat new password</label>
-                <input type="password" name="repeat-new-password" id="repeat-new-password" class="input-field" autocomplete="new-password" placeholder="Repeat your new password">
-                <p id="repeat-new-password-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <label>You can fill only the fields you need to change</label>
-                <button id="submit-button">Submit</button>
-            </div>
-            <a style="color: #000;" href="/delete/">Delete your account</a>
-        </form>
-        <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
-    {% endblock %}
+        <div class="form-section">
+            <label class="form-section-title">Change your email</label>
+            <label>New email</label>
+            <input type="text" name="email" class="input-field email realtime-validate" autocomplete="email"
+                   placeholder="Enter your new email">
+            <p class="credentials-check email-check"></p>
+            <label>Confirm new email</label>
+            <input type="text" name="repeat-email" class="input-field repeat-email realtime-validate"
+                   autocomplete="email" placeholder="Confirm your new email">
+            <p class="credentials-check email-match-check"></p>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title">Change your username</label>
+            <label>New username</label>
+            <input type="text" name="username" class="input-field username realtime-validate" autocomplete="username"
+                   placeholder="Enter your new username">
+            <p class="credentials-check username-check"></p>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title">Change your password</label>
+            <label>New password</label>
+            <input type="password" name="new-password" class="input-field new-password realtime-validate"
+                   autocomplete="new-password" placeholder="Enter your new password">
+            <label>Repeat new password</label>
+            <input type="password" name="repeat-new-password" class="input-field repeat-new-password realtime-validate"
+                   autocomplete="new-password" placeholder="Repeat your new password">
+            <p class="credentials-check repeat-new-password-check"></p>
+        </div>
+        <div class="form-section">
+            <label>You can fill only the fields you need to change</label>
+            <button type="submit">Submit</button>
+        </div>
+        <a style="color: #000;" href="/delete/">Delete your account</a>
+    </form>
+    <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+{% endblock %}

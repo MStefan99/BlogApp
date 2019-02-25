@@ -1,15 +1,15 @@
 {% extends 'layout.html' %}
-    {% block login %}
-        <div class=login>
-            <a href="/login/">
-                <p>
-                    Sign in
-                </p>
-            </a>
-            <a href="/register/">
-                <p>
-                    Sign up
-                </p>
-            </a>
-        </div>
-    {% endblock %}
+{% block login %}
+    <div class=popup-form>
+        <a href="/login/">
+            <p>
+                Sign in
+            </p>
+        </a>
+        <a href="/register/">
+            <p>
+                Sign up
+            </p>
+        </a>
+    </div>
+{% endblock %}

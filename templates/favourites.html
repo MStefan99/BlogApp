@@ -1,34 +1,35 @@
 {% extends 'layout.html' %}
-    {% block main %}
-                <div id="page-title">
-            <p>
-                Saved posts
-            </p>
-        </div>
-        {% if code == 'no_posts' %}
-            <p>
-                You have no saved posts.
-            </p>
-        {% endif %}
-        <div id="posts-container">
-            {% for post in posts %}
-                <a class="posts" id="{{ 'post' + post.id|string }}" href="{{ '/post/' + post.link }}" style="background-color: {{ post[5] }}">
-                    <div class="posts-info">
-                         <div class="posts-title">
-                            <p>{{ post.title }}</p>
-                        </div>
-                        <div class="posts-tagline">
-                            <p>{{ post.tagline }}</p>
-                        </div>
-                        <div class="posts-date">
-                            <p>{{ post.date }}</p>
-                        </div>
-                        <div class="posts-author">
-                            <p>{{ post.author }}</p>
-                        </div>
+{% block main %}
+    <div id="page-title">
+        <p>
+            Saved posts
+        </p>
+    </div>
+    {% if code == 'no_posts' %}
+        <p>
+            You have no saved posts.
+        </p>
+    {% endif %}
+    <div id="posts-container">
+        {% for post in posts %}
+            <a class="posts" id="{{ 'post' + post.id|string }}" href="{{ '/post/' + post.link }}"
+               style="background-color: {{ post[5] }}">
+                <div class="posts-info">
+                    <div class="posts-title">
+                        <p>{{ post.title }}</p>
                     </div>
-                    <img src="{{ post.image }}" class="post-image" alt="Post icon">
-                </a>
-            {% endfor %}
-        </div>
-    {% endblock %}
+                    <div class="posts-tagline">
+                        <p>{{ post.tagline }}</p>
+                    </div>
+                    <div class="posts-date">
+                        <p>{{ post.date }}</p>
+                    </div>
+                    <div class="posts-author">
+                        <p>{{ post.author }}</p>
+                    </div>
+                </div>
+                <img src="{{ post.image }}" class="post-image" alt="Post icon">
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
