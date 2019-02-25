@@ -1,40 +1,38 @@
 {% extends 'layout.html' %}
 {% block login %}
-    <div class=popup-form>
-        <form action="/register_processor/" class="popup-form validated" method="post">
-            <div class="form-section">
-                <label class=form-title>Sign up</label>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title required">Email</label>
-                <input type="text" name="email" class="input-field email realtime-validate" autocomplete="email"
-                       placeholder="Enter your email" required><br>
-                <p id="email-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title required">Username</label>
-                <input type="text" name="username" class="input-field username realtime-validate"
-                       autocomplete="username" placeholder="Enter your username" required><br>
-                <p id="username-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <label class="form-section-title">Password</label>
-                <input type="password" name="new-password" class="input-field new-password realtime-validate"
-                       autocomplete="new-password" placeholder="Enter your password" required><br>
-                <label>Repeat password</label>
-                <input type="password" name="repeat-new-password"
-                       class="input-field repeat-new-password realtime-validate" autocomplete="new-password"
-                       placeholder="Repeat your password" required><br>
-                <p id="repeat-new-password-check" class="credentials-check"></p>
-            </div>
-            <div class="form-section">
-                <button class="smart-submit">Submit</button>
-                <br>
-            </div>
-            <div class="form-section">
-                <p class="credentials-check required-check"></p>
-            </div>
-        </form>
-    </div>
+    <form action="/register_processor/" class="popup-form validated" method="post">
+        <div class="form-section">
+            <label class=form-title>Sign up</label>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title required">Email</label>
+            <input type="text" name="email" class="input-field email realtime-validate" autocomplete="email"
+                   placeholder="Enter your email" required>
+            <p class="credentials-check email-check"></p>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title required">Username</label>
+            <input type="text" name="username" class="input-field username realtime-validate"
+                   autocomplete="username" placeholder="Enter your username" required>
+            <p class="credentials-check username-check"></p>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title">Password</label>
+            <input type="password" name="new-password" class="input-field new-password realtime-validate"
+                   autocomplete="new-password" placeholder="Enter your password" required>
+            <label>Repeat password</label>
+            <input type="password" name="repeat-new-password"
+                   class="input-field repeat-new-password realtime-validate" autocomplete="new-password"
+                   placeholder="Repeat your password" required>
+            <p class="credentials-check repeat-new-password-check"></p>
+        </div>
+        <div class="form-section">
+            <button type="submit">Submit</button>
+
+        </div>
+        <div class="form-section">
+            <p class="credentials-check required-check"></p>
+        </div>
+    </form>
     <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
 {% endblock %}

@@ -5,7 +5,7 @@
             Your account
         </p>
     </div>
-    {{ user.username }}, welcome to your account!<br>
+    {{ user.username }}, welcome to your account!
     {% if not user.verified %}
         <p style="color: indianred">
             Your email address ({{ user.email }}) is not verified yet! You won't be able to reset your password without

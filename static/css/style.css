@@ -74,6 +74,7 @@ form {
 }
 
 button {
+    cursor: pointer;
     float: right;
     border: #9b9b9b 2px solid;
     background: #b3b3b3;
@@ -93,8 +94,6 @@ button:active {
 }
 
 button.disabled, button.disabled:hover, button.disabled:active {
-    cursor: pointer;
-    pointer-events: none;
     border: #808080 2px solid;
     background: #9b9b9b;
     color: dimgray;
