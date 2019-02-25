@@ -39,7 +39,7 @@
                     <p>{{ page + 1 }}</p>
                 {% endif %}
             {% endfor %}
-            {% if current_page < pages_number %}
+            {% if current_page < pages_number - 1 %}
                 <a href="/posts/?page={{ current_page + 1 }}">Next page</a>
             {% endif %}
         </div>

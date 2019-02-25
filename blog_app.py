@@ -220,10 +220,9 @@ def posts():
 
     if not current_page:
         current_page = 0
-        pages_number = 1
     else:
         current_page = int(current_page)
-        pages_number = len(posts) // 10 + 1
+    pages_number = len(posts) // 10 + 1
 
     if len(posts) > 10:
         posts = posts[current_page * 10:current_page * 10 + 10]
@@ -244,14 +243,25 @@ def post(post_link):
 @app.route('/favourites/')
 def favourites():
     user = get_user()
-    favourites = get_favourites(user)
-
     if not user:
         return render_template('error.html', code='logged_out')
-    if not favourites:
-        return render_template('favourites.html', code='no_posts')
 
-    return render_template('favourites.html', posts=favourites)
+    posts = get_favourites(user)
+    if not posts:
+        return render_template('favourites.html', code='no_posts')
+    current_page = request.args.get('page')
+
+    if not current_page:
+        current_page = 0
+    else:
+        current_page = int(current_page)
+    pages_number = len(posts) // 10 + 1
+
+    if len(posts) > 10:
+        posts = posts[current_page * 10:current_page * 10 + 10]
+    print(pages_number)
+
+    return render_template('favourites.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
 @app.route('/verify/')

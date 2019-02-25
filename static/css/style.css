@@ -93,10 +93,22 @@ button:active {
     color: var(--text-color);
 }
 
-button.disabled, button.disabled:hover, button.disabled:active {
+button.disabled {
     border: #808080 2px solid;
     background: #9b9b9b;
-    color: dimgray;
+    color: #686868;
+}
+
+button.disabled:hover {
+    border: #737373 2px solid;
+    background: #8d8d8d;
+    color: #5b5b5b;
+}
+
+button.disabled:active {
+    border: #676767 2px solid;
+    background: #818181;
+    color: #4f4f4f;
 }
 
 .button {
@@ -301,26 +313,4 @@ main {
 
 #tag {
     display: inline-block;
-}
-
-#dev {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-    padding: 1vh 0;
-    color: white;
-    background-color: #f22746;
-    width: 100vw;
-    min-height: 3vh;
-    max-height: fit-content;
-    text-align: center;
-    font-size: 2vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    clear: both;
-    text-decoration: underline;
-    font-weight: 600;
-    opacity: .7;
 }
