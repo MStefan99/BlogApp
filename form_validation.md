@@ -78,7 +78,7 @@ The form is validated as the user types (for all fields with `realtime-validate`
 before submission. After each failed validation _Smart submit_ feature activates, blocking the 
 submission of the form and notifying the user about the fields that failed to validate. Blocking the
 button is achieved by adding the `disabled` class to the button and preventing form submission in
-javascript.  
+javascript. The button will look disabled, but it is still clickable.   
 ***Do not disable the button in CSS with `pointer-events: none` as you may block the 
 form submission completely!***
 
