@@ -1,24 +1,29 @@
 {% extends 'layout.html' %}
-    {% block login %}
-        <div class=login>
-            <form action="/login_processor/" class="popup-form validated" method="post">
-                <div class="form-section">
-                    <label class="form-title">Sign in</label>
-                </div>
-                <div class="form-section">
-                    <label class="form-section-title">Username or email</label>
-                    <input type="text" name="login" id="login" class="input-field" autocomplete="email" placeholder="Enter your username or email" required><br>
-                </div>
-                <div class="form-section">
-                    <label class="form-section-title">Password</label>
-                    <input type="password" name="current-password" id="current-password" class="input-field" autocomplete="current-password" placeholder="Enter your password" required><br>
-                </div>
-                <div class="form-section">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-            <div id="password-recovery">
-                <a href="/recover_create/">Forgot your password?</a>
-            </div>
+{% block login %}
+    <form action="/login_processor/" class="popup-form validated" method="post">
+        <div class="form-section">
+            <label class="form-title">Sign in</label>
         </div>
-    {% endblock %}
+        <div class="form-section">
+            <label class="form-section-title required">Username or email</label>
+            <input type="text" name="login" class="input-field login" autocomplete="email"
+                   placeholder="Enter your username or email" required>
+            <p class="credentials-check login-check"></p>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title required">Password</label>
+            <input type="password" name="current-password" class="input-field current-password"
+                   autocomplete="current-password" placeholder="Enter your password" required>
+        </div>
+        <div class="form-section">
+            <button type="submit" class="smart-submit">Submit</button>
+        </div>
+        <div class="form-section">
+            <p class="credentials-check required-check"></p>
+        </div>
+        <div class="form-section">
+            <a href="/recover_create/">Forgot your password?</a>
+        </div>
+    </form>
+    <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+{% endblock %}

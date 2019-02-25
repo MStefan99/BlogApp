@@ -17,7 +17,7 @@ body {
     margin: 0;
 }
 
-.login {
+.popup-form {
     position: absolute;
     padding: 10vh 10vw;
     border: var(--accent-color) solid 2px;
@@ -28,7 +28,7 @@ body {
     background: var(--main-color);
 }
 
-.login a, .login a:visited, .login-link {
+.popup-form a, .popup-form a:visited, .login-link {
     color: var(--text-color);
     text-align: center;
 }
@@ -53,9 +53,9 @@ form {
 }
 
 .form-section {
+    display: block;
     margin: .5vh auto 1.5vh;
     padding: 0;
-    position: relative;
 }
 
 .form-section-title {
@@ -67,12 +67,6 @@ form {
     display: block;
     padding: 0;
     color: var(--text-color);
-}
-
-.form-section::after {
-  content: "";
-  clear: both;
-  display: table;
 }
 
 .form-title {
@@ -126,6 +120,15 @@ button.disabled, button.disabled:hover, button.disabled:active {
 label {
     color: var(--text-color);
     padding: 1vh 0;
+}
+
+label.required::after {
+    content: "*";
+    text-decoration: none;
+    color: orangered;
+    display: inline;
+    margin: 0 .5vw 0 0;
+    padding: 0;
 }
 
 .credentials-check {
@@ -254,7 +257,7 @@ main {
     color: var(--text-secondary);
 }
 
-#post-title p, #post-tagline p,  #post-author p, #post-date p, .posts-title p, .posts-tagline p {
+#post-title p, #post-tagline p, #post-author p, #post-date p, .posts-title p, .posts-tagline p {
     margin: 0;
 }
 

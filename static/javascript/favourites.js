@@ -8,7 +8,7 @@ function add_to_favourites(post_id) {
        }
     };
     xhttp.open("POST", "/add_post/", true);
-    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("post=" + post_id);
     button.onclick = function() { remove_from_favourites(post_id) };
 }

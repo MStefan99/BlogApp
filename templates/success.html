@@ -1,27 +1,27 @@
 {% extends 'layout.html' %}
-    {% block login %}
-        <div class=login>
-            <div class="login-message">
-                <p>
-                    {% if code == 'login_success' %}
-                        Login successful!
-                    {% elif code == 'register_success' %}
-                        Registration successful!
-                    {% elif code == 'edit_success' %}
-                        Changed your data successfully!
-                    {% elif code == 'verification_success' %}
-                        Thank you for verifying your email!
-                     {% elif code == 'recover_create_success' %}
-                        Password reset success! Check your email for a password reset link.
-                    {% endif %}
-                </p>
-                {% if code != 'recover_create_success' %}
+{% block login %}
+    <div class=popup-form>
+        <div class="login-message">
+            <p>
+                {% if code == 'login_success' %}
+                    Login successful!
+                {% elif code == 'register_success' %}
+                    Registration successful!
+                {% elif code == 'edit_success' %}
+                    Changed your data successfully!
+                {% elif code == 'verification_success' %}
+                    Thank you for verifying your email!
+                {% elif code == 'recover_create_success' %}
+                    Password reset success! Check your email for a password reset link.
+                {% endif %}
+            </p>
+            {% if code != 'recover_create_success' %}
                 <a class="login-link" href="/account/">
                     <p>
                         Go back to your account
                     </p>
                 </a>
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}
