@@ -276,10 +276,9 @@ class form {
         Array.from(this.required).forEach((element) => {
             if (!element.value) {
                 this.required_ok = false;
-                element.style.borderColor = "var(--error);";
                 required_msg.innerHTML = "Please fill in all required fields";
                 required_msg.className = "credentials-check error";
-                form.set_color(!element.value, element)
+                form.set_color(this.required_ok, element)
             }
         });
         this.validate_form();
