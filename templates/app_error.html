@@ -10,31 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Delius" rel="stylesheet">
 
 </head>
-<body id="layer">
-<div id="main">
-    <div id="msg">Page not found</div>
-    <div id="error">
-        <div id="f1">{% block f1 %}{% endblock %}</div>
-        <div id="mars">
-        </div>
-        <div id="circle">
-            <div id="satellite"></div>
-        </div>
-        <div id="f2">{% block f2 %}{% endblock %}</div>
-    </div>
-
-    <div id="error-msg">{% block error_msg %}{% endblock %}</div>
-
-    <a href="/">
-        <div id="btn" style="display: block;">
-            <p>Back to site</p>
-        </div>
-    </a>
-</div>
-
-<div id="ring-back"></div>
-<div id="ring-front"></div>
-
+<body>
 <div class="dusk" id="d1"></div>
 <div class="dusk" id="d2"></div>
 <div class="dusk" id="d3"></div>
@@ -48,6 +24,29 @@
 <div class="dusk" id="d11"></div>
 <div class="dusk" id="d12"></div>
 
-<div id="error-info"><strong>Error info</strong><br><br>{{ error }}</div>
+<main>
+    <div id="msg">Page not found</div>
+    <div id="error">
+        <div id="f1">{% block f1 %}{% endblock %}</div>
+        <div id="mars">
+            <div id="circle">
+                <div id="satellite"></div>
+            </div>
+            <div id="ring-back"></div>
+            <div id="ring-front"></div>
+        </div>
+        <div id="f2">{% block f2 %}{% endblock %}</div>
+    </div>
+
+    <div id="error-msg">{% block error_msg %}{% endblock %}</div>
+
+    <a href="/">
+        <div id="btn" style="display: block;">
+            <p>Back to site</p>
+        </div>
+    </a>
+</main>
+
+<div id="error-info"><p><strong>Error info</strong></p><p>{{ error }}</p></div>
 </body>
 </html>
