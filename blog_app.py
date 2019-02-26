@@ -9,8 +9,8 @@ DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blo
 DATABASE.autocommit = True
 
 
-@app.route('/select/')
-def select():
+@app.route('/sign in/')
+def sign_in():
     cookie_id = request.cookies.get(COOKIE_NAME)
 
     if cookie_id:
@@ -94,7 +94,7 @@ def register_processor():
 
 @app.route('/logout/')
 def logout():
-    resp = make_response(redirect('/select/', code=302))
+    resp = make_response(redirect('/', code=302))
     resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
 
     return resp
@@ -292,6 +292,7 @@ def verify():
 @app.route('/del-post/', methods=['GET'])
 @app.route('/register_processor/', methods=['GET'])
 @app.route('/login_processor/', methods=['GET'])
+@app.route('/select_processor/', methods=['GET'])
 @app.route('/settings_processor/', methods=['GET'])
 def wrong_route():
     return render_template('error.html', code='wrong_route')
@@ -352,19 +353,14 @@ def e_exists():
     return 'ok;'
 
 
-@app.errorhandler(403)
-def forbidden(error):
-    return render_template('403.html'), 403
-
-
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('404.html'), 404
+    return render_template('404.html', error=error), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
-    return render_template('500.html'), 500
+    return render_template('500.html', error=error), 500
 
 
 if __name__ == '__main__':

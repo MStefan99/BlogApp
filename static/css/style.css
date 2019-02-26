@@ -43,11 +43,12 @@ a.nav-button, main #posts-container a {
     color: var(--text-secondary);
 }
 
-.login-message {
+.popup-message {
     font-weight: 600;
     padding: 2vh 2vw;
     background-color: var(--background-color);
     border-radius: 10px;
+    text-align: center;
 }
 
 form {
@@ -240,7 +241,7 @@ main {
 
 #page-selector > *, #page-selector > *:visited {
     color: var(--text-color);
-    margin: 0 .25vw;
+    margin: 0 .25vmax;
 }
 
 .post {

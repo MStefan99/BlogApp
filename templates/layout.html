@@ -14,21 +14,18 @@
     -->
     <!-- WARNING: Favicon missing! -->
     <link rel="icon" type="image/png" sizes="16x16" href="https://blog.mstefan99.com/static/images/ico.png">
-    <meta name="description" content=""> <!-- TODO: fill in the description -->
-    {% if '/post/' in request.path %}
-        <meta name="theme-color" content={{ post.theme_color if post.theme_color else 'var(--accent-color)' }}>
-        <style>
-            header {
-                background-color: {{ post.theme_color if post.theme_color else 'var(--accent-color)' }};
-            }
-        </style>
-    {% else %}
-        <meta name="theme-color" content="#39d3e3">
-    {% endif %}
-    <meta name="author" content="Annushka project">
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Annushka Project Blog</title>
+    <meta name="theme-color" content={{ post.theme_color if post else 'var(--accent-color)' }}>
+    <meta charset="utf-8">
+
+    <title>{{ 'galera.dev: ' + post.title if post else 'galera.dev: ' + request.path[1:-1].capitalize() }}</title>
+    <meta name="description" content="{{ post.tagline if post else 'galera.dev blog' }}">
+    <meta name="author" content="{{ post.author if post else 'galera.dev' }}">
+    <style>
+        header {
+            background-color: {{ post.theme_color if post else 'var(--accent-color)' }};
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -40,7 +37,7 @@
             </li>
         {% else %}
             <li class="nav-element">
-                <a id="logout" class="nav-button" href="/select/">Sign in</a>
+                <a id="logout" class="nav-button" href="/sign in/">Sign in</a>
             </li>
         {% endif %}
         {% if request.path != '/settings/' %}
