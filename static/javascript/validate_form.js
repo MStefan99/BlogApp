@@ -19,11 +19,8 @@ class form {
             this.submit.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.submit.classList.add("disabled");
-                this.submit.innerText = "Sending, please wait...";
                 if (this.validate_all()) {
                     this.form_element.submit()
-                } else {
-                    this.submit.innerText = "Submit";
                 }
             });
 
@@ -34,11 +31,8 @@ class form {
                 if (key === "Enter") {
                     e.preventDefault();
                     this.submit.classList.add("disabled");
-                    this.submit.innerText = "Sending, please wait...";
                     if (this.validate_all()) {
                         this.form_element.submit()
-                    } else {
-                        this.submit.innerText = "Submit";
                     }
                 }
             };
