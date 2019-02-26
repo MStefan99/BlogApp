@@ -276,7 +276,6 @@ main {
     align-items: flex-start;
 }
 
-
 #post-title, #post-tagline, #post-author, #post-date {
     color: var(--text-secondary);
 }
@@ -313,4 +312,16 @@ main {
 
 #tag {
     display: inline-block;
+}
+
+.button {
+    padding: .5vh .5vw;
+    margin: 2vh .5vw;
+    border-radius: 1em;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button p {
+    color: var(--text-secondary);
 }
