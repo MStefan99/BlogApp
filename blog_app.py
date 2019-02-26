@@ -236,7 +236,7 @@ def posts():
     pages_number = len(posts) // 10 + 1
 
     if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 11]
+        posts = posts[current_page * 10:current_page * 10 + 10]
 
     return render_template('posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
