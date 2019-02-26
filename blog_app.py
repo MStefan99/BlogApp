@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from validate_email import validate_email
 from utils import *
 from search import *
 
@@ -9,17 +10,18 @@ DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blo
 DATABASE.autocommit = True
 
 
-@app.route('/select/')
-def select():
+@app.route('/sign in/')
+def sign_in():
     cookie_id = request.cookies.get(COOKIE_NAME)
 
     if cookie_id:
         user = find_user_by_cookie(cookie_id)
         if user:
             return redirect('/account/', code=302)
-        return redirect('/logout/', code=302)
-
-    return render_template('select.html')
+        else:
+            return redirect('/logout/', code=302)
+    else:
+        return render_template('select.html')
 
 
 @app.route('/select_processor/', methods=['POST'])
@@ -51,16 +53,14 @@ def login_processor():
 
     if not login or not current_password:
         return render_template('error.html', code='form_not_filled')
-
-    if user and password_correct(user, current_password):
+    elif not user:
+        return render_template('error.html', code='wrong_login')
+    elif user and password_correct(user, current_password):
         resp = make_response(render_template('success.html', code='login_success'))
         resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
         return resp
-
-    if not user:
-        return render_template('error.html', code='wrong_login')
-
-    return render_template('error.html', code='wrong_password')
+    else:
+        return render_template('error.html', code='wrong_password')
 
 
 @app.route('/register_processor/', methods=['POST'])
@@ -69,8 +69,10 @@ def register_processor():
     email = request.form.get('email')
     new_password = request.form.get('new-password')
     repeat_new_password = request.form.get('repeat-new-password')
+
     username_exists = check_username(username)
     email_exists = check_email(email)
+    email_format_ok = validate_email(email)
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
@@ -79,11 +81,12 @@ def register_processor():
         return render_template('error.html', code='username_exists')
     elif email_exists:
         return render_template('error.html', code='email_exists')
+    elif not email_format_ok:
+        return render_template('error.html', code='wrong_email_format')
     elif new_password != repeat_new_password:
         return render_template('error.html', code='passwords_do_not_match')
     elif ' ' in username or ' ' in email:
         return render_template('error.html', code='spaces_not_allowed')
-
     else:
         cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
@@ -94,7 +97,7 @@ def register_processor():
 
 @app.route('/logout/')
 def logout():
-    resp = make_response(redirect('/select/', code=302))
+    resp = make_response(redirect('/', code=302))
     resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
 
     return resp
@@ -106,7 +109,8 @@ def account():
 
     if user:
         return render_template('account.html', user=user)
-    return render_template('error.html', code='logged_out')
+    else:
+        return render_template('error.html', code='logged_out')
 
 
 @app.route('/settings/')
@@ -115,7 +119,8 @@ def settings():
 
     if user:
         return render_template('settings.html')
-    return render_template('error.html', code='logged_out')
+    else:
+        return render_template('error.html', code='logged_out')
 
 
 @app.route('/recover_create/')
@@ -133,6 +138,7 @@ def recover():
 def recover_create_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
+
     if user:
         create_recover_link(user)
         return render_template('success.html', code='recover_create_success')
@@ -148,19 +154,19 @@ def recover_processor():
     repeat_new_password = request.form.get('repeat-new-password')
 
     new_password_check = new_password == repeat_new_password
-    if user:
-        if not new_password:
-            return render_template('error.html', code='form_not_filled')
-        elif not new_password_check:
-            return render_template('error.html', code='passwords_do_not_match')
-        else:
-            cookie_id = generate_hash()
-            update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
-            resp = make_response(render_template('success.html', code='edit_success'))
-            resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
-            return resp
-    else:
+
+    if not user:
         return render_template('error.html', code='user_not_found')
+    elif not new_password or not repeat_new_password:
+        return render_template('error.html', code='form_not_filled')
+    elif not new_password_check:
+        return render_template('error.html', code='passwords_do_not_match')
+    else:
+        cookie_id = generate_hash()
+        update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
+        resp = make_response(render_template('success.html', code='edit_success'))
+        resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
+        return resp
 
 
 @app.route('/settings_processor/', methods=['POST'])
@@ -179,7 +185,6 @@ def settings_processor():
 
     if not user:
         return redirect('/logout/', code=302)
-
     if not new_password_check:
         return render_template('error.html', code='passwords_do_not_match')
     elif not email_check:
@@ -193,17 +198,15 @@ def settings_processor():
 
     if username:
         update_user(user, username=username)
-
     if email:
         update_user(user, email=email)
-
     if new_password:
         cookie_id = generate_hash()
         update_user(user, new_password=new_password, cookie_id=cookie_id)
         resp = make_response(render_template('success.html', code='edit_success'))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
-
+    
     return render_template('success.html', code='edit_success')
 
 
@@ -218,9 +221,9 @@ def delete_confirm():
 
     if not user:
         return render_template('error.html', code='logged_out')
-    delete_user(user)
-
-    return redirect('/logout/', code=302)
+    else:
+        delete_user(user)
+        return redirect('/logout/', code=302)
 
 
 @app.route('/')
@@ -236,7 +239,7 @@ def posts():
     pages_number = len(posts) // 10 + 1
 
     if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 11]
+        posts = posts[current_page * 10:current_page * 10 + 10]
 
     return render_template('posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
@@ -292,6 +295,7 @@ def verify():
 @app.route('/del-post/', methods=['GET'])
 @app.route('/register_processor/', methods=['GET'])
 @app.route('/login_processor/', methods=['GET'])
+@app.route('/select_processor/', methods=['GET'])
 @app.route('/settings_processor/', methods=['GET'])
 def wrong_route():
     return render_template('error.html', code='wrong_route')
@@ -325,10 +329,10 @@ def u_exists():
 
     if not username:
         return ''
-
-    if check_username(username):
+    elif check_username(username):
         return 'error;Username already taken'
-    return 'ok;Username is free'
+    else:
+        return 'ok;Username is free'
 
 
 @app.route('/check_login/', methods=['POST'])
@@ -337,10 +341,10 @@ def l_exists():
 
     if not login:
         return ''
-
-    if check_login(login):
+    elif check_login(login):
         return 'ok;'
-    return 'error;User not found'
+    else:
+        return 'error;User not found'
 
 
 @app.route('/check_email/', methods=['POST'])
@@ -349,7 +353,18 @@ def e_exists():
 
     if check_email(email):
         return 'error;Email already exists'
-    return 'ok;'
+    else:
+        return 'ok;'
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', error=error), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html', error=error), 500
 
 
 if __name__ == '__main__':
