@@ -2,21 +2,23 @@
 {% block login %}
     <form action="/login_processor/" class="popup-form validated" method="post">
         <div class="form-section">
-            <label class="form-title">Sign in</label>
+            <label class="form-title">{{ login + ', welcome back!' if login else 'Sign in' }}</label>
         </div>
         <div class="form-section">
             <label class="form-section-title required">Username or email</label>
             <input type="text" name="login" class="input-field login" autocomplete="email"
-                   placeholder="Enter your username or email" required>
+                   placeholder="Enter your username or email"
+                   value="{{ login if login }}" {{ 'readonly="readonly"' if login }} required>
             <p class="credentials-check login-check"></p>
         </div>
         <div class="form-section">
             <label class="form-section-title required">Password</label>
             <input type="password" name="current-password" class="input-field current-password"
-                   autocomplete="current-password" placeholder="Enter your password" required>
+                   autocomplete="current-password" placeholder="Enter your password" value="{{ password if password }}"
+                   required>
         </div>
         <div class="form-section">
-            <button type="submit">Submit</button>
+            <button type="submit">Login</button>
         </div>
         <div class="form-section">
             <p class="credentials-check required-check"></p>

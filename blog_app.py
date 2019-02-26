@@ -22,6 +22,17 @@ def select():
     return render_template('select.html')
 
 
+@app.route('/select_processor/', methods=['POST'])
+def select_processor():
+    login = request.form.get('login')
+    current_password = request.form.get('current-password')
+
+    if find_user_by_login(login):
+        return render_template('login.html', login=login, password=current_password)
+    else:
+        return render_template('register.html', login=login)
+
+
 @app.route('/login/')
 def login():
     return render_template('login.html')
@@ -118,7 +129,7 @@ def recover():
     return render_template('recover.html', key=key)
 
 
-@app.route('/recover_create_processor/', methods=["POST"])
+@app.route('/recover_create_processor/', methods=['POST'])
 def recover_create_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
@@ -129,7 +140,7 @@ def recover_create_processor():
         return render_template('error.html', code='wrong_login')
 
 
-@app.route('/recover_processor/', methods=["POST"])
+@app.route('/recover_processor/', methods=['POST'])
 def recover_processor():
     key = request.form.get('key')
     user = find_user_by_recover_key(key)
@@ -225,7 +236,7 @@ def posts():
     pages_number = len(posts) // 10 + 1
 
     if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 10]
+        posts = posts[current_page * 10:current_page * 10 + 11]
 
     return render_template('posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
@@ -237,7 +248,7 @@ def post(post_link):
     is_favourite = check_favourite(user, post)
 
     return render_template('post.html', post=post, is_favourite=is_favourite,
-                           tags=post.tags.split(","))
+                           tags=post.tags.split(','))
 
 
 @app.route('/favourites/')
@@ -275,40 +286,40 @@ def verify():
 
 # Error routes
 
-@app.route('/check_email/', methods=["GET"])
-@app.route('/check_username/', methods=["GET"])
-@app.route('/add_post/', methods=["GET"])
-@app.route('/del-post/', methods=["GET"])
-@app.route('/register_processor/', methods=["GET"])
-@app.route('/login_processor/', methods=["GET"])
-@app.route('/settings_processor/', methods=["GET"])
+@app.route('/check_email/', methods=['GET'])
+@app.route('/check_username/', methods=['GET'])
+@app.route('/add_post/', methods=['GET'])
+@app.route('/del-post/', methods=['GET'])
+@app.route('/register_processor/', methods=['GET'])
+@app.route('/login_processor/', methods=['GET'])
+@app.route('/settings_processor/', methods=['GET'])
 def wrong_route():
     return render_template('error.html', code='wrong_route')
 
 
 # Internal routes
 
-@app.route('/add_post/', methods=["POST"])
+@app.route('/add_post/', methods=['POST'])
 def add_post():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
     save_post(user, post)
-    return "OK"
+    return 'OK'
 
 
-@app.route('/del_post/', methods=["POST"])
+@app.route('/del_post/', methods=['POST'])
 def del_post():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
     remove_post(user, post)
-    return "OK"
+    return 'OK'
 
 
-@app.route('/check_username/', methods=["POST"])
+@app.route('/check_username/', methods=['POST'])
 def u_exists():
     username = request.form.get('username').strip()
 
@@ -320,7 +331,7 @@ def u_exists():
     return 'ok;Username is free'
 
 
-@app.route('/check_login/', methods=["POST"])
+@app.route('/check_login/', methods=['POST'])
 def l_exists():
     login = request.form.get('login').strip()
 
@@ -332,7 +343,7 @@ def l_exists():
     return 'error;User not found'
 
 
-@app.route('/check_email/', methods=["POST"])
+@app.route('/check_email/', methods=['POST'])
 def e_exists():
     email = request.form.get('email').strip()
 

@@ -19,11 +19,8 @@ class form {
             this.submit.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.submit.classList.add("disabled");
-                this.submit.innerText = "Sending, please wait...";
                 if (this.validate_all()) {
                     this.form_element.submit()
-                } else {
-                    this.submit.innerText = "Submit";
                 }
             });
 
@@ -34,11 +31,8 @@ class form {
                 if (key === "Enter") {
                     e.preventDefault();
                     this.submit.classList.add("disabled");
-                    this.submit.innerText = "Sending, please wait...";
                     if (this.validate_all()) {
                         this.form_element.submit()
-                    } else {
-                        this.submit.innerText = "Submit";
                     }
                 }
             };
@@ -166,6 +160,7 @@ class form {
                     username_msg.innerHTML = response[1];
                     this.username_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.username_ok, username)
                 }
             };
 
@@ -174,6 +169,7 @@ class form {
             xhr.send("username=" + username.value);
         }
         this.validate_form();
+        form.set_color(this.username_ok, username)
     }
 
 
@@ -191,6 +187,7 @@ class form {
                     login_msg.innerHTML = response[1];
                     this.login_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.login_ok, login)
                 }
             };
 
@@ -199,6 +196,7 @@ class form {
             xhr.send("login=" + login.value);
         }
         this.validate_form();
+        form.set_color(this.login_ok, login)
     }
 
 
@@ -216,6 +214,7 @@ class form {
                     email_msg.innerHTML = response[1];
                     this.email_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.email_ok, email)
                 }
             };
             xhr.open("POST", "/check_email/", async);
@@ -223,6 +222,7 @@ class form {
             xhr.send("email=" + email.value);
         }
         this.validate_form();
+        form.set_color(this.email_ok, email)
     }
 
 
@@ -239,6 +239,7 @@ class form {
             this.email_match_ok = true;
         }
         this.validate_form();
+        form.set_color(this.email_match_ok, email, email_repeat)
     }
 
 
@@ -259,17 +260,19 @@ class form {
             this.password_match_ok = true;
         }
         this.validate_form();
+        form.set_color(this.password_match_ok, password, password_repeat)
     }
 
 
     check_required(required_msg) {
         this.required_ok = true;
         required_msg.innerHTML = "";
-        Array.from(this.required).forEach((i) => {
-            if (!i.value) {
+        Array.from(this.required).forEach((element) => {
+            if (!element.value) {
                 this.required_ok = false;
                 required_msg.innerHTML = "Please fill in all required fields";
                 required_msg.className = "credentials-check error";
+                form.set_color(this.required_ok, element)
             }
         });
         this.validate_form();
@@ -315,6 +318,18 @@ class form {
             this.submit.classList.add("disabled");
             return true;
         }
+    }
+
+
+    static set_color(ok, ...elements) {
+        elements.forEach((element) => {
+            if (ok) {
+                element.style.borderColor = "var(--accent-light)";
+            } else {
+                element.style.borderColor = "var(--error)";
+            }
+        });
+
     }
 }
 

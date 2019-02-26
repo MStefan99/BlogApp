@@ -6,8 +6,11 @@
     --accent-color: #39d3e3;
     --accent-light: #b3fcff;
     --accent-dark: #72cacf;
-    --default-post-color: #95a8ee;
+    --error: #f22746;
+    --ok: #2bf27f;
     --text-color: #272727;
+    --disabled-color: #686868;
+    --disabled-text: #4f4f4f;
     --text-secondary: #ffffff;
     font-family: sans-serif;
     background: var(--background-color);
@@ -53,106 +56,98 @@ form {
     padding: 5vh 7vw;
 }
 
-.form-section {
+form .form-section {
     display: block;
-    margin: .5vh auto 1.5vh;
+    margin: .5vh 0 1.5vh;
     padding: 0;
+    width: 100%;
 }
 
-.form-section-title {
+form .form-section-title {
     margin: 0 0 1vh;
     text-decoration: underline;
 }
 
-.form-section label {
+form .form-section label {
     display: block;
     padding: 0;
     color: var(--text-color);
 }
 
-.form-title {
+form .form-title {
     font-weight: 700;
 }
 
-button {
+form button {
     cursor: pointer;
-    float: right;
-    border: #9b9b9b 2px solid;
-    background: #b3b3b3;
-    color: var(--text-color);
-}
-
-button:hover {
-    border: #808080 2px solid;
-    background: #9b9b9b;
-    color: var(--text-color);
-}
-
-button:active {
-    border: #414141 2px solid;
-    background: #5b5b5b;
-    color: var(--text-color);
-}
-
-button.disabled {
-    border: #808080 2px solid;
-    background: #9b9b9b;
-    color: #686868;
-}
-
-button.disabled:hover {
-    border: #737373 2px solid;
-    background: #8d8d8d;
-    color: #5b5b5b;
-}
-
-button.disabled:active {
-    border: #676767 2px solid;
-    background: #818181;
-    color: #4f4f4f;
-}
-
-.button {
-    margin: 2vh .8vw;
+    margin: 2vh 0;
     padding: .5vh .5vw;
     border-radius: 1rem;
     text-decoration: none;
+    border: var(--accent-light) 3px solid;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    width: 100%;
 }
 
-.button p {
+form button:hover {
+   filter: brightness(85%);
+}
+
+form button:active {
+    filter: brightness(70%);
+}
+
+form button.disabled {
+    border: var(--disabled-color) 2px solid;
+    background: var(--disabled-color);
+    color: var(--disabled-text);
+}
+
+form button.disabled:hover {
+    filter: brightness(75%);
+}
+
+form button.disabled:active {
+    filter: brightness(50%);
+}
+
+form button p {
     color: var(--text-secondary);
 }
 
-.input-field {
+form .input-field {
     background: var(--main-color);
-    border: lightgrey 1px solid;
+    border-radius: 1rem;
+    border: var(--accent-light) 3px solid;
+    padding: .5vh .5vw;
     margin: 5px 0;
 }
 
-label {
+form label {
     color: var(--text-color);
     padding: 1vh 0;
 }
 
-label.required::after {
+form label.required::after {
     content: "*";
     text-decoration: none;
-    color: orangered;
+    color: var(--error);
     display: inline;
     margin: 0 .5vw 0 0;
     padding: 0;
 }
 
-.credentials-check {
+form .credentials-check {
     margin: 0;
 }
 
-.credentials-check.error {
-    color: #f22746;
+form .credentials-check.error {
+    color: var(--error);
 }
 
-.credentials-check.ok {
-    color: #2bf27f;
+form .credentials-check.ok {
+    color: var(--ok);
 }
 
 header {
