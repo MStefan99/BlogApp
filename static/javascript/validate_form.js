@@ -277,7 +277,9 @@ class form {
 
     check_required(required_msg) {
         this.required_ok = true;
-        required_msg.innerHTML = "";
+        if (this.required_msg) {
+            required_msg.innerHTML = "";
+        }
         Array.from(this.required).forEach((element) => {
             if (!element.value) {
                 this.required_ok = false;
