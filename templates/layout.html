@@ -16,7 +16,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="https://calc.mstefan99.com/resources/ico.png">
     <meta name="description" content=""> <!-- TODO: fill in the description -->
     {% if '/post/' in request.path %}
-        <meta name="theme-color" content={{ post.theme_color if post.theme_color != null else "#39d3e3" }}>
+        <meta name="theme-color" content={{ post.theme_color if post.theme_color else 'var(--accent-color)' }}>
+        <style>
+            header {
+                background-color: {{ post.theme_color if post.theme_color else 'var(--accent-color)' }};
+            }
+        </style>
     {% else %}
         <meta name="theme-color" content="#39d3e3">
     {% endif %}
@@ -61,11 +66,6 @@
 </main>
 {% block login %}
 {% endblock %}
-<div id="dev" onclick="{let dev = document.getElementById('dev'); dev.style.display = 'none';}">
-    WEBSITE IS CURRENTLY IN DEVELOPMENT STAGE.
-    ANY DATA CAN BE REMOVED AT ANY TIME, INCLUDING USER ACCOUNTS.
-    DEVELOPERS ARE NOT RESPONSIBLE IF ANY DATA IS LOST. CLICK TO HIDE ON THIS PAGE.
-</div>
 <footer>
     {% block footer %}
     {% endblock %}
