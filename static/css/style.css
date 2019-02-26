@@ -60,7 +60,6 @@ form .form-section {
     display: block;
     margin: .5vh 0 1.5vh;
     padding: 0;
-    width: 100%;
 }
 
 form .form-section-title {
@@ -75,18 +74,20 @@ form .form-section label {
 }
 
 form .form-title {
+    text-align: center;
     font-weight: 700;
 }
 
 form button {
     cursor: pointer;
-    margin: 2vh 0;
+    margin: 0 0 2vh;
     padding: .5vh .5vw;
     border-radius: 1rem;
     text-decoration: none;
     border: var(--accent-light) 3px solid;
     background-color: var(--accent-color);
-    color: var(--text-color);
+    color: var(--text-secondary);
+    font-weight: 700;
     width: 100%;
 }
 
@@ -116,7 +117,9 @@ form button p {
     color: var(--text-secondary);
 }
 
-form .input-field {
+form input {
+    box-sizing: border-box;
+    width: 100%;
     background: var(--main-color);
     border-radius: 1rem;
     border: var(--accent-light) 3px solid;
