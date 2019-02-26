@@ -27,10 +27,11 @@ def sign_in():
 @app.route('/select_processor/', methods=['POST'])
 def select_processor():
     login = request.form.get('login')
-    username = find_user_by_login(login).username
-    current_password = request.form.get('current-password')
+    user = find_user_by_login(login)
 
-    if find_user_by_login(login):
+    if user:
+        username = user.username
+        current_password = request.form.get('current-password')
         return render_template('login.html', login=username, password=current_password)
     else:
         return render_template('register.html', login=login)
