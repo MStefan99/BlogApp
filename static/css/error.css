@@ -58,15 +58,6 @@ main {
     z-index: 2;
 }
 
-@-webkit-keyframes move {
-    0% {
-        transform: translate(-25%, -25%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-25%, -25%) rotate(360deg);
-    }
-}
-
 #satellite {
     height: 7px;
     width: 7px;
@@ -75,6 +66,7 @@ main {
     position: relative;
     top: 15%;
     left: 15%;
+    animation: size 4s cubic-bezier(0.4, 0.6, 0.6, 0.4) infinite;
 }
 
 #error-msg {
@@ -263,4 +255,40 @@ a {
     top: 86%;
     left: 90%;
     -webkit-filter: blur(5px);
+}
+
+@-webkit-keyframes move {
+    0% {
+        transform: translate(-25%, -25%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-25%, -25%) rotate(360deg);
+    }
+}
+
+@-webkit-keyframes size {
+    0% {
+        transform: scale(0);
+    }
+    10% {
+        transform: scale(0);
+    }
+    30% {
+        transform: scale(.65);
+    }
+    45% {
+        transform: scale(1);
+    }
+    55% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(.65);
+    }
+    90% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(0);
+    }
 }
