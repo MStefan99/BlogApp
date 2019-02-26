@@ -18,7 +18,7 @@
     <meta name="theme-color" content={{ post.theme_color if post else 'var(--accent-color)' }}>
     <meta charset="utf-8">
 
-    <title>{{ 'galera.dev: ' + post.title if post else 'galera.dev: ' + request.path[1:-1].capitalize() }}</title>
+    <title>{{ 'galera.dev ' + post.title if post else 'galera.dev ' + request.path[1:-1].capitalize() }}</title>
     <meta name="description" content="{{ post.tagline if post else 'galera.dev blog' }}">
     <meta name="author" content="{{ post.author if post else 'galera.dev' }}">
     <style>
