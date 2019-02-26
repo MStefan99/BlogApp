@@ -166,6 +166,7 @@ class form {
                     username_msg.innerHTML = response[1];
                     this.username_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.username_ok, username)
                 }
             };
 
@@ -174,6 +175,7 @@ class form {
             xhr.send("username=" + username.value);
         }
         this.validate_form();
+        form.set_color(this.username_ok, username)
     }
 
 
@@ -191,6 +193,7 @@ class form {
                     login_msg.innerHTML = response[1];
                     this.login_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.login_ok, login)
                 }
             };
 
@@ -199,6 +202,7 @@ class form {
             xhr.send("login=" + login.value);
         }
         this.validate_form();
+        form.set_color(this.login_ok, login)
     }
 
 
@@ -216,6 +220,7 @@ class form {
                     email_msg.innerHTML = response[1];
                     this.email_ok = response[0] === "ok";
                     this.validate_form();
+                    form.set_color(this.email_ok, email)
                 }
             };
             xhr.open("POST", "/check_email/", async);
@@ -223,6 +228,7 @@ class form {
             xhr.send("email=" + email.value);
         }
         this.validate_form();
+        form.set_color(this.email_ok, email)
     }
 
 
@@ -239,6 +245,7 @@ class form {
             this.email_match_ok = true;
         }
         this.validate_form();
+        form.set_color(this.email_match_ok, email, email_repeat)
     }
 
 
@@ -259,17 +266,20 @@ class form {
             this.password_match_ok = true;
         }
         this.validate_form();
+        form.set_color(this.password_match_ok, password, password_repeat)
     }
 
 
     check_required(required_msg) {
         this.required_ok = true;
         required_msg.innerHTML = "";
-        Array.from(this.required).forEach((i) => {
-            if (!i.value) {
+        Array.from(this.required).forEach((element) => {
+            if (!element.value) {
                 this.required_ok = false;
+                element.style.borderColor = "var(--error);";
                 required_msg.innerHTML = "Please fill in all required fields";
                 required_msg.className = "credentials-check error";
+                form.set_color(!element.value, element)
             }
         });
         this.validate_form();
@@ -315,6 +325,18 @@ class form {
             this.submit.classList.add("disabled");
             return true;
         }
+    }
+
+
+    static set_color(ok, ...elements) {
+        elements.forEach((element) => {
+            if (ok) {
+                element.style.borderColor = "var(--accent-light)";
+            } else {
+                element.style.borderColor = "var(--error)";
+            }
+        });
+
     }
 }
 

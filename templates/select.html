@@ -1,15 +1,21 @@
 {% extends 'layout.html' %}
 {% block login %}
-    <div class=popup-form>
-        <a href="/login/">
-            <p>
-                Sign in
-            </p>
-        </a>
-        <a href="/register/">
-            <p>
-                Sign up
-            </p>
-        </a>
-    </div>
+    <form action="/select_processor/" class="popup-form validated" method="post">
+        <div class="form-section">
+            <label class="form-title">Sign in</label>
+        </div>
+        <div class="form-section">
+            <label class="form-section-title required">Username or email</label>
+            <input type="text" name="login" class="input-field" autocomplete="email"
+                   placeholder="Enter your username or email" required>
+            <p class="credentials-check login-check"></p>
+        </div>
+        <div class="form-section">
+            <button type="submit">Submit</button>
+        </div>
+        <div class="form-section">
+            <p class="credentials-check required-check"></p>
+        </div>
+    </form>
+    <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
 {% endblock %}

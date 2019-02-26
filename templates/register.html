@@ -2,7 +2,7 @@
 {% block login %}
     <form action="/register_processor/" class="popup-form validated" method="post">
         <div class="form-section">
-            <label class=form-title>Sign up</label>
+            <label class=form-title>{{ login + ', register on galera.dev!' if login else 'Register' }}</label>
         </div>
         <div class="form-section">
             <label class="form-section-title required">Email</label>
