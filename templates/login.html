@@ -14,10 +14,11 @@
         <div class="form-section">
             <label class="form-section-title required">Password</label>
             <input type="password" name="current-password" class="input-field current-password"
-                   autocomplete="current-password" placeholder="Enter your password" required>
+                   autocomplete="current-password" placeholder="Enter your password" value="{{ password if password }}"
+                   required>
         </div>
         <div class="form-section">
-            <button type="submit">Submit</button>
+            <button type="submit">Login</button>
         </div>
         <div class="form-section">
             <p class="credentials-check required-check"></p>

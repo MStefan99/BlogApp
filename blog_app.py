@@ -25,8 +25,10 @@ def select():
 @app.route('/select_processor/', methods=['POST'])
 def select_processor():
     login = request.form.get('login')
+    current_password = request.form.get('current-password')
+
     if find_user_by_login(login):
-        return render_template('login.html', login=login)
+        return render_template('login.html', login=login, password=current_password)
     else:
         return render_template('register.html', login=login)
 
