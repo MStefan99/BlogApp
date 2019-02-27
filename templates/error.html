@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block login %}
     <div class=popup-form>
-        <div class="login-message">
+        <div class="popup-message">
             <p>
                 {% if code == 'username_exists' %}
                     Username already exists.
@@ -18,11 +18,11 @@
                 {% elif code == 'emails_do_not_match' %}
                     Emails do not match.
                 {% elif code == 'logged_out' %}
-                    You need to <a href="/select/">sign in</a> to view this page.
+                    You need to <a href="/sign in/">sign in</a> to view this page.
                 {% elif code == 'spaces_not_allowed' %}
                     Using spaces is not allowed in username or email.
                 {% elif code == 'wrong_route' %}
-                    Oops! This page doesn't do anything by itself, but you can always visit our
+                    Oops! This page is empty, but you can always visit our
                     <a href="/">homepage</a>!
                 {% elif code == 'verification_failed' %}
                     Something went wrong. 
@@ -30,6 +30,8 @@
                     but if not, try again or change the email.
                 {% elif code == 'user_not_found' %}
                     User not found.
+                {% elif code == 'wrong_email_format' %}
+                    Wrong email format.
                 {% endif %}
             </p>
         </div>

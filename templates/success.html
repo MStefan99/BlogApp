@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block login %}
     <div class=popup-form>
-        <div class="login-message">
+        <div class="popup-message">
             <p>
                 {% if code == 'login_success' %}
                     Login successful!
@@ -16,9 +16,9 @@
                 {% endif %}
             </p>
             {% if code != 'recover_create_success' %}
-                <a class="login-link" href="/account/">
+                <a class="login-link" href="/">
                     <p>
-                        Go back to your account
+                        Go back to the site
                     </p>
                 </a>
             {% endif %}

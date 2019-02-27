@@ -213,6 +213,17 @@ class form {
                     email_msg.className = "credentials-check " + response[0];
                     email_msg.innerHTML = response[1];
                     this.email_ok = response[0] === "ok";
+                    if (this.email_ok) {
+                        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                        var ok = re.test(this.email.value.toLowerCase());
+                        if (!ok) {
+                            email_msg.className = "credentials-check error";
+                            email_msg.innerHTML = "Invalid email format";
+                        } else {
+                            email_msg.innerHTML = "";
+                        }
+                        this.email_ok = ok;
+                    }
                     this.validate_form();
                     form.set_color(this.email_ok, email)
                 }
@@ -266,7 +277,9 @@ class form {
 
     check_required(required_msg) {
         this.required_ok = true;
-        required_msg.innerHTML = "";
+        if (this.required_msg) {
+            required_msg.innerHTML = "";
+        }
         Array.from(this.required).forEach((element) => {
             if (!element.value) {
                 this.required_ok = false;
