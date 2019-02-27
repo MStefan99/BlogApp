@@ -1,10 +1,9 @@
 from flask import Flask, render_template
-from validate_email import validate_email
+import syntax_check
 from utils import *
 from search import *
 
 app = Flask(__name__)
-
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
                             cursor_factory=psycopg2.extras.NamedTupleCursor)
 DATABASE.autocommit = True
@@ -74,21 +73,25 @@ def register_processor():
 
     username_exists = check_username(username)
     email_exists = check_email(email)
-    email_format_ok = validate_email(email)
+    email_syntax_ok = syntax_check.check_email_syntax(email)
+    username_syntax_ok = syntax_check.check_username_syntax(username)
+    password_syntax_ok = syntax_check.check_password_syntax(new_password)
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
         return render_template('error.html', code='form_not_filled')
+    elif not email_syntax_ok:
+        return render_template('error.html', code='wrong_email_syntax')
+    elif not username_syntax_ok:
+        return render_template('error.html', code='wrong_username_syntax')
+    elif not password_syntax_ok:
+        return render_template('error.html', code='wrong_password_syntax')
     elif username_exists:
         return render_template('error.html', code='username_exists')
     elif email_exists:
         return render_template('error.html', code='email_exists')
-    elif not email_format_ok:
-        return render_template('error.html', code='wrong_email_format')
     elif new_password != repeat_new_password:
         return render_template('error.html', code='passwords_do_not_match')
-    elif ' ' in username or ' ' in email:
-        return render_template('error.html', code='spaces_not_allowed')
     else:
         cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
@@ -184,9 +187,18 @@ def settings_processor():
     email_check = email == repeat_email
     username_exists = check_username(username)
     email_exists = check_email(email)
+    email_syntax_ok = syntax_check.check_email_syntax(email)
+    username_syntax_ok = syntax_check.check_username_syntax(username)
+    password_syntax_ok = syntax_check.check_password_syntax(new_password)
 
     if not user:
         return redirect('/logout/', code=302)
+    elif email and not email_syntax_ok:
+        return render_template('error.html', code='wrong_email_syntax')
+    elif username and not username_syntax_ok:
+        return render_template('error.html', code='wrong_username_syntax')
+    elif new_password and not password_syntax_ok:
+        return render_template('error.html', code='wrong_password_syntax')
     if not new_password_check:
         return render_template('error.html', code='passwords_do_not_match')
     elif not email_check:
@@ -195,8 +207,6 @@ def settings_processor():
         return render_template('error.html', code='username_exists')
     elif email_exists:
         return render_template('error.html', code='email_exists')
-    elif (username and ' ' in username) or (email and ' ' in email):
-        return render_template('error.html', code='spaces_not_allowed')
 
     if username:
         update_user(user, username=username)
