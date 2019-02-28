@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>galera.dev Error</title>
+    <title>{{ code }} {{ title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" type="image/png" sizes="16x16" href="https://blog.mstefan99.com/static/images/ico.png">
@@ -14,30 +14,28 @@
    <div class="dusk" id="d{{ i }}"></div>
 {% endfor %}
 <main>
-    <div id="msg">Page not found</div>
+    <p id="msg">{{ title }}</p>
     <div id="error">
-        <div id="f1">{{ code // 100 }}</div>
+        <p id="f1">{{ code // 100 }}</p>
         {% if code // 10 % 10 == 0 %}
             <div id="mars">
                 <div id="circle">
-                    <div id="satellite"></div>
+                    <div id="satellite" onclick="window.location.href='/secret/'"></div>
                 </div>
                 <div class="ring ring-back"></div>
                 <div class="ring ring-front"></div>
             </div>
         {% else %}
-            <div id="f2">{{ code // 10 % 10 }}</div>
+            <p id="f2">{{ code // 10 % 10 }}</p>
         {% endif %}
-        <div id="f3">{{ code % 10 }}</div>
+        <p id="f3">{{ code % 10 }}</p>
     </div>
-    <div id="error-msg">{{ message }}</div>
-    <a href="/">
-        <div id="btn">
-            <p style="margin: 0;">Back to galera.dev</p>
-        </div>
+    <p id="error-msg">{{ message }}</p>
+    <a href="/" id="btn">
+        <p style="margin: 0;">Back to galera.dev!</p>
     </a>
 </main>
-<div id="error-info"><p>If you <i><b>really want</b></i> to know<br>what happened...</p>
+<div id="error-info"><p style="white-space: nowrap">If you <i><b>really want</b></i> to know<br>what happened...</p>
     <p>{{ error }}</p></div>
 </body>
 </html>
