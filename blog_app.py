@@ -23,7 +23,7 @@ def sign_in():
         return render_template('select.html')
 
 
-@app.route('/select_processor/', methods=['POST'])
+@app.route('/smart sign in/', methods=['POST'])
 def select_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
@@ -307,7 +307,7 @@ def verify():
 @app.route('/del-post/', methods=['GET'])
 @app.route('/register_processor/', methods=['GET'])
 @app.route('/login_processor/', methods=['GET'])
-@app.route('/select_processor/', methods=['GET'])
+@app.route('/smart sign in/', methods=['GET'])
 @app.route('/settings_processor/', methods=['GET'])
 def wrong_route():
     return render_template('error.html', code='wrong_route')
@@ -371,12 +371,14 @@ def e_exists():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('404.html', error=error), 404
+    message = 'Oops! It\'s not you, it\'s us. Seems like we\'ve lost this page somewhere. '
+    return render_template('app_error.html', code=404, message=message, error=error), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
-    return render_template('500.html', error=error), 500
+    message = 'It seems, there are some problems with the server.'
+    return render_template('app_error.html', code=500, message=message, error=error), 500
 
 
 if __name__ == '__main__':
