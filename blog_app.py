@@ -372,14 +372,21 @@ def e_exists():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    message = 'Oops! It\'s not you, it\'s us. Seems like we\'ve lost this page somewhere. '
-    return render_template('status/app_error.html', code=404, message=message, error=error), 404
+    title = 'Page not found!'
+    message = 'Oops! It\'s not you, it\'s us! Seems like we\'ve lost this page somewhere...'
+    return render_template('status/app_error.html', code=404, title=title, message=message, error=error), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
-    message = 'It seems, there are some problems with the server.'
-    return render_template('status/app_error.html', code=500, message=message, error=error), 500
+    title = 'Server error!'
+    message = 'Oops! It\'s not you, it\'s us! Seems like our programmers messed up this page...'
+    return render_template('status/app_error.html', code=500, title=title, message=message, error=error), 500
+
+
+@app.route('/secret/')
+def secret():
+    return render_template('status/secret.html')
 
 
 if __name__ == '__main__':
