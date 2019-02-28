@@ -5,7 +5,8 @@ class form {
     email_match_ok = true;
     login_ok = true;
     username_ok = true;
-    password_match_ok = true;
+    new_password_ok = true;
+    new_password_match_ok = true;
     required_ok = true;
 
     constructor(element) {
@@ -20,7 +21,7 @@ class form {
                 e.preventDefault();
                 this.submit.classList.add("disabled");
                 if (this.validate_all()) {
-                    this.form_element.submit()
+                    this.form_element.submit();
                 }
             });
 
@@ -32,7 +33,7 @@ class form {
                     e.preventDefault();
                     this.submit.classList.add("disabled");
                     if (this.validate_all()) {
-                        this.form_element.submit()
+                        this.form_element.submit();
                     }
                 }
             };
@@ -57,6 +58,7 @@ class form {
         this.email_msg = this.form_element.querySelector("p.email-check");
         this.repeat_email_msg = this.form_element.querySelector("p.email-match-check");
         this.username_msg = this.form_element.querySelector("p.username-check");
+        this.new_password_msg = this.form_element.querySelector("p.new-password-check");
         this.repeat_new_password_msg = this.form_element.querySelector("p.repeat-new-password-check");
         this.required_msg = this.form_element.querySelector("p.required-check");
 
@@ -120,6 +122,7 @@ class form {
             if (this.new_password.classList.contains("realtime-validate")) {
                 ["keyup", "paste", "load"].forEach((event) => {
                     this.new_password.addEventListener(event, () => {
+                        this.check_password(this.new_password, this.new_password_msg);
                         this.check_password_match(this.new_password,
                             this.repeat_new_password, this.repeat_new_password_msg);
                     });
@@ -139,9 +142,9 @@ class form {
                 });
             }
         } else {
-            console.log("No repeat-new-password field, continuing...")
+            console.log("No repeat-new-password field, continuing...");
         }
-        this.enable_smart_submit()
+        this.enable_smart_submit();
     }
 
 
@@ -159,8 +162,20 @@ class form {
                     username_msg.className = "credentials-check " + response[0];
                     username_msg.innerHTML = response[1];
                     this.username_ok = response[0] === "ok";
+                    if (this.username_ok) {
+                        let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
+                        var ok = re.test(username.value.toLowerCase());
+                        if (!ok) {
+                            username_msg.className = "credentials-check error";
+                            username_msg.innerHTML = "Your username must be at least 3 symbols long " +
+                            "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
+                        } else {
+                            username.innerHTML = "";
+                        }
+                        this.username_ok = ok;
+                    }
                     this.validate_form();
-                    form.set_color(this.username_ok, username)
+                    form.set_color(this.username_ok, username);
                 }
             };
 
@@ -169,7 +184,7 @@ class form {
             xhr.send("username=" + username.value);
         }
         this.validate_form();
-        form.set_color(this.username_ok, username)
+        form.set_color(this.username_ok, username);
     }
 
 
@@ -187,7 +202,7 @@ class form {
                     login_msg.innerHTML = response[1];
                     this.login_ok = response[0] === "ok";
                     this.validate_form();
-                    form.set_color(this.login_ok, login)
+                    form.set_color(this.login_ok, login);
                 }
             };
 
@@ -196,7 +211,7 @@ class form {
             xhr.send("login=" + login.value);
         }
         this.validate_form();
-        form.set_color(this.login_ok, login)
+        form.set_color(this.login_ok, login);
     }
 
 
@@ -214,8 +229,8 @@ class form {
                     email_msg.innerHTML = response[1];
                     this.email_ok = response[0] === "ok";
                     if (this.email_ok) {
-                        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                        var ok = re.test(this.email.value.toLowerCase());
+                        let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                        var ok = re.test(email.value.toLowerCase());
                         if (!ok) {
                             email_msg.className = "credentials-check error";
                             email_msg.innerHTML = "Invalid email format";
@@ -225,7 +240,7 @@ class form {
                         this.email_ok = ok;
                     }
                     this.validate_form();
-                    form.set_color(this.email_ok, email)
+                    form.set_color(this.email_ok, email);
                 }
             };
             xhr.open("POST", "/check_email/", async);
@@ -233,7 +248,7 @@ class form {
             xhr.send("email=" + email.value);
         }
         this.validate_form();
-        form.set_color(this.email_ok, email)
+        form.set_color(this.email_ok, email);
     }
 
 
@@ -250,7 +265,23 @@ class form {
             this.email_match_ok = true;
         }
         this.validate_form();
-        form.set_color(this.email_match_ok, email, email_repeat)
+        form.set_color(this.email_match_ok, email, email_repeat);
+    }
+
+
+    check_password(password, password_msg) {
+        let re = /^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[0-9a-zA-Z!@#$%^&*(){}\[\]\-_=+,.<>|\\]{8,100}$/;
+        var ok = re.test(password.value.toLowerCase());
+        if (!ok) {
+            password_msg.className = "credentials-check error";
+            password_msg.innerHTML = "Your password must be at least 8 characters long " +
+            "and include at least one letter and one number. Spaces not allowed.";
+        } else {
+            password_msg.innerHTML = "";
+        }
+        this.new_password_ok = ok;
+        this.validate_form();
+        form.set_color(this.new_password_ok, password);
     }
 
 
@@ -258,32 +289,35 @@ class form {
         if (!password.value && password.hasAttribute('required') &&
             !password_repeat.value && password_repeat.hasAttribute('required')) {
             password_msg.innerHTML = "";
-            this.password_match_ok = false;
+            this.new_password_match_ok = false;
         } else if (!password.value.trim() && !password_repeat.value.trim()) {
             password_msg.innerHTML = "";
         } else if (password.value !== password_repeat.value) {
             password_msg.innerHTML = "Passwords do not match";
             password_msg.className = "credentials-check error";
-            this.password_match_ok = false;
+            this.new_password_match_ok = false;
         } else if (password.value === password_repeat.value) {
             password_msg.innerHTML = "Passwords match";
             password_msg.className = "credentials-check ok";
-            this.password_match_ok = true;
+            this.new_password_match_ok = true;
         }
         this.validate_form();
-        form.set_color(this.password_match_ok, password, password_repeat)
+        form.set_color(this.new_password_ok, password);
+        form.set_color(this.new_password_match_ok, password_repeat);
     }
 
 
     check_required(required_msg) {
         this.required_ok = true;
-        required_msg.innerHTML = "";
+        if (this.required_msg) {
+            required_msg.innerHTML = "";
+        }
         Array.from(this.required).forEach((element) => {
             if (!element.value) {
                 this.required_ok = false;
                 required_msg.innerHTML = "Please fill in all required fields";
                 required_msg.className = "credentials-check error";
-                form.set_color(this.required_ok, element)
+                form.set_color(this.required_ok, element);
             }
         });
         this.validate_form();
@@ -303,6 +337,9 @@ class form {
         if (this.repeat_email) {
             this.check_email_match(this.email, this.repeat_email, this.repeat_email_msg);
         }
+        if (this.new_password) {
+            this.check_password(this.new_password, this.new_password_msg);
+        }
         if (this.new_password && this.repeat_new_password) {
             this.check_password_match(this.new_password, this.repeat_new_password, this.repeat_new_password_msg);
         }
@@ -310,9 +347,9 @@ class form {
             this.check_required(this.required_msg);
         }
         // Enabling or disabling form submission
-        var ok = this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.password_match_ok && this.required_ok;
+        var ok = this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.new_password_match_ok && this.required_ok;
         if (!ok) {
-            this.submit.classList.add("disabled")
+            this.submit.classList.add("disabled");
         } else {
             this.submit.classList.remove("disabled");
         }
@@ -322,7 +359,7 @@ class form {
 
     // Enabling or disabling form submission
     validate_form() {
-        if (this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.password_match_ok && this.required_ok) {
+        if (this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.new_password_match_ok && this.required_ok) {
             this.submit.classList.remove("disabled");
             return false;
         } else {

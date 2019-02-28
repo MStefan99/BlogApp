@@ -19,8 +19,6 @@
                     Emails do not match.
                 {% elif code == 'logged_out' %}
                     You need to <a href="/sign in/">sign in</a> to view this page.
-                {% elif code == 'spaces_not_allowed' %}
-                    Using spaces is not allowed in username or email.
                 {% elif code == 'wrong_route' %}
                     Oops! This page is empty, but you can always visit our
                     <a href="/">homepage</a>!
@@ -30,8 +28,16 @@
                     but if not, try again or change the email.
                 {% elif code == 'user_not_found' %}
                     User not found.
-                {% elif code == 'wrong_email_format' %}
+                {% elif code == 'wrong_email_syntax' %}
                     Wrong email format.
+                {% elif code == 'wrong_username_syntax' %}
+                    Your username must be at least 3 symbols long<br>
+                    and include only letters, numbers or characters \"-\", \"_\" and \".\".<br>
+                    Spaces not allowed.
+                {% elif code == 'wrong_password_syntax' %}
+                    Your password must be at least 8 characters long<br>
+                    and include at least one letter and one number.<br>
+                    Spaces not allowed.
                 {% endif %}
             </p>
         </div>
