@@ -189,8 +189,10 @@ main {
 }
 
 .star {
+    height: .3em;
+    width: .3em;
     background-color: var(--text-secondary);
-    box-shadow: 0 0 20px var(--text-secondary);
+    box-shadow: 0 0 3em .4em var(--text-secondary);
     border-radius: 50%;
     position: absolute;
 }
@@ -220,73 +222,61 @@ a {
 #s1 {
     top: 33%;
     left: 35%;
-    -webkit-filter: blur(3px);
 }
 
 #s2 {
     top: 53%;
     left: 55%;
-    -webkit-filter: blur(1px);
 }
 
 #s3 {
     top: 43%;
     left: 85%;
-    -webkit-filter: blur(4px);
 }
 
 #s4 {
     top: 53%;
     left: 40%;
-    -webkit-filter: blur(1px);
 }
 
 #s5 {
     top: 65%;
     left: 37%;
-    -webkit-filter: blur(2px);
 }
 
 #s6 {
     top: 75%;
     left: 20%;
-    -webkit-filter: blur(4px);
 }
 
 #s7 {
     top: 77%;
     left: 53%;
-    -webkit-filter: blur(2px);
 }
 
 #s8 {
     top: 64%;
     left: 64%;
-    -webkit-filter: blur(2px);
 }
 
 #s9 {
     top: 44%;
     left: 61%;
-    -webkit-filter: blur(1px);
 }
 
 #s10 {
     top: 22%;
     left: 68%;
-    -webkit-filter: blur(2px);
 }
 
 #s11 {
     top: 14%;
     left: 10%;
-    -webkit-filter: blur(5px);
 }
 
 #s12 {
     top: 86%;
     left: 90%;
-    -webkit-filter: blur(5px);
 }
 
 @-webkit-keyframes move {

@@ -11,16 +11,20 @@ for (i = 13; i < 100 / window.devicePixelRatio; i++) {
 let stars = document.getElementsByClassName("star");
 let star_text = document.getElementById("star-text");
 
-document.getElementById('satellite').onclick = () => window.location.href='/secret/';
+document.getElementById('satellite').onclick = () => window.location.href = '/secret/';
 
 function setup() {
-    Array.from(stars).forEach((dusk) => {
-        dusk.style.top = Math.round(Math.random() * 90 + 5) + '%';
-        dusk.style.left = Math.round(Math.random() * 90 + 5) + '%';
-        var size = Math.round(Math.random() * 4 + 4);
-        dusk.style.webkitFilter = 'blur(' + Math.random() / 4 + 'em)';
-        dusk.style.height = (size / 18) + 'em';
-        dusk.style.width = (size / 18) + 'em';
+    Array.from(stars).forEach((star) => {
+        star.style.top = Math.round(Math.random() * 90 + 5) + '%';
+        star.style.left = Math.round(Math.random() * 90 + 5) + '%';
+        var size = Math.round(Math.random() * 9 + 1);
+        var red = Math.round(Math.random() * 55 + 200);
+        var blue = red < 240 ? 255 : Math.round(Math.random() * 35 + 220);
+        var green = blue < 210 && red > 240? 255: Math.round(Math.random() * 35 + 220);
+        star.style.boxShadow = `0 0 ${size / 3}em ${size / 20}em rgb(${red}, ${green}, ${blue})`;
+        star.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        star.style.height = (size / 18) + 'em';
+        star.style.width = (size / 18) + 'em';
     });
 }
 
