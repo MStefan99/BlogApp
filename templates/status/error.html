@@ -1,6 +1,5 @@
 {% extends 'layout.html' %}
 {% block login %}
-    <div class=popup-form>
         <div class="popup-message">
             <p>
                 {% if code == 'username_exists' %}
@@ -41,5 +40,4 @@
                 {% endif %}
             </p>
         </div>
-    </div>
 {% endblock %}

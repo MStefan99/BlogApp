@@ -1,10 +1,9 @@
 from flask import request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
 import psycopg2.extras
-from hash import *
-from mail import *
-from datetime import *
-from search import *
+from blog.utils.hash import *
+from blog.mail.mail import *
+from blog.utils.search import *
 
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
                             cursor_factory=psycopg2.extras.NamedTupleCursor)
@@ -80,36 +79,6 @@ def check_cookie():
         except AttributeError:
             return False
     return True
-
-
-def get_posts():
-    cursor = DATABASE.cursor()
-    cursor.execute('select * from posts order by date desc')
-    return cursor.fetchall()
-
-
-def check_favourite(user, post):
-    cursor = DATABASE.cursor()
-    if user and post:
-        cursor.execute('select * from posts join favourites '
-                       'on (favourites.post_id = posts.id '
-                       'and favourites.user_id = %s and post_id = %s)',
-                       (user.id, post.id))
-        return bool(cursor.fetchall())
-
-
-def save_post(user, post):
-    cursor = DATABASE.cursor()
-    time = datetime.now()
-    cursor.execute('insert into favourites(user_id, post_id, date_added) values (%s, %s, %s)',
-                   (user.id, post.id, time.strftime('%Y-%m-%d %H:%M:%S')))
-
-
-def remove_post(user, post):
-    cursor = DATABASE.cursor()
-    time = datetime.now()
-    cursor.execute('delete from favourites where user_id = %s and post_id = %s',
-                   (user.id, post.id))
 
 
 def get_user():

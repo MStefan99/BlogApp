@@ -14,6 +14,11 @@ body {
     font-family: 'Delius', cursive;
 }
 
+p {
+    pointer-events: none;
+    cursor: default;
+}
+
 main {
     position: absolute;
     top: 50%;
@@ -25,8 +30,8 @@ main {
     font-size: 3em;
     color: var(--text-secondary);
     text-align: center;
+    margin: 0;
     text-shadow: 0 0 10px var(--text-secondary);
-    white-space: nowrap;
 }
 
 #error {
@@ -40,6 +45,7 @@ main {
     font-size: 100px;
     color: var(--text-secondary);
     text-shadow: 0 0 10px var(--text-secondary);
+    margin: 0;
     z-index: 3;
 }
 
@@ -68,6 +74,7 @@ main {
     position: relative;
     top: 15%;
     left: 15%;
+    cursor: crosshair;
     animation: size 4s cubic-bezier(0.4, 0.6, 0.6, 0.4) infinite;
 }
 
@@ -85,7 +92,7 @@ main {
 #error-info:hover {
     transform: translateY(0);
     bottom: 0;
-    background-color: rgba(0, 0, 0, .75);
+    background-color: rgba(0, 0, 0, .8);
     transition: background-color 1.4s cubic-bezier(0.65, 0.05, 0.36, 1),
     transform .8s cubic-bezier(0.65, 0.05, 0.36, 1),
     bottom .8s cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -111,15 +118,15 @@ main {
     bottom .8s 1s cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-@media screen and (max-aspect-ratio: 6/5) {
+@media screen and (max-aspect-ratio: 12/8) {
     #error-info {
         margin: 0 20vw 2vh;
     }
 }
 
-@media screen and (max-aspect-ratio: 3/8) {
+@media screen and (max-aspect-ratio: 5/8) {
     #error-info {
-        margin: 0 0 2vh;
+        margin: 0 5vw 2vh;
     }
 }
 
@@ -127,6 +134,7 @@ main {
     padding: .3em 2vw;
     width: fit-content;
     height: fit-content;
+    display: block;
     color: var(--text-secondary);
     background-color: var(--accent-color);
     border-radius: 1rem;
@@ -135,9 +143,6 @@ main {
     left: 50%;
     transform: translateX(-50%);
     box-shadow: 0 0 10px var(--accent-color);
-}
-
-#btn:hover {
     cursor: pointer;
 }
 

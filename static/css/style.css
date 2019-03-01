@@ -40,19 +40,36 @@ body {
     margin: 0;
 }
 
-.popup-form {
+.popup-form, .popup-message {
     position: absolute;
     box-sizing: border-box;
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 2vh 2vw;
     border: var(--accent-color) solid 2px;
     border-radius: 2vmax;
     top: 50%;
     right: 35vw;
     left: 35vw;
-    transform: translateY(-50%);
     background: var(--main-color);
+    transform: translateY(-50%);
+}
+
+@media (max-aspect-ratio: 16/12) {
+    .popup-form, .popup-message {
+        right: 20vw;
+        left: 20vw;
+    }
+}
+
+@media (max-aspect-ratio: 8/12) {
+    .popup-form, .popup-message {
+        right: 5vw;
+        left: 5vw;
+    }
+}
+
+.popup-form {
+    padding: 5vh 5vw;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .popup-form a, .popup-form a:visited, .login-link {
@@ -60,18 +77,17 @@ body {
     text-align: center;
 }
 
+.popup-message {
+    font-weight: 600;
+    padding: 2vh 2vw;
+    border-radius: 10px;
+    text-align: center;
+}
+
 a.nav-button, main #posts-container a {
     text-decoration: none;
     font-weight: 600;
     color: var(--text-secondary);
-}
-
-.popup-message {
-    font-weight: 600;
-    padding: 2vh 2vw;
-    background-color: var(--background-color);
-    border-radius: 10px;
-    text-align: center;
 }
 
 form {
@@ -195,12 +211,13 @@ header {
     flex-flow: row-reverse wrap;
     justify-content: flex-end;
     align-items: center;
-    margin: 0 1vw 0 0;
+    padding: 0;
+    margin: 1vh 1vw 1vh 8vw;
 }
 
 .nav-block li {
-    padding: 1vh 0;
-    margin: 0 1vw;
+    padding: .5vh 1vw;
+    margin: 0;
 }
 
 .nav-button {
