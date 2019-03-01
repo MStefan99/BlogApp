@@ -9,10 +9,14 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/error.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Delius" rel="stylesheet">
 </head>
-<body>
-{% for i in range(1,12) %}
-   <div class="dusk" id="d{{ i }}"></div>
-{% endfor %}
+<body onload="setup()">
+<div id="stars">
+    {% for i in range(1,13) %}
+        <div id="s{{ i }}" class="star" draggable="true"></div>
+    {% endfor %}
+</div>
+
+<div id="star-text">No, that's a star! That's not your page!<br>But we're looking for it...</div>
 <main>
     <p id="msg">{{ title }}</p>
     <div id="error">
@@ -20,7 +24,7 @@
         {% if code // 10 % 10 == 0 %}
             <div id="mars">
                 <div id="circle">
-                    <div id="satellite" onclick="window.location.href='/secret/'"></div>
+                    <div id="satellite"></div>
                 </div>
                 <div class="ring ring-back"></div>
                 <div class="ring ring-front"></div>
@@ -30,12 +34,14 @@
         {% endif %}
         <p id="f3">{{ code % 10 }}</p>
     </div>
-    <p id="error-msg">{{ message }}</p>
+    <p class="error-msg">{{ message }}</p>
+    <p class="error-msg" id="pc-only">But you can drag the stars around!</p>
     <a href="/" id="btn">
         <p style="margin: 0;">Back to galera.dev!</p>
     </a>
 </main>
 <div id="error-info"><p style="white-space: nowrap">If you <i><b>really want</b></i> to know<br>what happened...</p>
     <p>{{ error }}</p></div>
+<script src="{{ url_for('static', filename='javascript/error.js') }}"></script>
 </body>
 </html>
