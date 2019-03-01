@@ -7,7 +7,7 @@ body {
     width: 100vw;
     overflow: hidden;
     background: url('../images/pattern.png'),
-    radial-gradient(circle farthest-side, #158AB2 0%, #1f2a6e 15%, #111742 35%, #0D071A 85%);
+    radial-gradient(circle closest-side, #158AB2 0%, #1f2a6e 20%, #111742 80%, #0D071A 160%);
 }
 
 * {
@@ -20,6 +20,7 @@ p {
 }
 
 main {
+    pointer-events: none;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -75,12 +76,13 @@ main {
     top: 15%;
     left: 15%;
     cursor: crosshair;
+    pointer-events: auto;
     animation: size 4s cubic-bezier(0.4, 0.6, 0.6, 0.4) infinite;
 }
 
-#error-msg {
+.error-msg {
     font-size: 1em;
-    margin: 2vh 0 0;
+    margin: 1.5vh 0;
     color: var(--text-secondary);
     text-align: center;
     position: relative;
@@ -130,13 +132,19 @@ main {
     }
 }
 
+@media (pointer: coarse) {
+    #pc-only {
+        display: none;
+    }
+}
+
 #btn {
     padding: .3em 2vw;
     width: fit-content;
     height: fit-content;
     display: block;
     color: var(--text-secondary);
-    background-color: var(--accent-color);
+    background: linear-gradient(to bottom, var(--accent-light) 30%, var(--accent-color) 90%);
     border-radius: 1rem;
     position: relative;
     margin-top: 1vh;
@@ -144,6 +152,7 @@ main {
     transform: translateX(-50%);
     box-shadow: 0 0 10px var(--accent-color);
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .ring {
@@ -173,86 +182,108 @@ main {
     z-index: -1
 }
 
-.dusk {
-    height: 1vmin;
-    width: 1vmin;
+
+#stars {
+    height: inherit;
+    width: inherit;
+}
+
+.star {
     background-color: var(--text-secondary);
     box-shadow: 0 0 20px var(--text-secondary);
     border-radius: 50%;
     position: absolute;
 }
 
+#star-text {
+    position: absolute;
+    display: inline-block;
+    transform: translate(-50%, 100%);
+    top: 100%;
+    opacity: 0;
+    width: fit-content;
+    background-color: rgba(0, 0, 0, .8);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1vh 1vw;
+    border-radius: 1em;
+    pointer-events: none;
+    transition: top .8s cubic-bezier(0.65, 0.05, 0.36, 1),
+    left .8s cubic-bezier(0.65, 0.05, 0.36, 1),
+    opacity .8s cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
 a {
     text-decoration: none;
 }
 
-#d1 {
+#s1 {
     top: 33%;
     left: 35%;
     -webkit-filter: blur(3px);
 }
 
-#d2 {
+#s2 {
     top: 53%;
     left: 55%;
     -webkit-filter: blur(1px);
 }
 
-#d3 {
+#s3 {
     top: 43%;
     left: 85%;
     -webkit-filter: blur(4px);
 }
 
-#d4 {
+#s4 {
     top: 53%;
     left: 40%;
     -webkit-filter: blur(1px);
 }
 
-#d5 {
+#s5 {
     top: 65%;
     left: 37%;
     -webkit-filter: blur(2px);
 }
 
-#d6 {
+#s6 {
     top: 75%;
     left: 20%;
     -webkit-filter: blur(4px);
 }
 
-#d7 {
+#s7 {
     top: 77%;
     left: 53%;
     -webkit-filter: blur(2px);
 }
 
-#d8 {
+#s8 {
     top: 64%;
     left: 64%;
     -webkit-filter: blur(2px);
 }
 
-#d9 {
+#s9 {
     top: 44%;
     left: 61%;
     -webkit-filter: blur(1px);
 }
 
-#d10 {
+#s10 {
     top: 22%;
     left: 68%;
     -webkit-filter: blur(2px);
 }
 
-#d11 {
+#s11 {
     top: 14%;
     left: 10%;
     -webkit-filter: blur(5px);
 }
 
-#d12 {
+#s12 {
     top: 86%;
     left: 90%;
     -webkit-filter: blur(5px);

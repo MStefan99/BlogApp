@@ -373,7 +373,7 @@ def e_exists():
 @app.errorhandler(404)
 def page_not_found(error):
     title = 'Page not found!'
-    message = 'Oops! It\'s not you, it\'s us! Seems like we\'ve lost this page somewhere...'
+    message = 'Oops! It\'s not you, it\'s us! Seems like we\'ve lost this page somewhere in space...'
     return render_template('status/app_error.html', code=404, title=title, message=message, error=error), 404
 
 
