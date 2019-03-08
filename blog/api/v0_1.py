@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 
 from blog.utils.check import check_username, check_login, check_email
 from blog.utils.posts import get_posts, get_favourites, check_favourite, save_post, remove_post
@@ -24,16 +24,22 @@ def api_posts_get():
 @app.route(f'{PATH}/favourites/', methods=['GET'])
 def api_favourites_get():
     user = get_user()
-    posts = get_favourites(user)
-    return jsonify(posts)
+
+    if not user:
+        return make_response('NO USER', 400)
+    else:
+        posts = get_favourites(user)
+        return jsonify(posts)
 
 
 @app.route(f'{PATH}/post/<string:post_link>/', methods=['GET'])
 def api_post_get(post_link):
-    user = get_user()
     post = find_post_by_link(post_link)
-    is_favourite = check_favourite(user, post) if user else False
-    return jsonify(post, is_favourite)
+
+    if not post:
+        return make_response('NO POST', 400)
+    else:
+        return jsonify(post)
 
 
 @app.route(f'{PATH}/favourite/', methods=['GET'])
@@ -44,13 +50,13 @@ def api_favourite_get():
     added = check_favourite(user, post)
 
     if not post:
-        return 'NO POST'
+        return make_response('NO POST', 400)
     if not user:
-        return 'NO USER'
+        return make_response('NO USER', 400)
     if added:
-        return 'IS FAVOURITE'
+        return make_response('IS FAVOURITE', 200)
     else:
-        return 'NOT FAVOURITE'
+        return make_response('NOT FAVOURITE', 200)
 
 
 @app.route(f'{PATH}/favourite/', methods=['PUT'])
@@ -60,9 +66,9 @@ def api_favourite_post():
     post = find_post_by_id(post_id)
 
     if not post:
-        return 'NO POST'
+        return make_response('NO POST', 400)
     if not user:
-        return 'NO USER'
+        return make_response('NO USER', 400)
     else:
         return save_post(user, post)
 
@@ -74,9 +80,9 @@ def api_favourite_delete():
     post = find_post_by_id(post_id)
 
     if not post:
-        return 'NO POST'
+        return make_response('NO POST', 400)
     if not user:
-        return 'NO USER'
+        return make_response('NO USER', 400)
     else:
         return remove_post(user, post)
 
@@ -84,40 +90,43 @@ def api_favourite_delete():
 @app.route(f'{PATH}/check_username/', methods=['GET'])
 def api_username_exists_get():
     username = request.form.get('username').strip()
+    username = username.strip if username else None
     username_syntax_ok = check_username_syntax(username)
 
     if not username:
-        return 'NO USERNAME'
+        return make_response('NO USERNAME', 400)
     elif not username_syntax_ok:
-        return 'INVALID SYNTAX'
+        return make_response('INVALID SYNTAX', 200)
     elif check_username(username):
-        return 'ALREADY EXISTS'
+        return make_response('ALREADY EXISTS', 200)
     else:
-        return 'OK'
+        return make_response('OK', 200)
 
 
 @app.route(f'{PATH}/check_login/', methods=['GET'])
 def api_login_exists_get():
-    login = request.form.get('login').strip()
+    login = request.form.get('login')
+    login = login.strip if login else None
 
     if not login:
-        return 'NO LOGIN'
+        return make_response('NO LOGIN', 400)
     elif check_login(login):
-        return 'OK'
+        return make_response('OK', 200)
     else:
-        return 'NOT FOUND'
+        return make_response('NOT FOUND', 200)
 
 
 @app.route(f'{PATH}/check_email/', methods=['GET'])
 def api_email_exists_get():
-    email = request.form.get('email').strip()
+    email = request.form.get('email')
+    email = email.strip if email else None
     email_syntax_ok = check_email_syntax(email)
 
     if not email:
-        return 'NO EMAIL'
-    if not email_syntax_ok:
-        return 'INVALID SYNTAX'
-    if check_email(email):
-        return 'ALREADY EXISTS'
+        return make_response('NO EMAIL', 400)
+    elif not email_syntax_ok:
+        return make_response('INVALID SYNTAX', 200)
+    elif check_email(email):
+        return make_response('ALREADY EXISTS', 200)
     else:
-        return 'OK'
+        return make_response('OK', 200)
