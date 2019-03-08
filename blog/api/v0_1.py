@@ -1,6 +1,7 @@
 from flask import jsonify, request
 
-from blog.utils.search import find_post_by_link, find_post_by_id, check_username, check_login, check_email
+from blog.utils.search import find_post_by_link, find_post_by_id, check_username, check_login, check_email, \
+    get_favourites
 from blog.utils.syntax_check import check_username_syntax, check_email_syntax
 from blog.utils.users import get_user
 from blog_app import app
@@ -20,6 +21,13 @@ def api_posts_get():
     return jsonify(posts)
 
 
+@app.route(f'{PATH}/favourites/', methods=['GET'])
+def api_favourites_get():
+    user = get_user()
+    posts = get_favourites(user)
+    return jsonify(posts)
+
+
 @app.route(f'{PATH}/post/<string:post_link>/', methods=['GET'])
 def api_post_get(post_link):
     user = get_user()
@@ -28,8 +36,25 @@ def api_post_get(post_link):
     return jsonify(post, is_favourite)
 
 
+@app.route(f'{PATH}/favourite/', methods=['GET'])
+def api_favourite_get():
+    user = get_user()
+    post_id = request.form.get('post')
+    post = find_post_by_id(post_id)
+    added = check_favourite(user, post)
+
+    if not post:
+        return 'NO POST'
+    if not user:
+        return 'NO USER'
+    if added:
+        return 'IS FAVOURITE'
+    else:
+        return 'NOT FAVOURITE'
+
+
 @app.route(f'{PATH}/favourite/', methods=['PUT'])
-def api_favourites_post():
+def api_favourite_post():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
@@ -38,12 +63,12 @@ def api_favourites_post():
         return 'NO POST'
     if not user:
         return 'NO USER'
-
-    return save_post(user, post)
+    else:
+        return save_post(user, post)
 
 
 @app.route(f'{PATH}/favourite/', methods=['DELETE'])
-def api_favourites_delete():
+def api_favourite_delete():
     user = get_user()
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
@@ -52,8 +77,8 @@ def api_favourites_delete():
         return 'NO POST'
     if not user:
         return 'NO USER'
-
-    return remove_post(user, post)
+    else:
+        return remove_post(user, post)
 
 
 @app.route(f'{PATH}/check_username/', methods=['GET'])
