@@ -107,7 +107,7 @@ def web_posts():
     return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
-@app.route('/post/<string:post_link>')
+@app.route('/post/<string:post_link>/')
 def web_post(post_link):
     user = get_user()
     post = find_post_by_link(post_link)

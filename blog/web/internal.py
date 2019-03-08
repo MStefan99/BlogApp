@@ -12,8 +12,7 @@ def web_add_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    save_post(user, post)
-    return 'OK'
+    return save_post(user, post)
 
 
 @app.route('/del_post/', methods=['POST'])
@@ -22,8 +21,7 @@ def web_del_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    remove_post(user, post)
-    return 'OK'
+    return remove_post(user, post)
 
 
 @app.route('/check_username/', methods=['POST'])
@@ -31,11 +29,11 @@ def web_username_exists():
     username = request.form.get('username').strip()
 
     if not username:
-        return ''
+        return 'NO USERNAME'
     elif check_username(username):
-        return 'error;Username already taken'
+        return 'ALREADY EXISTS'
     else:
-        return 'ok;Username is free'
+        return 'OK'
 
 
 @app.route('/check_login/', methods=['POST'])
@@ -43,18 +41,20 @@ def web_login_exists():
     login = request.form.get('login').strip()
 
     if not login:
-        return ''
+        return 'NO LOGIN'
     elif check_login(login):
-        return 'ok;'
+        return 'OK'
     else:
-        return 'error;User not found'
+        return 'NOT FOUND'
 
 
 @app.route('/check_email/', methods=['POST'])
 def web_email_exists():
     email = request.form.get('email').strip()
 
+    if not email:
+        return 'NO EMAIL'
     if check_email(email):
-        return 'error;Email already exists'
+        return 'ALREADY EXISTS'
     else:
-        return 'ok;'
+        return 'OK'

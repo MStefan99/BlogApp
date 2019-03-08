@@ -158,17 +158,28 @@ class form {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    username_msg.className = "credentials-check " + response[0];
-                    username_msg.innerHTML = response[1];
-                    this.username_ok = response[0] === "ok";
+                    let response = xhr.responseText;
+                    switch (response) {
+                        case 'OK':
+                            username_msg.className = "credentials-check ok";
+                            username_msg.innerHTML = "Username is free";
+                            break;
+                        case 'ALREADY EXISTS':
+                            username_msg.className = "credentials-check error";
+                            username_msg.innerHTML = "Username is already taken!";
+                            break;
+                        default:
+                            username_msg.innerHTML = "";
+                    }
+
+                    this.username_ok = response === "OK";
                     if (this.username_ok) {
                         let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
                         var ok = re.test(username.value.toLowerCase());
                         if (!ok) {
                             username_msg.className = "credentials-check error";
                             username_msg.innerHTML = "Your username must be at least 3 symbols long " +
-                            "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
+                                "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
                         } else {
                             username.innerHTML = "";
                         }
@@ -197,10 +208,21 @@ class form {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    login_msg.className = "credentials-check " + response[0];
-                    login_msg.innerHTML = response[1];
-                    this.login_ok = response[0] === "ok";
+                    let response = xhr.responseText;
+                    switch (response) {
+                        case 'OK':
+                            login_msg.className = "credentials-check ok";
+                            login_msg.innerHTML = "User found";
+                            break;
+                        case 'NOT FOUND':
+                            login_msg.className = "credentials-check error";
+                            login_msg.innerHTML = "User not found!";
+                            break;
+                        default:
+                            login_msg.innerHTML = "";
+                    }
+
+                    this.login_ok = response === "OK";
                     this.validate_form();
                     form.set_color(this.login_ok, login);
                 }
@@ -224,18 +246,27 @@ class form {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    email_msg.className = "credentials-check " + response[0];
-                    email_msg.innerHTML = response[1];
-                    this.email_ok = response[0] === "ok";
+                    let response = xhr.responseText;
+                    switch (response) {
+                        case 'OK':
+                            email_msg.className = "credentials-check ok";
+                            email_msg.innerHTML = "Email is free";
+                            break;
+                        case 'ALREADY EXISTS':
+                            email_msg.className = "credentials-check error";
+                            email_msg.innerHTML = "Email is already taken!";
+                            break;
+                        default:
+                            email_msg.innerHTML = "";
+                    }
+
+                    this.email_ok = response === "OK";
                     if (this.email_ok) {
                         let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                         var ok = re.test(email.value.toLowerCase());
                         if (!ok) {
                             email_msg.className = "credentials-check error";
                             email_msg.innerHTML = "Invalid email format";
-                        } else {
-                            email_msg.innerHTML = "";
                         }
                         this.email_ok = ok;
                     }
@@ -275,7 +306,7 @@ class form {
         if (!ok) {
             password_msg.className = "credentials-check error";
             password_msg.innerHTML = "Your password must be at least 8 characters long " +
-            "and include at least one letter and one number. Spaces not allowed.";
+                "and include at least one letter and one number. Spaces not allowed.";
         } else {
             password_msg.innerHTML = "";
         }
@@ -371,8 +402,10 @@ class form {
 
     static set_color(ok, ...elements) {
         elements.forEach((element) => {
-            if (ok) {
-                element.style.borderColor = "var(--accent-light)";
+            if (!element.value) {
+                element.style.borderColor = "var(--accent-color)";
+            } else if (ok) {
+                element.style.borderColor = "var(--ok)";
             } else {
                 element.style.borderColor = "var(--error)";
             }
