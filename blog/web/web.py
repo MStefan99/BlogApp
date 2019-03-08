@@ -1,9 +1,10 @@
-from flask import render_template
-from blog.utils import syntax_check
-from blog.utils.posts import *
-from blog.utils.users import *
-from blog.utils.search import *
-from blog_app import app
+from flask import render_template, request, redirect, make_response
+import psycopg2
+
+from blog.utils.posts import get_posts, check_favourite, get_favourites
+from blog.utils.search import find_user_by_cookie, find_post_by_link
+from blog.utils.users import get_user, delete_user, verify_email
+from blog_app import app, COOKIE_NAME
 
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
                             cursor_factory=psycopg2.extras.NamedTupleCursor)

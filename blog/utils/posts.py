@@ -10,6 +10,14 @@ def get_posts():
     return cursor.fetchall()
 
 
+def get_favourites(user):
+    cursor = DATABASE.cursor()
+    cursor.execute('select posts.* from posts join favourites '
+                   'on (favourites.post_id = posts.id and favourites.user_id = %s) '
+                   'order by favourites.date_added desc', (user.id,))
+    return cursor.fetchall()
+
+
 def check_favourite(user, post):
     cursor = DATABASE.cursor()
     if user and post:

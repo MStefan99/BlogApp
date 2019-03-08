@@ -33,5 +33,3 @@ def delete_hash(*hashes):
     for hash_value in hashes:
         cursor = DATABASE.cursor()
         cursor.execute('delete from hashes where hash = %s', (hash_value,))
-
-
