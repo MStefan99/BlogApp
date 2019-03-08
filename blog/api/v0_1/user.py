@@ -1,48 +1,36 @@
+from flask import request, make_response
+
+from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email
 from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
 from blog_app import app, COOKIE_NAME
-
-from flask import render_template, request, make_response, redirect
-from blog.utils import syntax_check
+from .path import PATH
 
 
-@app.route('/smart sign in/', methods=['POST'])
-def web_select_processor():
-    login = request.form.get('login')
-    user = find_user_by_login(login)
-
-    if user:
-        username = user.username
-        current_password = request.form.get('current-password')
-        return render_template('user/login.html', login=username, password=current_password)
-    else:
-        return render_template('user/register.html', login=login)
-
-
-@app.route('/login_processor/', methods=['POST'])
-def web_login_processor():
+@app.route(f'{PATH}/login/', methods=['POST'])
+def api_login_post():
     login = request.form.get('login')
     login = login.strip() if login else None
     current_password = request.form.get('current-password')
     user = find_user_by_login(login)
 
     if not login or not current_password:
-        return render_template('status/error.html', code='form_not_filled')
+        return make_response('MISSING ARGS', 400)
     elif not user:
-        return render_template('status/error.html', code='wrong_login')
+        return make_response('INVALID LOGIN', 400)
     elif user and password_correct(user, current_password):
-        resp = make_response(render_template('status/success.html', code='login_success'))
+        resp = make_response('OK', 200)
         resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
         return resp
     else:
-        return render_template('status/error.html', code='wrong_password')
+        return make_response('WRONG PASSWORD', 400)
+    
 
-
-@app.route('/register_processor/', methods=['POST'])
-def web_register_processor():
+@app.route(f'{PATH}/register/', methods=['PUT'])
+def api_register_put():
     username = request.form.get('username')
     email = request.form.get('email')
     new_password = request.form.get('new-password')
@@ -56,41 +44,41 @@ def web_register_processor():
     form_filled = username and new_password and repeat_new_password and email
 
     if not form_filled:
-        return render_template('status/error.html', code='form_not_filled')
+        return make_response('MISSING ARGS', 400)
     elif not email_syntax_ok:
-        return render_template('status/error.html', code='wrong_email_syntax')
+        return make_response('INVALID EMAIL SYNTAX', 400)
     elif not username_syntax_ok:
-        return render_template('status/error.html', code='wrong_username_syntax')
+        return make_response('INVALID USERNAME SYNTAX', 400)
     elif not password_syntax_ok:
-        return render_template('status/error.html', code='wrong_password_syntax')
+        return make_response('INVALID PASSWORD SYNTAX', 400)
     elif username_exists:
-        return render_template('status/error.html', code='username_exists')
+        return make_response('USERNAME EXISTS', 400)
     elif email_exists:
-        return render_template('status/error.html', code='email_exists')
+        return make_response('EMAIL EXISTS', 400)
     elif new_password != repeat_new_password:
-        return render_template('status/error.html', code='passwords_do_not_match')
+        return make_response('PASSWORDS DO NOT MATCH', 400)
     else:
         cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
-        resp = make_response(render_template('status/success.html', code='register_success'))
+        resp = make_response(make_response('OK', 201))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
-@app.route('/recover_create_processor/', methods=['POST'])
-def web_recover_create_processor():
+@app.route(f'{PATH}/recover_create/', methods=['POST'])
+def api_recover_create_post():
     login = request.form.get('login')
     user = find_user_by_login(login)
 
     if user:
         create_recover_link(user)
-        return render_template('status/success.html', code='recover_create_success')
+        return make_response('OK', 200)
     else:
-        return render_template('status/error.html', code='wrong_login')
+        return make_response('NO USER', 400)
 
 
-@app.route('/recover_processor/', methods=['POST'])
-def web_recover_processor():
+@app.route(f'{PATH}/recover/', methods=['PUT'])
+def api_recover_put():
     key = request.form.get('key')
     user = find_user_by_recover_key(key)
     new_password = request.form.get('new-password')
@@ -99,21 +87,21 @@ def web_recover_processor():
     new_password_check = new_password == repeat_new_password
 
     if not user:
-        return render_template('status/error.html', code='user_not_found')
+        return make_response('NO USER', 400)
     elif not new_password or not repeat_new_password:
-        return render_template('status/error.html', code='form_not_filled')
+        return make_response('MISSING ARGS', 400)
     elif not new_password_check:
-        return render_template('status/error.html', code='passwords_do_not_match')
+        return make_response('PASSWORDS DO NOT MATCH', 400)
     else:
         cookie_id = generate_hash()
         update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
-        resp = make_response(render_template('status/success.html', code='edit_success'))
+        resp = make_response(make_response('OK', 200))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
-@app.route('/settings_processor/', methods=['POST'])
-def web_settings_processor():
+@app.route(f'{PATH}/settings/', methods=['POST'])
+def api_settings_post():
     username = request.form.get('username')
     email = request.form.get('email')
     repeat_email = request.form.get('repeat-email')
@@ -130,21 +118,21 @@ def web_settings_processor():
     password_syntax_ok = syntax_check.check_password_syntax(new_password)
 
     if not user:
-        return redirect('/logout/', code=302)
+        return make_response('NO USER', 400)
     elif email and not email_syntax_ok:
-        return render_template('status/error.html', code='wrong_email_syntax')
+        return make_response('INVALID EMAIL SYNTAX', 400)
     elif username and not username_syntax_ok:
-        return render_template('status/error.html', code='wrong_username_syntax')
+        return make_response('INVALID USERNAME SYNTAX', 400)
     elif new_password and not password_syntax_ok:
-        return render_template('status/error.html', code='wrong_password_syntax')
+        return make_response('INVALID PASSWORD SYNTAX', 400)
     if not new_password_check:
-        return render_template('status/error.html', code='passwords_do_not_match')
+        return make_response('PASSWORDS DO NOT MATCH', 400)
     elif not email_check:
-        return render_template('status/error.html', code='emails_do_not_match')
+        return make_response('EMAILS DO NOT MATCH', 400)
     elif username_exists:
-        return render_template('status/error.html', code='username_exists')
+        return make_response('USERNAME EXISTS', 400)
     elif email_exists:
-        return render_template('status/error.html', code='email_exists')
+        return make_response('EMAIL EXISTS', 400)
 
     if username:
         update_user(user, username=username)
@@ -153,28 +141,28 @@ def web_settings_processor():
     if new_password:
         cookie_id = generate_hash()
         update_user(user, new_password=new_password, cookie_id=cookie_id)
-        resp = make_response(render_template('status/success.html', code='edit_success'))
+        resp = make_response(make_response('OK', 200))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
-    return render_template('status/success.html', code='edit_success')
+    return make_response('OK', 200)
 
 
-@app.route('/delete_confirm/')
-def web_delete_confirm():
+@app.route(f'{PATH}/delete/', methods=['PUT'])
+def api_delete_put():
     user = get_user()
 
     if not user:
-        return render_template('status/error.html', code='logged_out')
+        return make_response('NO USER', 400)
     else:
         delete_user(user)
-        return redirect('/logout/', code=302)
+        return make_response('OK', 200)
 
 
-@app.route('/verify/')
-def web_verify():
-    key = request.args.get('key')
+@app.route(f'{PATH}/verify/', methods=['PUT'])
+def api_verify_post():
+    key = request.form.get('key')
     if verify_email(key):
-        return render_template('status/success.html', code='verification_success')
+        return make_response('OK', 200)
     else:
-        return render_template('status/error.html', code='verification_failed')
+        return make_response('NO USER', 400)

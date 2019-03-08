@@ -6,13 +6,7 @@ from blog.utils.search import find_post_by_link, find_post_by_id
 from blog.utils.syntax_check import check_username_syntax, check_email_syntax
 from blog.utils.users import get_user
 from blog_app import app
-
-URL = 'api'
-VERSION = 'v0.1'
-PATH = f'/{URL}/{VERSION}'
-
-
-#  WARNING: JSONPLUS NEEDS TO BE INSTALLED FOR API TO WORK CORRECTLY!
+from .path import PATH
 
 
 @app.route(f'{PATH}/posts/', methods=['GET'])
@@ -90,7 +84,7 @@ def api_favourite_delete():
 @app.route(f'{PATH}/check_username/', methods=['GET'])
 def api_username_exists_get():
     username = request.form.get('username').strip()
-    username = username.strip if username else None
+    username = username.strip() if username else None
     username_syntax_ok = check_username_syntax(username)
 
     if not username:
@@ -106,7 +100,7 @@ def api_username_exists_get():
 @app.route(f'{PATH}/check_login/', methods=['GET'])
 def api_login_exists_get():
     login = request.form.get('login')
-    login = login.strip if login else None
+    login = login.strip() if login else None
 
     if not login:
         return make_response('NO LOGIN', 400)
@@ -119,7 +113,7 @@ def api_login_exists_get():
 @app.route(f'{PATH}/check_email/', methods=['GET'])
 def api_email_exists_get():
     email = request.form.get('email')
-    email = email.strip if email else None
+    email = email.strip() if email else None
     email_syntax_ok = check_email_syntax(email)
 
     if not email:

@@ -32,7 +32,7 @@ def web_del_post():
 @app.route('/check_username/', methods=['POST'])
 def web_username_exists():
     username = request.form.get('username')
-    username = username.strip if username else None
+    username = username.strip() if username else None
     username_syntax_ok = check_username_syntax(username)
 
     if not username:
@@ -48,7 +48,7 @@ def web_username_exists():
 @app.route('/check_login/', methods=['POST'])
 def web_login_exists():
     login = request.form.get('login')
-    login = login.strip if login else None
+    login = login.strip() if login else None
 
     if not login:
         return 'NO LOGIN'
@@ -61,7 +61,7 @@ def web_login_exists():
 @app.route('/check_email/', methods=['POST'])
 def web_email_exists():
     email = request.form.get('email')
-    email = email.strip if email else None
+    email = email.strip() if email else None
     email_syntax_ok = check_email_syntax(email)
 
     if not email:
