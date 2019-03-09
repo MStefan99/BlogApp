@@ -195,8 +195,6 @@ form .credentials-check.ok {
 
 header {
     background-color: var(--accent-color);
-    width: 100vw;
-    position: fixed;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
