@@ -23,7 +23,7 @@ def api_login_post():
         return make_response('INVALID LOGIN', 422)
     elif user and password_correct(user, current_password):
         resp = make_response('OK', 200)
-        resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
+        resp.set_cookie(COOKIE_NAME, user['cookieid'], max_age=60 * 60 * 24 * 30)
         return resp
     else:
         return make_response('WRONG PASSWORD', 422)

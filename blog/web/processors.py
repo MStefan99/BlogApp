@@ -15,7 +15,7 @@ def web_select_processor():
     user = find_user_by_login(login)
 
     if user:
-        username = user.username
+        username = user['username']
         current_password = request.form.get('current-password')
         return render_template('user/login.html', login=username, password=current_password)
     else:
@@ -35,7 +35,7 @@ def web_login_processor():
         return render_template('status/error.html', code='wrong_login')
     elif user and password_correct(user, current_password):
         resp = make_response(render_template('status/success.html', code='login_success'))
-        resp.set_cookie(COOKIE_NAME, user.cookieid, max_age=60 * 60 * 24 * 30)
+        resp.set_cookie(COOKIE_NAME, user['cookieid'], max_age=60 * 60 * 24 * 30)
         return resp
     else:
         return render_template('status/error.html', code='wrong_password')

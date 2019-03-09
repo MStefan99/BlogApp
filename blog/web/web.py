@@ -99,7 +99,7 @@ def web_post(post_link):
     is_favourite = check_favourite(user, post)
 
     return render_template('posts/post.html', post=post, is_favourite=is_favourite,
-                           tags=post.tags.split(','))
+                           tags=post['tags'].split(','))
 
 
 @app.route('/favourites/')
