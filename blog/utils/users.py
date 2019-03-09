@@ -1,9 +1,10 @@
 from flask import request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
 import psycopg2.extras
-from blog.utils.hash import *
-from blog.mail.mail import *
-from blog.utils.search import *
+
+from blog.mail.mail import send_mail
+from blog.utils.hash import generate_hash, delete_hash
+from blog.utils.search import find_user_by_cookie
 
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
                             cursor_factory=psycopg2.extras.NamedTupleCursor)

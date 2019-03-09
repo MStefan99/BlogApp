@@ -20,12 +20,12 @@ email_re = '^(([^<>()\\[\\]\\\\.,;:\\s@"][\\w]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"][\\
 
 
 def check_password_syntax(password):
-    return True if re.search(password_re, password) else False
+    return True if password and re.search(password_re, password) else False
 
 
 def check_username_syntax(username):
-    return True if re.search(username_re, username) else False
+    return True if username and re.search(username_re, username) else False
 
 
 def check_email_syntax(email):
-    return True if re.search(email_re, email) else False
+    return True if email and re.search(email_re, email) else False

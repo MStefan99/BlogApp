@@ -1,9 +1,10 @@
-from flask import render_template
-from blog.utils import syntax_check
-from blog.utils.posts import *
-from blog.utils.users import *
-from blog.utils.search import *
-from blog_app import app
+from flask import render_template, request, redirect, make_response
+import psycopg2
+
+from blog.utils.posts import get_posts, check_favourite, get_favourites
+from blog.utils.search import find_user_by_cookie, find_post_by_link
+from blog.utils.users import get_user
+from blog_app import app, COOKIE_NAME
 
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
                             cursor_factory=psycopg2.extras.NamedTupleCursor)
@@ -78,17 +79,6 @@ def web_delete():
     return render_template('user/delete.html')
 
 
-@app.route('/delete_confirm/')
-def web_delete_confirm():
-    user = get_user()
-
-    if not user:
-        return render_template('status/error.html', code='logged_out')
-    else:
-        delete_user(user)
-        return redirect('/logout/', code=302)
-
-
 @app.route('/')
 @app.route('/posts/')
 def web_posts():
@@ -107,7 +97,7 @@ def web_posts():
     return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
-@app.route('/post/<string:post_link>')
+@app.route('/post/<string:post_link>/')
 def web_post(post_link):
     user = get_user()
     post = find_post_by_link(post_link)
@@ -139,15 +129,6 @@ def web_favourites():
     print(pages_number)
 
     return render_template('posts/favourites.html', posts=posts, current_page=current_page, pages_number=pages_number)
-
-
-@app.route('/verify/')
-def web_verify():
-    key = request.args.get('key')
-    if verify_email(key):
-        return render_template('status/success.html', code='verification_success')
-    else:
-        return render_template('status/error.html', code='verification_failed')
 
 
 @app.route('/secret/')

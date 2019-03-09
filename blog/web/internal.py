@@ -1,7 +1,12 @@
+from flask import request
+
+from blog.utils.check import check_username, check_login, check_email
+from blog.utils.posts import save_post, remove_post
+from blog.utils.search import find_post_by_id
+from blog.utils.syntax_check import check_email_syntax, check_username_syntax
+from blog.utils.users import get_user
 from blog_app import app
 
-from blog.utils.posts import *
-from blog.utils.users import *
 
 # Internal routes
 
@@ -12,8 +17,7 @@ def web_add_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    save_post(user, post)
-    return 'OK'
+    return save_post(user, post)
 
 
 @app.route('/del_post/', methods=['POST'])
@@ -22,39 +26,49 @@ def web_del_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    remove_post(user, post)
-    return 'OK'
+    return remove_post(user, post)
 
 
 @app.route('/check_username/', methods=['POST'])
 def web_username_exists():
-    username = request.form.get('username').strip()
+    username = request.form.get('username')
+    username = username.strip() if username else None
+    username_syntax_ok = check_username_syntax(username)
 
     if not username:
-        return ''
+        return 'NO USERNAME'
+    elif not username_syntax_ok:
+        return 'INVALID SYNTAX'
     elif check_username(username):
-        return 'error;Username already taken'
+        return 'ALREADY EXISTS'
     else:
-        return 'ok;Username is free'
+        return 'OK'
 
 
 @app.route('/check_login/', methods=['POST'])
 def web_login_exists():
-    login = request.form.get('login').strip()
+    login = request.form.get('login')
+    login = login.strip() if login else None
 
     if not login:
-        return ''
+        return 'NO LOGIN'
     elif check_login(login):
-        return 'ok;'
+        return 'OK'
     else:
-        return 'error;User not found'
+        return 'NOT FOUND'
 
 
 @app.route('/check_email/', methods=['POST'])
 def web_email_exists():
-    email = request.form.get('email').strip()
+    email = request.form.get('email')
+    email = email.strip() if email else None
+    email_syntax_ok = check_email_syntax(email)
 
-    if check_email(email):
-        return 'error;Email already exists'
+    if not email:
+        return 'NO EMAIL'
+    elif not email_syntax_ok:
+        return 'INVALID SYNTAX'
+    elif check_email(email):
+        return 'ALREADY EXISTS'
     else:
-        return 'ok;'
+        return 'OK'

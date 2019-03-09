@@ -1,8 +1,12 @@
-from blog_app import app
+from blog.utils.check import check_username, check_email
+from blog.utils.hash import generate_hash
+from blog.utils.search import find_user_by_login, find_user_by_recover_key
+from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
+    delete_user
+from blog_app import app, COOKIE_NAME
 
-from flask import render_template
+from flask import render_template, request, make_response, redirect
 from blog.utils import syntax_check
-from blog.utils.users import *
 
 
 @app.route('/smart sign in/', methods=['POST'])
@@ -20,7 +24,8 @@ def web_select_processor():
 
 @app.route('/login_processor/', methods=['POST'])
 def web_login_processor():
-    login = request.form.get('login').strip()
+    login = request.form.get('login')
+    login = login.strip() if login else None
     current_password = request.form.get('current-password')
     user = find_user_by_login(login)
 
@@ -153,3 +158,23 @@ def web_settings_processor():
         return resp
 
     return render_template('status/success.html', code='edit_success')
+
+
+@app.route('/delete_confirm/')
+def web_delete_confirm():
+    user = get_user()
+
+    if not user:
+        return render_template('status/error.html', code='logged_out')
+    else:
+        delete_user(user)
+        return redirect('/logout/', code=302)
+
+
+@app.route('/verify/')
+def web_verify():
+    key = request.args.get('key')
+    if verify_email(key):
+        return render_template('status/success.html', code='verification_success')
+    else:
+        return render_template('status/error.html', code='verification_failed')
