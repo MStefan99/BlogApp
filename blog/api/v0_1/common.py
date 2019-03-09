@@ -20,7 +20,7 @@ def api_favourites_get():
     user = get_user()
 
     if not user:
-        return make_response('NO USER', 400)
+        return make_response('NO USER', 422)
     else:
         posts = get_favourites(user)
         return jsonify(posts)
@@ -31,7 +31,7 @@ def api_post_get(post_link):
     post = find_post_by_link(post_link)
 
     if not post:
-        return make_response('NO POST', 400)
+        return make_response('NO POST', 422)
     else:
         return jsonify(post)
 
@@ -44,9 +44,9 @@ def api_favourite_get():
     added = check_favourite(user, post)
 
     if not post:
-        return make_response('NO POST', 400)
+        return make_response('NO POST', 422)
     if not user:
-        return make_response('NO USER', 400)
+        return make_response('NO USER', 422)
     if added:
         return make_response('IS FAVOURITE', 200)
     else:
@@ -60,9 +60,9 @@ def api_favourite_post():
     post = find_post_by_id(post_id)
 
     if not post:
-        return make_response('NO POST', 400)
+        return make_response('NO POST', 422)
     if not user:
-        return make_response('NO USER', 400)
+        return make_response('NO USER', 422)
     else:
         return save_post(user, post)
 
@@ -74,9 +74,9 @@ def api_favourite_delete():
     post = find_post_by_id(post_id)
 
     if not post:
-        return make_response('NO POST', 400)
+        return make_response('NO POST', 422)
     if not user:
-        return make_response('NO USER', 400)
+        return make_response('NO USER', 422)
     else:
         return remove_post(user, post)
 
@@ -88,7 +88,7 @@ def api_username_exists_get():
     username_syntax_ok = check_username_syntax(username)
 
     if not username:
-        return make_response('NO USERNAME', 400)
+        return make_response('NO USERNAME', 422)
     elif not username_syntax_ok:
         return make_response('INVALID SYNTAX', 200)
     elif check_username(username):
@@ -103,7 +103,7 @@ def api_login_exists_get():
     login = login.strip() if login else None
 
     if not login:
-        return make_response('NO LOGIN', 400)
+        return make_response('NO LOGIN', 422)
     elif check_login(login):
         return make_response('OK', 200)
     else:
@@ -117,7 +117,7 @@ def api_email_exists_get():
     email_syntax_ok = check_email_syntax(email)
 
     if not email:
-        return make_response('NO EMAIL', 400)
+        return make_response('NO EMAIL', 422)
     elif not email_syntax_ok:
         return make_response('INVALID SYNTAX', 200)
     elif check_email(email):
