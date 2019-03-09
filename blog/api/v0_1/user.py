@@ -1,12 +1,12 @@
-from flask import request, make_response
-
+from flask import request, make_response, jsonify
+from blog.globals import COOKIE_NAME
 from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email
 from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
-from blog_app import app, COOKIE_NAME
+from blog_app import app
 from .path import PATH
 
 
@@ -27,7 +27,7 @@ def api_login_post():
         return resp
     else:
         return make_response('WRONG PASSWORD', 422)
-    
+
 
 @app.route(f'{PATH}/register/', methods=['PUT'])
 def api_register_put():
@@ -130,6 +130,18 @@ def api_settings_post():
         return resp
 
     return make_response('OK', 200)
+
+
+@app.route(f'{PATH}/account/', methods=['GET'])
+def api_account_get():
+    user = get_user()
+
+    keys = 'username', 'email', 'verified'
+
+    if not user:
+        return make_response('NO USER', 422)
+    else:
+        return jsonify({key: user[key] for key in keys})
 
 
 @app.route(f'{PATH}/delete/', methods=['PUT'])

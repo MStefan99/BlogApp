@@ -1,8 +1,4 @@
-import psycopg2
-
-DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
-                            cursor_factory=psycopg2.extras.NamedTupleCursor)
-DATABASE.autocommit = True
+from blog.globals import DATABASE
 
 
 def find_user_by_name(username):

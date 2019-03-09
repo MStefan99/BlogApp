@@ -1,6 +1,5 @@
 import psycopg2
 from datetime import datetime
-
 from blog.utils.users import DATABASE
 
 
