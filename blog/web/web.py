@@ -7,7 +7,7 @@ from blog.utils.users import get_user
 from blog_app import app, COOKIE_NAME
 
 DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
-                            cursor_factory=psycopg2.extras.NamedTupleCursor)
+                            cursor_factory=psycopg2.extras.RealDictCursor)
 DATABASE.autocommit = True
 
 

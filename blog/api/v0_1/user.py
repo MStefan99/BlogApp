@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request, make_response, jsonify
 
 from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email
@@ -27,7 +27,7 @@ def api_login_post():
         return resp
     else:
         return make_response('WRONG PASSWORD', 422)
-    
+
 
 @app.route(f'{PATH}/register/', methods=['PUT'])
 def api_register_put():
@@ -130,6 +130,18 @@ def api_settings_post():
         return resp
 
     return make_response('OK', 200)
+
+
+@app.route(f'{PATH}/account/', methods=['GET'])
+def api_account_get():
+    user = get_user()
+
+    keys = 'username', 'email', 'verified'
+
+    if not user:
+        return make_response('NO USER', 422)
+    else:
+        return jsonify({key: user[key] for key in keys})
 
 
 @app.route(f'{PATH}/delete/', methods=['PUT'])
