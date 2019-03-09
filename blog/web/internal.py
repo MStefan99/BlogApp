@@ -1,5 +1,4 @@
 from flask import request
-
 from blog.utils.check import check_username, check_login, check_email
 from blog.utils.posts import save_post, remove_post
 from blog.utils.search import find_post_by_id

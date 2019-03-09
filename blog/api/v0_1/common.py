@@ -1,5 +1,4 @@
 from flask import jsonify, request, make_response
-
 from blog.utils.check import check_username, check_login, check_email
 from blog.utils.posts import get_posts, get_favourites, check_favourite, save_post, remove_post
 from blog.utils.search import find_post_by_link, find_post_by_id
