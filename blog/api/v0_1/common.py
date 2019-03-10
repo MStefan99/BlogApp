@@ -26,9 +26,10 @@ def api_favourites_get():
         return jsonify(posts)
 
 
-@app.route(f'{PATH}/post/<string:post_link>/', methods=['GET'])
-def api_post_get(post_link):
-    post = find_post_by_link(post_link)
+@app.route(f'{PATH}/post/', methods=['GET'])
+def api_post_get():
+    id = request.args.get('id')
+    post = find_post_by_id(id)
 
     if not post:
         return make_response('NO POST', 422)
