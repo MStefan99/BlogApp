@@ -12,7 +12,7 @@
     {% else %}
         <div id="posts-container">
             {% for post in posts %}
-                <a class="posts" id="{{ 'post' + post['id']|string }}" href="{{ '/post/' + post['link'] + '/'}}"
+                <a class="posts" id="{{ 'post' + post['id']|string }}" href="{{ '/post/' + post['link'] + '/' }}"
                    style="background-color: {{ post['theme_color'] }}">
                     <div class="posts-info">
                         <div class="posts-title">

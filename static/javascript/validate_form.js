@@ -13,6 +13,18 @@ class form {
         this.form_element = element;
     }
 
+    static set_color(ok, ...elements) {
+        elements.forEach((element) => {
+            if (!element.value) {
+                element.style.borderColor = "var(--accent-color)";
+            } else if (ok) {
+                element.style.borderColor = "var(--ok)";
+            } else {
+                element.style.borderColor = "var(--error)";
+            }
+        });
+
+    }
 
     enable_smart_submit() {
         if (this.submit) {
@@ -39,7 +51,6 @@ class form {
             };
         }
     }
-
 
     setup() {
 //  Input fields
@@ -147,7 +158,6 @@ class form {
         this.enable_smart_submit();
     }
 
-
 //Check functions
     check_username(username, username_msg, async = true) {
         username.value = username.value.trim().replace(/\s+/g, '');
@@ -198,7 +208,6 @@ class form {
         form.set_color(this.username_ok, username);
     }
 
-
     check_login(login, login_msg, async = true) {
         login.value = login.value.trim().replace(/\s+/g, '');
         if (!login.value.trim()) {
@@ -235,7 +244,6 @@ class form {
         this.validate_form();
         form.set_color(this.login_ok, login);
     }
-
 
     check_email(email, email_msg, async = true) {
         email.value = email.value.trim().replace(/\s+/g, '');
@@ -282,7 +290,6 @@ class form {
         form.set_color(this.email_ok, email);
     }
 
-
     check_email_match(email, email_repeat, email_match_msg) {
         if (!email.value && email.hasAttribute('required') &&
             !email_repeat.value && email_repeat.hasAttribute('required')) {
@@ -299,7 +306,6 @@ class form {
         form.set_color(this.email_match_ok, email, email_repeat);
     }
 
-
     check_password(password, password_msg) {
         let re = /^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[0-9a-zA-Z!@#$%^&*(){}\[\]\-_=+,.<>|\\]{8,100}$/;
         var ok = re.test(password.value.toLowerCase());
@@ -314,7 +320,6 @@ class form {
         this.validate_form();
         form.set_color(this.new_password_ok, password);
     }
-
 
     check_password_match(password, password_repeat, password_msg) {
         if (!password.value && password.hasAttribute('required') &&
@@ -337,7 +342,6 @@ class form {
         form.set_color(this.new_password_match_ok, password_repeat);
     }
 
-
     check_required(required_msg) {
         this.required_ok = true;
         if (this.required_msg) {
@@ -353,7 +357,6 @@ class form {
         });
         this.validate_form();
     }
-
 
     validate_all() {
         if (this.username) {
@@ -387,7 +390,6 @@ class form {
         return ok;
     }
 
-
     // Enabling or disabling form submission
     validate_form() {
         if (this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.new_password_match_ok && this.required_ok) {
@@ -397,20 +399,6 @@ class form {
             this.submit.classList.add("disabled");
             return true;
         }
-    }
-
-
-    static set_color(ok, ...elements) {
-        elements.forEach((element) => {
-            if (!element.value) {
-                element.style.borderColor = "var(--accent-color)";
-            } else if (ok) {
-                element.style.borderColor = "var(--ok)";
-            } else {
-                element.style.borderColor = "var(--error)";
-            }
-        });
-
     }
 }
 

@@ -1,5 +1,6 @@
 import random
 import string
+
 from blog.globals import DATABASE
 
 

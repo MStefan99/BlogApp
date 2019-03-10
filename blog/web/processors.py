@@ -1,12 +1,13 @@
+from flask import render_template, request, make_response, redirect
+
 from blog.globals import COOKIE_NAME
+from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email
 from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
 from blog_app import app
-from flask import render_template, request, make_response, redirect
-from blog.utils import syntax_check
 
 
 @app.route('/smart sign in/', methods=['POST'])

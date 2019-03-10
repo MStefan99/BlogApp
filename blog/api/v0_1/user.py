@@ -1,4 +1,5 @@
 from flask import request, make_response, jsonify
+
 from blog.globals import COOKIE_NAME
 from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email

@@ -1,5 +1,6 @@
-from blog.mail.email_template import get_email_text
 import mailer
+
+from blog.mail.email_template import get_email_text
 
 # WARNING! Disabling email is used only during development process! ALWAYS TURN EMAIL ON BEFORE DEPLOYMENT!
 EMAIL_ENABLED = True

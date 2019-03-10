@@ -1,5 +1,6 @@
 from flask import request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
+
 from blog.globals import DATABASE, COOKIE_NAME
 from blog.mail.mail import send_mail
 from blog.utils.hash import generate_hash, delete_hash

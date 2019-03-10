@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, make_response
+
 from blog.globals import COOKIE_NAME
 from blog.utils.posts import get_posts, check_favourite, get_favourites
 from blog.utils.search import find_user_by_cookie, find_post_by_link

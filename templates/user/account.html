@@ -8,7 +8,8 @@
     {{ user['username'] }}, welcome to your account!
     {% if not user['verified'] %}
         <p style="color: indianred">
-            Your email address ({{ user['email'] }}) is not verified yet! You won't be able to reset your password without
+            Your email address ({{ user['email'] }}) is not verified yet! You won't be able to reset your password
+            without
             a verified email.
         </p>
     {% else %}

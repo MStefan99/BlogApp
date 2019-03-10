@@ -1,5 +1,6 @@
-from blog_app import app
 from flask import render_template
+
+from blog_app import app
 
 
 # Error routes
