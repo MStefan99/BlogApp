@@ -1,6 +1,6 @@
-from flask import make_response
+from flask import Flask, make_response
 
-from blog_app import app
+app = Flask(__name__)
 
 
 @app.errorhandler(404)
