@@ -165,44 +165,41 @@ class form {
             username_msg.innerHTML = "";
             this.username_ok = !username.hasAttribute('required');
         } else {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText;
-                    switch (response) {
-                        case 'OK':
-                            username_msg.className = "credentials-check ok";
-                            username_msg.innerHTML = "Username is free";
-                            break;
-                        case 'ALREADY EXISTS':
-                            username_msg.className = "credentials-check error";
-                            username_msg.innerHTML = "Username is already taken!";
-                            break;
-                        default:
-                            username_msg.innerHTML = "";
-                    }
-
-                    this.username_ok = response === "OK";
-                    if (this.username_ok) {
-                        let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
-                        var ok = re.test(username.value.toLowerCase());
-                        if (!ok) {
-                            username_msg.className = "credentials-check error";
-                            username_msg.innerHTML = "Your username must be at least 3 symbols long " +
-                                "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
-                        } else {
-                            username.innerHTML = "";
+            let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
+            this.username_ok = re.test(username.value.toLowerCase());
+            if (!this.username_ok) {
+                username_msg.className = "credentials-check error";
+                username_msg.innerHTML = "Your username must be at least 3 symbols long " +
+                    "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
+            } else {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        let response = xhr.responseText;
+                        switch (response) {
+                            case 'OK':
+                                username_msg.className = "credentials-check ok";
+                                username_msg.innerHTML = "Username is free";
+                                break;
+                            case 'ALREADY EXISTS':
+                                username_msg.className = "credentials-check error";
+                                username_msg.innerHTML = "Username is already taken!";
+                                break;
+                            default:
+                                username_msg.innerHTML = "";
                         }
-                        this.username_ok = ok;
-                    }
-                    this.validate_form();
-                    form.set_color(this.username_ok, username);
-                }
-            };
+                        this.username_ok = response === "OK";
 
-            xhr.open("POST", "/check_username/", async);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("username=" + username.value);
+                        this.validate_form();
+                        form.set_color(this.username_ok, username);
+                    }
+                };
+
+                xhr.open("POST", "/check_username/", async);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("username=" + username.value);
+            }
+
         }
         this.validate_form();
         form.set_color(this.username_ok, username);
@@ -251,40 +248,39 @@ class form {
             email_msg.innerHTML = "";
             this.email_ok = !email.hasAttribute('required');
         } else {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText;
-                    switch (response) {
-                        case 'OK':
-                            email_msg.className = "credentials-check ok";
-                            email_msg.innerHTML = "Email is free";
-                            break;
-                        case 'ALREADY EXISTS':
-                            email_msg.className = "credentials-check error";
-                            email_msg.innerHTML = "Email is already taken!";
-                            break;
-                        default:
-                            email_msg.innerHTML = "";
-                    }
-
-                    this.email_ok = response === "OK";
-                    if (this.email_ok) {
-                        let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                        var ok = re.test(email.value.toLowerCase());
-                        if (!ok) {
-                            email_msg.className = "credentials-check error";
-                            email_msg.innerHTML = "Invalid email format";
+            let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            this.email_ok = re.test(email.value.toLowerCase());
+            if (!this.email_ok) {
+                email_msg.className = "credentials-check error";
+                email_msg.innerHTML = "Invalid email format";
+            } else {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        let response = xhr.responseText;
+                        switch (response) {
+                            case 'OK':
+                                email_msg.className = "credentials-check ok";
+                                email_msg.innerHTML = "Email is free";
+                                break;
+                            case 'ALREADY EXISTS':
+                                email_msg.className = "credentials-check error";
+                                email_msg.innerHTML = "Email is already taken!";
+                                break;
+                            default:
+                                email_msg.innerHTML = "";
                         }
-                        this.email_ok = ok;
+
+                        this.email_ok = response === "OK";
+
+                        this.validate_form();
+                        form.set_color(this.email_ok, email);
                     }
-                    this.validate_form();
-                    form.set_color(this.email_ok, email);
-                }
-            };
-            xhr.open("POST", "/check_email/", async);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("email=" + email.value);
+                };
+                xhr.open("POST", "/check_email/", async);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("email=" + email.value);
+            }
         }
         this.validate_form();
         form.set_color(this.email_ok, email);
