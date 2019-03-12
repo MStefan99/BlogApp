@@ -16,15 +16,15 @@
     <!-- WARNING: Favicon missing! -->
     <link rel="icon" type="image/png" sizes="16x16" href="https://blog.mstefan99.com/static/images/ico.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content={{ post.theme_color if post else '#66d9e3' }}>
+    <meta name="theme-color" content={{ post['theme_color'] if post else '#66d9e3' }}>
     <meta charset="utf-8">
 
-    <title>{{ 'galera.dev ' + post.title if post else 'galera.dev ' + request.path[1:-1].capitalize() }}</title>
-    <meta name="description" content="{{ post.tagline if post else 'galera.dev blog' }}">
-    <meta name="author" content="{{ post.author if post else 'galera.dev' }}">
+    <title>{{ 'galera.dev ' + post['title'] if post else 'galera.dev ' + request.path[1:-1].capitalize() }}</title>
+    <meta name="description" content="{{ post['tagline'] if post else 'galera.dev blog' }}">
+    <meta name="author" content="{{ post['author'] if post else 'galera.dev' }}">
     <style>
         header {
-            background-color: {{ post.theme_color if post else 'var(--accent-color)' }};
+            background-color: {{ post['theme_color'] if post else 'var(--accent-color)' }};
         }
     </style>
 </head>

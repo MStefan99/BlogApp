@@ -13,6 +13,18 @@ class form {
         this.form_element = element;
     }
 
+    static set_color(ok, ...elements) {
+        elements.forEach((element) => {
+            if (!element.value) {
+                element.style.borderColor = "var(--accent-color)";
+            } else if (ok) {
+                element.style.borderColor = "var(--ok)";
+            } else {
+                element.style.borderColor = "var(--error)";
+            }
+        });
+
+    }
 
     enable_smart_submit() {
         if (this.submit) {
@@ -39,7 +51,6 @@ class form {
             };
         }
     }
-
 
     setup() {
 //  Input fields
@@ -147,7 +158,6 @@ class form {
         this.enable_smart_submit();
     }
 
-
 //Check functions
     check_username(username, username_msg, async = true) {
         username.value = username.value.trim().replace(/\s+/g, '');
@@ -155,38 +165,45 @@ class form {
             username_msg.innerHTML = "";
             this.username_ok = !username.hasAttribute('required');
         } else {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    username_msg.className = "credentials-check " + response[0];
-                    username_msg.innerHTML = response[1];
-                    this.username_ok = response[0] === "ok";
-                    if (this.username_ok) {
-                        let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
-                        var ok = re.test(username.value.toLowerCase());
-                        if (!ok) {
-                            username_msg.className = "credentials-check error";
-                            username_msg.innerHTML = "Your username must be at least 3 symbols long " +
-                            "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
-                        } else {
-                            username.innerHTML = "";
+            let re = /^(?=.*[a-zA-Z]+)[0-9a-zA-Z\-_.]{3,100}$/;
+            this.username_ok = re.test(username.value.toLowerCase());
+            if (!this.username_ok) {
+                username_msg.className = "credentials-check error";
+                username_msg.innerHTML = "Your username must be at least 3 symbols long " +
+                    "and include only letters, numbers or characters \"-\", \"_\" and \".\". Spaces not allowed.";
+            } else {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        let response = xhr.responseText;
+                        switch (response) {
+                            case 'OK':
+                                username_msg.className = "credentials-check ok";
+                                username_msg.innerHTML = "Username is free";
+                                break;
+                            case 'ALREADY EXISTS':
+                                username_msg.className = "credentials-check error";
+                                username_msg.innerHTML = "Username is already taken!";
+                                break;
+                            default:
+                                username_msg.innerHTML = "";
                         }
-                        this.username_ok = ok;
-                    }
-                    this.validate_form();
-                    form.set_color(this.username_ok, username);
-                }
-            };
+                        this.username_ok = response === "OK";
 
-            xhr.open("POST", "/check_username/", async);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("username=" + username.value);
+                        this.validate_form();
+                        form.set_color(this.username_ok, username);
+                    }
+                };
+
+                xhr.open("POST", "/check_username/", async);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("username=" + username.value);
+            }
+
         }
         this.validate_form();
         form.set_color(this.username_ok, username);
     }
-
 
     check_login(login, login_msg, async = true) {
         login.value = login.value.trim().replace(/\s+/g, '');
@@ -197,10 +214,21 @@ class form {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    login_msg.className = "credentials-check " + response[0];
-                    login_msg.innerHTML = response[1];
-                    this.login_ok = response[0] === "ok";
+                    let response = xhr.responseText;
+                    switch (response) {
+                        case 'OK':
+                            login_msg.className = "credentials-check ok";
+                            login_msg.innerHTML = "User found";
+                            break;
+                        case 'NOT FOUND':
+                            login_msg.className = "credentials-check error";
+                            login_msg.innerHTML = "User not found!";
+                            break;
+                        default:
+                            login_msg.innerHTML = "";
+                    }
+
+                    this.login_ok = response === "OK";
                     this.validate_form();
                     form.set_color(this.login_ok, login);
                 }
@@ -214,43 +242,49 @@ class form {
         form.set_color(this.login_ok, login);
     }
 
-
     check_email(email, email_msg, async = true) {
         email.value = email.value.trim().replace(/\s+/g, '');
         if (!email.value) {
             email_msg.innerHTML = "";
             this.email_ok = !email.hasAttribute('required');
         } else {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let response = xhr.responseText.split(";", 2);
-                    email_msg.className = "credentials-check " + response[0];
-                    email_msg.innerHTML = response[1];
-                    this.email_ok = response[0] === "ok";
-                    if (this.email_ok) {
-                        let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                        var ok = re.test(email.value.toLowerCase());
-                        if (!ok) {
-                            email_msg.className = "credentials-check error";
-                            email_msg.innerHTML = "Invalid email format";
-                        } else {
-                            email_msg.innerHTML = "";
+            let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            this.email_ok = re.test(email.value.toLowerCase());
+            if (!this.email_ok) {
+                email_msg.className = "credentials-check error";
+                email_msg.innerHTML = "Invalid email format";
+            } else {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        let response = xhr.responseText;
+                        switch (response) {
+                            case 'OK':
+                                email_msg.className = "credentials-check ok";
+                                email_msg.innerHTML = "Email is free";
+                                break;
+                            case 'ALREADY EXISTS':
+                                email_msg.className = "credentials-check error";
+                                email_msg.innerHTML = "Email is already taken!";
+                                break;
+                            default:
+                                email_msg.innerHTML = "";
                         }
-                        this.email_ok = ok;
+
+                        this.email_ok = response === "OK";
+
+                        this.validate_form();
+                        form.set_color(this.email_ok, email);
                     }
-                    this.validate_form();
-                    form.set_color(this.email_ok, email);
-                }
-            };
-            xhr.open("POST", "/check_email/", async);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("email=" + email.value);
+                };
+                xhr.open("POST", "/check_email/", async);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("email=" + email.value);
+            }
         }
         this.validate_form();
         form.set_color(this.email_ok, email);
     }
-
 
     check_email_match(email, email_repeat, email_match_msg) {
         if (!email.value && email.hasAttribute('required') &&
@@ -268,14 +302,13 @@ class form {
         form.set_color(this.email_match_ok, email, email_repeat);
     }
 
-
     check_password(password, password_msg) {
         let re = /^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[0-9a-zA-Z!@#$%^&*(){}\[\]\-_=+,.<>|\\]{8,100}$/;
         var ok = re.test(password.value.toLowerCase());
         if (!ok) {
             password_msg.className = "credentials-check error";
             password_msg.innerHTML = "Your password must be at least 8 characters long " +
-            "and include at least one letter and one number. Spaces not allowed.";
+                "and include at least one letter and one number. Spaces not allowed.";
         } else {
             password_msg.innerHTML = "";
         }
@@ -283,7 +316,6 @@ class form {
         this.validate_form();
         form.set_color(this.new_password_ok, password);
     }
-
 
     check_password_match(password, password_repeat, password_msg) {
         if (!password.value && password.hasAttribute('required') &&
@@ -306,7 +338,6 @@ class form {
         form.set_color(this.new_password_match_ok, password_repeat);
     }
 
-
     check_required(required_msg) {
         this.required_ok = true;
         if (this.required_msg) {
@@ -322,7 +353,6 @@ class form {
         });
         this.validate_form();
     }
-
 
     validate_all() {
         if (this.username) {
@@ -356,7 +386,6 @@ class form {
         return ok;
     }
 
-
     // Enabling or disabling form submission
     validate_form() {
         if (this.email_ok && this.email_match_ok && this.username_ok && this.login_ok && this.new_password_match_ok && this.required_ok) {
@@ -366,18 +395,6 @@ class form {
             this.submit.classList.add("disabled");
             return true;
         }
-    }
-
-
-    static set_color(ok, ...elements) {
-        elements.forEach((element) => {
-            if (ok) {
-                element.style.borderColor = "var(--accent-light)";
-            } else {
-                element.style.borderColor = "var(--error)";
-            }
-        });
-
     }
 }
 

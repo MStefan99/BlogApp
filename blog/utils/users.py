@@ -1,14 +1,10 @@
 from flask import request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
-import psycopg2.extras
-from blog.utils.hash import *
-from blog.mail.mail import *
-from blog.utils.search import *
 
-DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
-                            cursor_factory=psycopg2.extras.NamedTupleCursor)
-DATABASE.autocommit = True
-COOKIE_NAME = 'MSTID'
+from blog.globals import DATABASE, COOKIE_NAME
+from blog.mail.mail import send_mail
+from blog.utils.hash import generate_hash, delete_hash
+from blog.utils.search import find_user_by_cookie
 
 
 def add_new_user(username, email, new_password, cookie_id):
@@ -24,47 +20,47 @@ def add_new_user(username, email, new_password, cookie_id):
 
 def update_user(user, password_reset=False, **kwargs):
     cursor = DATABASE.cursor()
-    username = ''
     if 'username' in kwargs:
-        cursor.execute('update users set username = %s where id = %s', (kwargs['username'], user.id))
-        username = kwargs['username']
+        cursor.execute('update users set username = %s where id = %s', (kwargs['username'], user['id']))
+        user['username'] = kwargs['username']
 
     if 'email' in kwargs:
         link = generate_hash()
-        if user.verification_link:
-            delete_hash(user.verification_link)
+        if user['verification_link']:
+            delete_hash(user['verification_link'])
         cursor.execute('update users set email = %s, verification_link = %s, verified = false '
-                       'where id = %s', (kwargs['email'], link, user.id))
-        send_mail(kwargs['email'], username if username else user.username, link, 'email_change')
+                       'where id = %s', (kwargs['email'], link, user['id']))
+        send_mail(kwargs['email'], user['username'], link, 'email_change')
 
     if 'new_password' and 'cookie_id' in kwargs:
         password_hash = pbkdf2_sha512.encrypt(kwargs['new_password'], rounds=200000, salt_size=64)
-        delete_hash(user.cookieid)
+        delete_hash(user['cookieid'])
         cursor.execute('update users set password = %s, cookieid = %s where id = %s',
-                       (password_hash, user.cookieid, user.id))
+                       (password_hash, user['cookieid'], user['id']))
         if password_reset:
-            delete_hash(user.recovery_link)
-            cursor.execute('update users set recovery_link = null where id = %s', (user.id,))
+            delete_hash(user['recovery_link'])
+            cursor.execute('update users set recovery_link = null where id = %s', (user['id'],))
 
 
 def delete_user(user):
     cursor = DATABASE.cursor()
-    delete_hash(user.cookieid, user.recovery_link, user.verification_link)
-    cursor.execute('delete from users where id = %s', (user.id,))
+    delete_hash(user['cookieid'], user['recovery_link'], user['verification_link'])
+    cursor.execute('delete from users where id = %s', (user['id'],))
 
 
 def password_correct(user, password):
-    return pbkdf2_sha512.verify(password, user.password)
+    return pbkdf2_sha512.verify(password, user['password'])
 
 
 def create_recover_link(user):
     cursor = DATABASE.cursor()
     link = generate_hash()
-    if user.recovery_link:
-        delete_hash(user.recovery_link)
-    cursor.execute('update users set recovery_link = %s where id = %s', (link, user.id))
+    if user['recovery_link']:
+        delete_hash(user['recovery_link'])
+    cursor.execute('update users set recovery_link = %s where id = %s', (link, user['id']))
 
-    send_mail(user.verified_email if user.verified_email else user.email, user.username, link, 'password-recovery')
+    send_mail(user['verified_email'] if user['verified_email'] else user['email'], user['username'], link,
+              'password-recovery')
 
 
 def check_cookie():
@@ -74,7 +70,7 @@ def check_cookie():
         resp = make_response(redirect(request.path, code=302))
         resp.set_cookie('MSTID', 'Bye!', expires=0)
         try:
-            if not user.cookieid == cookie_id:
+            if not user['cookieid'] == cookie_id:
                 return False
         except AttributeError:
             return False
@@ -91,9 +87,9 @@ def verify_email(key):
     user = cursor.fetchone()
 
     if user:
-        delete_hash(user.verification_link)
+        delete_hash(user['verification_link'])
         cursor.execute('update users set verification_link = null, verified = true, verified_email = %s '
-                       'where id = %s', (user.email, user.id))
+                       'where id = %s', (user['email'], user['id']))
         return True
     else:
         return False

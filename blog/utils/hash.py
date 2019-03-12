@@ -1,10 +1,7 @@
 import random
 import string
-import psycopg2
 
-DATABASE = psycopg2.connect(user='flask', password='blogappflask', database='blog',
-                            cursor_factory=psycopg2.extras.NamedTupleCursor)
-DATABASE.autocommit = True
+from blog.globals import DATABASE
 
 
 def generate_hash():
@@ -33,5 +30,3 @@ def delete_hash(*hashes):
     for hash_value in hashes:
         cursor = DATABASE.cursor()
         cursor.execute('delete from hashes where hash = %s', (hash_value,))
-
-

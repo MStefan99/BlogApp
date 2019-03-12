@@ -20,7 +20,7 @@ function setup() {
         var size = Math.round(Math.random() * 9 + 1);
         var red = Math.round(Math.random() * 55 + 200);
         var blue = red < 240 ? 255 : Math.round(Math.random() * 35 + 220);
-        var green = blue < 210 && red > 240? 255: Math.round(Math.random() * 35 + 220);
+        var green = blue < 210 && red > 240 ? 255 : Math.round(Math.random() * 35 + 220);
         star.style.boxShadow = `0 0 ${size / 3}em ${size / 20}em rgb(${red}, ${green}, ${blue})`;
         star.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
         star.style.height = (size / 18) + 'em';
