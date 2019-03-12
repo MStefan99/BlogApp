@@ -40,8 +40,8 @@ function drop(e) {
     e.preventDefault();
     var data = e.dataTransfer.getData("star");
     var star = document.getElementById(data);
-    star.style.left = (e.clientX / window.screen.availWidth * 100) + 'vw';
-    star.style.top = (e.clientY / window.screen.availHeight * 100) + 'vh';
+    star.style.left = (e.clientX / window.screen.width * 100) + 'vw';
+    star.style.top = (e.clientY / window.screen.height * 100) + 'vh';
     e.target.appendChild(star);
 }
 
