@@ -122,7 +122,6 @@ def web_favourites():
 
     if len(posts) > 10:
         posts = posts[current_page * 10:current_page * 10 + 10]
-    print(pages_number)
 
     return render_template('posts/favourites.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
