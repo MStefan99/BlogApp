@@ -1,20 +1,7 @@
 :root {
-    --background-color: #f2f2f2;
-    --main-color: #ffffff;
-    --secondary-color: #29272e;
-    --accent-color: #67dbe6;
-    --accent-light: #a6f8ff;
-    --accent-dark: #50aab3;
-
-    --text-color: #272727;
-    --text-secondary: #ffffff;
-    --disabled-text: #4f4f4f;
-    --disabled-color: #686868;
-
-    --ok: #2bf27f;
-    --error: #f22746;
-
-    --scrollbar-color: #666666;
-    --scrollbar-hover: #595959;
-    --scrollbar-active: #404040;
+  --color-background: #f2f2f2;
+  --color-accent: #67dbe6;
+  --color-ok: #2bf27f;
+  --color-error: #f22746;
 }
+/*# sourceMappingURL=colors.css.map */

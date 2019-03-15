@@ -23,8 +23,8 @@
     <meta name="description" content="{{ post['tagline'] if post else 'galera.dev blog' }}">
     <meta name="author" content="{{ post['author'] if post else 'galera.dev' }}">
     <style>
-        header {
-            background-color: {{ post['theme_color'] if post else 'var(--accent-color)' }};
+        body header {
+            background-color: {{ post['theme_color'] if post else 'var(--color-accent)' }};
         }
     </style>
 </head>
@@ -53,9 +53,15 @@
         {% endif %}
         {% if request.path != '/favourites/' %}
             <li class="nav-element">
-                <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
+                <a id="posts-container" class="nav-button" href="/favourites/">Favourites</a>
             </li>
         {% endif %}
+{#        <li>#}
+{#            <form class="inline-form" action="/search/" method="post">#}
+{#                <input type="text">#}
+{#                <button type="submit"></button>#}
+{#            </form>#}
+{#        </li>#}
     </ul>
 </header>
 <main>
