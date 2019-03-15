@@ -30,8 +30,11 @@ body {
       padding: 0;
       margin: 1vh 1vw 1vh 8vw;
 
-      li.nav-element {
+      & * {
         list-style-type: none;
+      }
+
+      li.nav-element {
         padding: .5vh 1vw;
       }
     }
@@ -51,8 +54,8 @@ body {
     #page-title {
       p {
         font-weight: 800;
+        padding: 2vh 0;
         font-size: 2rem;
-        margin: 0;
       }
     }
 
@@ -86,7 +89,6 @@ body {
             p {
               font-size: 2.5rem;
               font-weight: 700;
-              margin: 0;
             }
           }
 
@@ -98,7 +100,6 @@ body {
               font-style: italic;
               text-decoration: @color_text_secondary dashed underline;
               font-weight: 700;
-              margin: 0;
             }
           }
         }
@@ -117,7 +118,6 @@ body {
 
         &:visited {
           color: @color_text;
-          margin: 0 .25vmax;
         }
       }
     }
@@ -149,7 +149,6 @@ body {
             color: @color_text_secondary;
 
             p {
-              margin: 0;
               font-size: 4rem;
               font-weight: 700;
             }
@@ -160,7 +159,6 @@ body {
             color: @color_text_secondary;
 
             p {
-              margin: 0;
               font-size: 2rem;
               font-style: italic;
               text-decoration: @color_text_secondary dashed underline;
@@ -170,18 +168,10 @@ body {
 
           #post-author {
             color: @color_text_secondary;
-
-            p {
-              margin: 0;
-            }
           }
 
           #post-date {
             color: @color_text_secondary;
-
-            p {
-              margin: 0;
-            }
           }
 
           #post-save {
@@ -200,13 +190,13 @@ body {
 
         #post-tags {
           #tag {
+            display: inline-block;
+
             a {
               cursor: pointer;
               user-select: none;
               color: @color_text;
             }
-
-            display: inline-block;
           }
         }
       }
@@ -261,7 +251,8 @@ body {
       }
     }
 
-    .disabled:extend(button) {
+    .disabled {
+      &:extend(body form button);
       border: @color_disabled 2px solid;
       background: @color_disabled;
       color: @color_text_disabled;
@@ -299,16 +290,19 @@ body {
       margin: 0;
     }
 
-    .error:extend(.credentials-check) {
+    .error {
+      &:extend(body form .credentials-check);
       color: @color_error;
     }
 
-    .ok:extend(.credentials-check) {
+    .ok {
+      &:extend(body form .credentials-check);
       color: @color_ok;
     }
   }
 
-  .popup-message, .popup-form:extend(form) {
+  .popup-message, .popup-form {
+    &:extend(body form);
     position: absolute;
     border: @color_accent solid 2px;
     border-radius: 2vmax;
@@ -336,6 +330,10 @@ body {
       text-align: center;
     }
   }
+}
+
+p {
+  margin: 0;
 }
 
 @media (pointer: fine) {
