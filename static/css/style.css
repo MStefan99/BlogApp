@@ -249,13 +249,25 @@ body .popup-message {
   border: #67dbe6 solid 2px;
   border-radius: 2vmax;
   top: 50%;
-  right: 35vw;
-  left: 35vw;
+  right: 5vw;
+  left: 5vw;
   background: #ffffff;
   transform: translateY(-50%);
   font-weight: 600;
   padding: 2vh 2vw;
   text-align: center;
+}
+@media screen and (min-width: 400px) {
+  body .popup-message {
+    right: 20vw;
+    left: 20vw;
+  }
+}
+@media screen and (min-width: 1000px) {
+  body .popup-message {
+    right: 35vw;
+    left: 35vw;
+  }
 }
 body .popup-message .login-link {
   color: #272727;
@@ -267,13 +279,25 @@ body .popup-form {
   border: #67dbe6 solid 2px;
   border-radius: 2vmax;
   top: 50%;
-  right: 35vw;
-  left: 35vw;
+  right: 5vw;
+  left: 5vw;
   background: #ffffff;
   transform: translateY(-50%);
   padding: 5vh 5vw;
   max-height: 70vh;
   overflow-y: auto;
+}
+@media screen and (min-width: 400px) {
+  body .popup-form {
+    right: 20vw;
+    left: 20vw;
+  }
+}
+@media screen and (min-width: 1000px) {
+  body .popup-form {
+    right: 35vw;
+    left: 35vw;
+  }
 }
 @media (pointer: fine) {
   ::-webkit-scrollbar {
@@ -293,26 +317,6 @@ body .popup-form {
   }
   .popup-form::-webkit-scrollbar {
     display: none;
-  }
-}
-@media (max-aspect-ratio: 1.33333333) {
-  .popup-form {
-    right: 20vw;
-    left: 20vw;
-  }
-  .popup-message {
-    right: 20vw;
-    left: 20vw;
-  }
-}
-@media (max-aspect-ratio: 0.66666667) {
-  .popup-form {
-    right: 5vw;
-    left: 5vw;
-  }
-  .popup-message {
-    right: 5vw;
-    left: 5vw;
   }
 }
 /*# sourceMappingURL=style.css.map */

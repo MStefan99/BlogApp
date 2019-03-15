@@ -313,13 +313,23 @@ body {
     border: @color_accent solid 2px;
     border-radius: 2vmax;
     top: 50%;
-    right: 35vw;
-    left: 35vw;
+    right: 5vw;
+    left: 5vw;
     background: @color_main;
     transform: translateY(-50%);
     font-weight: 600;
     padding: 2vh 2vw;
     text-align: center;
+
+    @media screen and (min-width: 400px) {
+      right: 20vw;
+      left: 20vw;
+    }
+
+    @media screen and (min-width: 1000px) {
+      right: 35vw;
+      left: 35vw;
+    }
 
     .login-link {
       color: @color_text;
@@ -333,13 +343,23 @@ body {
     border: @color_accent solid 2px;
     border-radius: 2vmax;
     top: 50%;
-    right: 35vw;
-    left: 35vw;
+    right: 5vw;
+    left: 5vw;
     background: @color_main;
     transform: translateY(-50%);
     padding: 5vh 5vw;
     max-height: 70vh;
     overflow-y: auto;
+
+    @media screen and (min-width: 400px) {
+      right: 20vw;
+      left: 20vw;
+    }
+
+    @media screen and (min-width: 1000px) {
+      right: 35vw;
+      left: 35vw;
+    }
   }
 }
 
@@ -371,26 +391,3 @@ body {
   }
 }
 
-@media (max-aspect-ratio: 16/12) {
-  .popup-form {
-    right: 20vw;
-    left: 20vw;
-  }
-
-  .popup-message {
-    right: 20vw;
-    left: 20vw;
-  }
-}
-
-@media (max-aspect-ratio: 8/12) {
-  .popup-form {
-    right: 5vw;
-    left: 5vw;
-  }
-
-  .popup-message {
-    right: 5vw;
-    left: 5vw;
-  }
-}
