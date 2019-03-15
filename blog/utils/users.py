@@ -1,3 +1,4 @@
+import psycopg2
 from flask import request, make_response, redirect
 from passlib.hash import pbkdf2_sha512
 
@@ -7,14 +8,17 @@ from blog.utils.hash import generate_hash, delete_hash
 from blog.utils.search import find_user_by_cookie
 
 
-def add_new_user(username, email, new_password, cookie_id):
+def add_user(username, email, new_password, cookie_id):
     cursor = DATABASE.cursor()
     link = generate_hash()
 
-    password_hash = pbkdf2_sha512.encrypt(new_password, rounds=200000, salt_size=64)
-    cursor.execute('insert into users (username, password, cookieid, email, verification_link) '
-                   'values (%s, %s, %s, %s, %s)',
-                   (username, password_hash, cookie_id, email, link))
+    password_hash = pbkdf2_sha512.using(max_rounds=220000, min_rounds=150000, salt_size=64).hash(new_password)
+    try:
+        cursor.execute('insert into users (username, password, cookieid, email, verification_link) '
+                       'values (%s, %s, %s, %s, %s)',
+                       (username, password_hash, cookie_id, email, link))
+    except psycopg2.IntegrityError:
+        delete_hash(link)
     send_mail(email, username, link, 'register')
 
 
@@ -28,12 +32,16 @@ def update_user(user, password_reset=False, **kwargs):
         link = generate_hash()
         if user['verification_link']:
             delete_hash(user['verification_link'])
-        cursor.execute('update users set email = %s, verification_link = %s, verified = false '
-                       'where id = %s', (kwargs['email'], link, user['id']))
+            try:
+                cursor.execute('update users set email = %s, verification_link = %s, verified = false '
+                               'where id = %s', (kwargs['email'], link, user['id']))
+            except psycopg2.IntegrityError:
+                delete_hash(link)
         send_mail(kwargs['email'], user['username'], link, 'email_change')
 
     if 'new_password' and 'cookie_id' in kwargs:
-        password_hash = pbkdf2_sha512.encrypt(kwargs['new_password'], rounds=200000, salt_size=64)
+        password_hash = pbkdf2_sha512.using(max_rounds=220000, min_rounds=150000, salt_size=64).hash(
+            kwargs['new_password'])
         delete_hash(user['cookieid'])
         cursor.execute('update users set password = %s, cookieid = %s where id = %s',
                        (password_hash, user['cookieid'], user['id']))
@@ -44,8 +52,11 @@ def update_user(user, password_reset=False, **kwargs):
 
 def delete_user(user):
     cursor = DATABASE.cursor()
-    delete_hash(user['cookieid'], user['recovery_link'], user['verification_link'])
-    cursor.execute('delete from users where id = %s', (user['id'],))
+    try:
+        delete_hash(user['cookieid'], user['recovery_link'], user['verification_link'])
+        cursor.execute('delete from users where id = %s', (user['id'],))
+    except TypeError:
+        print('User not found')
 
 
 def password_correct(user, password):

@@ -5,7 +5,7 @@ from blog.utils import syntax_check
 from blog.utils.check import check_username, check_email
 from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
-from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
+from blog.utils.users import password_correct, add_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
 from blog_app import app
 from .path import PATH
@@ -57,7 +57,7 @@ def api_register_put():
         return make_response('EMAIL EXISTS', 422)
     else:
         cookie_id = generate_hash()
-        add_new_user(username, email, new_password, cookie_id)
+        add_user(username, email, new_password, cookie_id)
         resp = make_response(make_response('OK', 201))
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
