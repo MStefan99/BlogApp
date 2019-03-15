@@ -92,8 +92,7 @@ body main #posts-container .post-thumbnail .post-thumbnail-info .post-thumbnail-
 body main #page-selector {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
   margin: 1vh auto;
 }
 body main #page-selector > * {
