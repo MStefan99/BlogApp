@@ -15,8 +15,8 @@ class form {
 
     static set_color(ok, ...elements) {
         elements.forEach((element) => {
-            if (!element.value) {
-                element.style.borderColor = "var(--accent-color)";
+            if (ok && !element.value) {
+                element.style.borderColor = "var(--color-accent)";
             } else if (ok) {
                 element.style.borderColor = "var(--ok)";
             } else {
@@ -304,33 +304,32 @@ class form {
 
     check_password(password, password_msg) {
         let re = /^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[0-9a-zA-Z!@#$%^&*(){}\[\]\-_=+,.<>|\\]{8,100}$/;
-        var ok = re.test(password.value.toLowerCase());
-        if (!ok) {
+        this.new_password_ok = re.test(password.value.toLowerCase());
+        if (!password.value) {
+            password_msg.innerHTML = "";
+            this.new_password_ok = !password.hasAttribute('required');
+        } else if (!this.new_password_ok) {
             password_msg.className = "credentials-check error";
             password_msg.innerHTML = "Your password must be at least 8 characters long " +
                 "and include at least one letter and one number. Spaces not allowed.";
         } else {
             password_msg.innerHTML = "";
         }
-        this.new_password_ok = ok;
         this.validate_form();
         form.set_color(this.new_password_ok, password);
     }
 
-    check_password_match(password, password_repeat, password_msg) {
-        if (!password.value && password.hasAttribute('required') &&
-            !password_repeat.value && password_repeat.hasAttribute('required')) {
-            password_msg.innerHTML = "";
-            this.new_password_match_ok = false;
-        } else if (!password.value.trim() && !password_repeat.value.trim()) {
-            password_msg.innerHTML = "";
+    check_password_match(password, password_repeat, password_repeat_msg) {
+        if (!password_repeat.value) {
+            password_repeat_msg.innerHTML = "";
+            this.new_password_match_ok = !password_repeat.hasAttribute('required');
         } else if (password.value !== password_repeat.value) {
-            password_msg.innerHTML = "Passwords do not match";
-            password_msg.className = "credentials-check error";
+            password_repeat_msg.innerHTML = "Passwords do not match";
+            password_repeat_msg.className = "credentials-check error";
             this.new_password_match_ok = false;
         } else if (password.value === password_repeat.value) {
-            password_msg.innerHTML = "Passwords match";
-            password_msg.className = "credentials-check ok";
+            password_repeat_msg.innerHTML = "Passwords match";
+            password_repeat_msg.className = "credentials-check ok";
             this.new_password_match_ok = true;
         }
         this.validate_form();
