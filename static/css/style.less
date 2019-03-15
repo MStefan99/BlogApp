@@ -308,7 +308,7 @@ body {
     }
   }
 
-  .popup-message {
+  .popup-message, .popup-form:extend(form) {
     position: absolute;
     border: @color_accent solid 2px;
     border-radius: 2vmax;
@@ -318,7 +318,7 @@ body {
     background: @color_main;
     transform: translateY(-50%);
     font-weight: 600;
-    padding: 2vh 2vw;
+    padding: 5vh 5vw;
     text-align: center;
 
     @media screen and (min-width: 400px) {
@@ -334,31 +334,6 @@ body {
     .login-link {
       color: @color_text;
       text-align: center;
-    }
-  }
-
-  .popup-form:extend(form) {
-    position: absolute;
-    box-sizing: border-box;
-    border: @color_accent solid 2px;
-    border-radius: 2vmax;
-    top: 50%;
-    right: 5vw;
-    left: 5vw;
-    background: @color_main;
-    transform: translateY(-50%);
-    padding: 5vh 5vw;
-    max-height: 70vh;
-    overflow-y: auto;
-
-    @media screen and (min-width: 400px) {
-      right: 20vw;
-      left: 20vw;
-    }
-
-    @media screen and (min-width: 1000px) {
-      right: 35vw;
-      left: 35vw;
     }
   }
 }
