@@ -15,7 +15,7 @@ password_allowed_symbols = f'[{numbers}{letters}!@#$%^&*(){{}}\\[\\]\\-_=+,.<>|\
 username_allowed_symbols = f'[{numbers}{letters}\\-_.]'
 password_re = f'^{must_contain(letters)}{must_contain(numbers)}{password_allowed_symbols}{length(8)}$'
 username_re = f'^{must_contain(letters)}{username_allowed_symbols}{length(3)}$'
-email_re = '^(([^<>()\\[\\]\\\\.,;:\\s@"][\\w]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"][\\w]+)*)|("\\w+"))@((\\[[0-9]{1,' \
+email_re = '^(([^<>()\\[\\]\\\\.,;:\\s@"][\\w]*(\\.[^<>()\\[\\]\\\\.,;:\\s@"][\\w]+)*)|("\\w+"))@((\\[[0-9]{1,' \
            '3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$'
 
 

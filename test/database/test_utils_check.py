@@ -1,7 +1,9 @@
-from blog.utils.users import add_user, delete_user
-from blog.utils.search import find_user_by_login, find_user_by_email, find_user_by_name
 from blog.utils.check import check_login, check_email, check_username
+from blog.utils.search import find_user_by_login, find_user_by_email, find_user_by_name
+from blog.utils.users import add_user, delete_user
 
+
+#  These tests communicate to the database and thus may take longer to run
 
 def test_utils_login_exists():
     add_user('testUsername', 'testEmail@gmail.com', 'testPasswd', 'testCookie')
@@ -41,4 +43,3 @@ def test_utils_username_not_exists():
     delete_user(user)
 
     assert not check_username('testUsername')
-
