@@ -1,4 +1,4 @@
-@import url("/static/css/colors.css");
+@import url("/static/css/colors.min.css");
 
 :root, input, button {
     font-family: Nunito, sans-serif;

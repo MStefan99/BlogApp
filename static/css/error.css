@@ -1,4 +1,4 @@
-@import url("/static/css/colors.css");
+@import url("/static/css/colors.min.css");
 
 body {
     margin: 0;
@@ -280,7 +280,7 @@ a {
 }
 
 @-webkit-keyframes move {
-    0% {
+    fropm{
         transform: translate(-25%, -25%) rotate(0deg);
     }
     100% {
@@ -289,7 +289,7 @@ a {
 }
 
 @-webkit-keyframes size {
-    0% {
+    from {
         transform: scale(0);
     }
     10% {

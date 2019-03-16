@@ -1,6 +1,6 @@
 let star_div = document.getElementById('stars');
 
-for (i = 13; i < 100 / window.devicePixelRatio; i++) {
+for (var i = 13; i < 100 / window.devicePixelRatio; i++) {
     var star = document.createElement('div');
     star.id = 's' + i;
     star.classList.add('star');
