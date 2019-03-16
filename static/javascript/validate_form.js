@@ -248,7 +248,7 @@ class form {
             email_msg.innerHTML = "";
             this.email_ok = !email.hasAttribute('required');
         } else {
-            let re = /^(([^<>()\[\]\\.,;:\s@"][\w]+(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            let re = /^(([^<>()\[\]\\.,;:\s@"][\w]*(\.[^<>()\[\]\\.,;:\s@"][\w]+)*)|("\w+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             this.email_ok = re.test(email.value.toLowerCase());
             if (!this.email_ok) {
                 email_msg.className = "credentials-check error";
