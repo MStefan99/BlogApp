@@ -18,9 +18,9 @@ class form {
             if (ok && !element.value) {
                 element.style.borderColor = "var(--color-accent)";
             } else if (ok) {
-                element.style.borderColor = "var(--ok)";
+                element.style.borderColor = "var(--color-ok)";
             } else {
-                element.style.borderColor = "var(--error)";
+                element.style.borderColor = "var(--color-error)";
             }
         });
 
@@ -299,7 +299,7 @@ class form {
             this.email_match_ok = true;
         }
         this.validate_form();
-        form.set_color(this.email_match_ok, email, email_repeat);
+        form.set_color(this.email_match_ok, email_repeat);
     }
 
     check_password(password, password_msg) {
