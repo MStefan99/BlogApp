@@ -239,7 +239,7 @@ a {
   text-decoration: none;
 }
 @-webkit-keyframes move {
-  0% {
+  from {
     transform: translate(-25%, -25%) rotate(0deg);
   }
   100% {
@@ -247,7 +247,7 @@ a {
   }
 }
 @-webkit-keyframes size {
-  0% {
+  from {
     transform: scale(0);
   }
   10% {

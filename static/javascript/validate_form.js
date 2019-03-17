@@ -1,6 +1,5 @@
 class form {
     // Setting check variables
-    form_element;
     email_ok = true;
     email_match_ok = true;
     login_ok = true;
