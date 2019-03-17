@@ -160,6 +160,9 @@ body main #post-container #post-main #post-tags #tag a {
   user-select: none;
   color: #272727;
 }
+body form *:focus {
+  outline: none;
+}
 body form .form-section {
   margin: 0.5vh 0 1.5vh;
 }
