@@ -81,10 +81,14 @@ def api_recover_put():
     user = find_user_by_recover_key(key)
     new_password = request.form.get('new-password')
 
+    password_syntax_ok = syntax_check.check_password_syntax(new_password)
+
     if not user:
         return make_response('NO USER', 422)
     elif not new_password:
         return make_response('MISSING ARGS', 422)
+    elif not password_syntax_ok:
+        return make_response('INVALID PASSWORD SYNTAX', 422)
     else:
         cookie_id = generate_hash()
         update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
