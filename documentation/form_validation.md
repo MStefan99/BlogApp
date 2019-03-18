@@ -1,6 +1,6 @@
 # Form validation script
 
-In `/static/javascript/` you will find the `validate_form.js` file. 
+In `/static/js_compiled/` you will find the `validate_form.min.js` file. 
 It is a script written in javascript that allows you to validate any forms on the website that have supported fields.
 This is how you can use it.
 
@@ -17,7 +17,7 @@ This is how you can use it.
 #### Linking the script
 To link the script, just paste this line at the end of the page:
 ```html
-<script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js_compiled/validate_form.min.js') }}"></script>
 ```
 
 #### How to use:
@@ -70,7 +70,7 @@ If the field needs to be validated in real time, as the user types, add the `rea
     <button>Submit</button>
     <p class="required-check"></p>
 </form>
-<script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js_compiled/validate_form.min.js') }}"></script>
 ```
 
 #### Smart submit

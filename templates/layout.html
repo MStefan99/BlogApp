@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.min.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Nunito|Ubuntu" rel="stylesheet">
     <!-- WARNING: Google analytics disabled for development purposes. Enable when needed!
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126259429-1"></script>
@@ -23,8 +23,8 @@
     <meta name="description" content="{{ post['tagline'] if post else 'galera.dev blog' }}">
     <meta name="author" content="{{ post['author'] if post else 'galera.dev' }}">
     <style>
-        header {
-            background-color: {{ post['theme_color'] if post else 'var(--accent-color)' }};
+        body header {
+            background-color: {{ post['theme_color'] if post else 'var(--color-accent)' }};
         }
     </style>
 </head>
@@ -53,7 +53,7 @@
         {% endif %}
         {% if request.path != '/favourites/' %}
             <li class="nav-element">
-                <a id="posts" class="nav-button" href="/favourites/">Favourites</a>
+                <a id="posts-container" class="nav-button" href="/favourites/">Favourites</a>
             </li>
         {% endif %}
     </ul>

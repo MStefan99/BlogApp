@@ -7,9 +7,6 @@
     </div>
     <form action="/settings_processor/" class="form validated" method="post">
         <div class="form-section">
-            <label class=form-title>Settings</label>
-        </div>
-        <div class="form-section">
             <label class="form-section-title">Change your email</label>
             <label>New email</label>
             <input type="text" name="email" class="email realtime-validate" autocomplete="email"
@@ -44,5 +41,5 @@
         </div>
         <a style="color: #000;" href="/delete/">Delete your account</a>
     </form>
-    <script src="{{ url_for('static', filename='javascript/validate_form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js_compiled/validate_form.min.js') }}"></script>
 {% endblock %}
