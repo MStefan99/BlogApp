@@ -33,7 +33,37 @@ body header .nav-block * {
   list-style-type: none;
 }
 body header .nav-block li.nav-element {
+  height: 100%;
   padding: 0.5vh 1vw;
+}
+body header .nav-block li.nav-element form {
+  width: 20vw;
+  height: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+body header .nav-block li.nav-element form input {
+  position: absolute;
+  right: 1vw;
+  width: 0;
+  margin: 0;
+  padding: 0;
+  transition: padding-left 0.8s ease-in-out, padding-right 0.8s ease-in-out, width 0.8s ease-in-out;
+}
+body header .nav-block li.nav-element form button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+  padding: 0 0.25vw;
+  width: unset;
+  z-index: 1;
+}
+body header .nav-block li.nav-element form button:hover + input,
+body header .nav-block li.nav-element form input:hover {
+  width: 100%;
+  padding: 0 3vw 0 1vw;
 }
 body header a.nav-button {
   text-decoration: none;

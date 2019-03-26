@@ -56,6 +56,12 @@
                 <a id="posts-container" class="nav-button" href="/favourites/">Favourites</a>
             </li>
         {% endif %}
+    <li class="nav-element">
+        <form action="/search/" method="get">
+            <button type="submit">Search</button>
+            <input type="text" name="q" autocomplete="off">
+        </form>
+    </li>
     </ul>
 </header>
 <main>

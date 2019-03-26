@@ -1,47 +1,64 @@
 {% extends 'layout.html' %}
+{% set search_query = request.args.get('q') if 'search' in request.path else None %}
 {% block main %}
     <div id="page-title">
         <p>
-            Posts
+            {% if 'posts' in request.path %}
+                Posts
+            {% elif 'favourites' in request.path %}
+                Saved posts
+            {% elif 'search' in request.path %}
+                Search results
+            {% endif %}
         </p>
     </div>
-    <div id="posts-container">
-        {% for post in posts %}
-            <a class="post-thumbnail" id="{{ 'post' + post['id']|string }}" href="{{ '/post/' + post['link'] + '/' }}"
-               style="background-color: {{ post['theme_color'] }}">
-                <div class="post-thumbnail-info">
-                    <div class="post-thumbnail-title">
-                        <p>{{ post['title'] }}</p>
+    {% if code == 'no_posts' %}
+        <p>
+            No posts here
+        </p>
+    {% else %}
+        <div id="posts-container">
+            {% for post in posts %}
+                <a class="post-thumbnail" id="{{ 'post' + post['id']|string }}"
+                   href="{{ '/post/' + post['link'] + '/' }}"
+                   style="background-color: {{ post['theme_color'] }}">
+                    <div class="post-thumbnail-info">
+                        <div class="post-thumbnail-title">
+                            <p>{{ post['title'] }}</p>
+                        </div>
+                        <div class="post-thumbnail-tagline">
+                            <p>{{ post['tagline'] }}</p>
+                        </div>
+                        <div class="posts-date">
+                            <p>{{ post['date'] }}</p>
+                        </div>
+                        <div class="posts-author">
+                            <p>{{ post['author'] }}</p>
+                        </div>
                     </div>
-                    <div class="post-thumbnail-tagline">
-                        <p>{{ post['tagline'] }}</p>
-                    </div>
-                    <div class="posts-date">
-                        <p>{{ post['date'] }}</p>
-                    </div>
-                    <div class="posts-author">
-                        <p>{{ post['author'] }}</p>
-                    </div>
-                </div>
-                <img src="{{ post['image'] }}" class="post-image" alt="Post icon">
-            </a>
-        {% endfor %}
-    </div>
-    {% if pages_number > 0 %}
-        <div id="page-selector">
-            {% if current_page > 0 %}
-                <a href="/posts/?page={{ current_page - 1 }}">Previous page</a>
-            {% endif %}
-            {% for page in range(0, pages_number) %}
-                {% if current_page != page %}
-                    <a href="/posts/?page={{ page }}">{{ page + 1 }}</a>
-                {% else %}
-                    <p>{{ page + 1 }}</p>
-                {% endif %}
+                    <img src="{{ post['image'] }}" class="post-image" alt="Post icon">
+                </a>
             {% endfor %}
-            {% if current_page < pages_number - 1 %}
-                <a href="/posts/?page={{ current_page + 1 }}">Next page</a>
-            {% endif %}
         </div>
+        {% if pages_number > 1 %}
+            <div id="page-selector">
+                {% if current_page > 0 %}
+                    <a href="{{ request.path }}?page={{ current_page - 1 }}{{
+                            '&q=' + search_query if search_query }}">Previous page</a>
+                {% endif %}
+                {% for page in range(0, pages_number) %}
+                    {% if current_page != page %}
+                        <a href="{{ request.path }}?page={{ page }}{{
+                                '&q=' + search_query if search_query }}">{{ page + 1 }}</a>
+                    {% else %}
+                        <p>{{ page + 1 }}</p>
+                    {% endif %}
+                {% endfor %}
+                {% if current_page < pages_number - 1 %}
+                    <a href="{{ request.path }}?page={{ current_page + 1 }}{{
+                            '&q=' + search_query if search_query }}">Next page</a>
+                {% endif %}
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}
