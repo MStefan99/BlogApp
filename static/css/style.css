@@ -90,16 +90,16 @@ body main #posts-container {
   flex-flow: column nowrap;
   align-items: stretch;
 }
-body main #posts-container a {
-  text-decoration: none;
-  font-weight: 600;
-  color: #ffffff;
-}
 body main #posts-container .post-thumbnail {
   margin: 2vh 0;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
+  text-decoration: none;
+  font-weight: 600;
+  color: #ffffff;
+  height: 30vh;
+  overflow: hidden;
 }
 body main #posts-container .post-thumbnail .post-thumbnail-info {
   padding: 0 3vw;
@@ -123,6 +123,9 @@ body main #posts-container .post-thumbnail .post-thumbnail-info .post-thumbnail-
   font-style: italic;
   text-decoration: #ffffff dashed underline;
   font-weight: 700;
+}
+body main #posts-container .post-thumbnail img {
+  height: inherit;
 }
 body main #page-selector {
   display: flex;
