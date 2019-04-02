@@ -4,8 +4,8 @@
 @color_disabled: #686868;
 
 @color_accent: #67dbe6;
-@color_accent_light: #a6f8ff;
-@color_accent_dark: #50aab3;
+@color_accent_light: lighten(@color_accent, 10%);
+@color_accent_dark: darken(@color_accent, 10%);
 
 @color_text: #272727;
 @color_text_secondary: #ffffff;
@@ -15,8 +15,8 @@
 @color_error: #f22746;
 
 @color_scrollbar: #666666;
-@color_scrollbar_hover: #595959;
-@color_scrollbar_active: #404040;
+@color_scrollbar_hover: darken(@color_scrollbar, 10%);
+@color_scrollbar_active: darken(@color_scrollbar, 20%);
 
 
 //CSS variable declaration

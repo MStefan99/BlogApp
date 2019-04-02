@@ -17,6 +17,7 @@ body {
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+    background: var(--color-accent);
 
     #logo-image {
       padding: 0 1vw;
@@ -41,34 +42,36 @@ body {
         form {
           width: 20vw;
           height: 100%;
-          position: relative;
           margin: 0;
           padding: 0;
+          display: flex;
+          flex-flow: row-reverse wrap;
 
           input {
-            position: absolute;
-            right: 1vw;
+            background: transparent;
             width: 0;
-            margin: 0;
             padding: 0;
-            transition: padding-left .8s ease-in-out,
-                        padding-right .8s ease-in-out,
-                        width .8s ease-in-out;
+            margin: 0 auto 0 0;
+            color: @color_text_secondary;
+            border-radius: 0;
+            border: none;
+            border-bottom: .25vh solid @color_background;
+            transition: all .8s ease-in-out;
           }
 
           button {
-            position: absolute;
-            right: 0;
-            top: 0;
             margin: 0;
             padding: 0 .25vw;
             width: unset;
-            z-index: 1;
+            border: none;
+            background: transparent;
+            font-size: unset;
           }
 
           button:hover + input, input:hover {
-            width: 100%;
-            padding: 0 3vw 0 1vw;
+            flex: 1;
+            margin: 0;
+            padding: 0 1vw;
           }
         }
       }
@@ -404,3 +407,6 @@ p {
   }
 }
 
+.no-scroll {
+  overflow-y: hidden;
+}
