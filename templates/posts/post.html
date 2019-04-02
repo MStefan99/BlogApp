@@ -40,7 +40,7 @@
             <div id="post-tags">
                 {% for tag in tags %}
                     <div id="tag">
-                        <a href="{{ '/tag/?q=' + tag[1:] }}">{{ tag }}</a>
+                        <a href="{{ '/tag/?q=' + tag[2:] }}">{{ tag }}</a>
                         <!-- TODO: make tags clickable and searchable -->
                     </div>
                 {% endfor %}

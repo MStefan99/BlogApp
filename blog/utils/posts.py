@@ -63,3 +63,13 @@ def search_posts_by_text(query):
                    'order by date desc',
                    (query, query, query))
     return cursor.fetchall()
+
+
+def search_posts_by_tag(tag):
+    tag = '%' + tag + '%'
+    cursor = DATABASE.cursor()
+    cursor.execute('select * from posts '
+                   'where tags like %s '
+                   'order by date desc',
+                   (tag, ))
+    return cursor.fetchall()

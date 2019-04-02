@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, make_response
 
 from blog.globals import COOKIE_NAME
-from blog.utils.posts import get_posts, check_favourite, get_favourites, search_posts_by_text
+from blog.utils.posts import get_posts, check_favourite, get_favourites, search_posts_by_text, search_posts_by_tag
 from blog.utils.search import find_user_by_cookie, find_post_by_link
 from blog.utils.users import get_user
 from blog_app import app
@@ -127,9 +127,30 @@ def web_favourites():
 
 
 @app.route('/search/')
-def web_search():
+def web_search_text():
     query = request.args.get('q')
     posts = search_posts_by_text(query)
+
+    if not posts:
+        return render_template('posts/posts.html', code='no_posts')
+    current_page = request.args.get('page')
+
+    if not current_page:
+        current_page = 0
+    else:
+        current_page = int(current_page)
+    pages_number = len(posts) // 10 + 1
+
+    if len(posts) > 10:
+        posts = posts[current_page * 10:current_page * 10 + 10]
+
+    return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
+
+
+@app.route('/tag/')
+def web_search_tag():
+    tag = request.args.get('q')
+    posts = search_posts_by_tag(tag)
 
     if not posts:
         return render_template('posts/posts.html', code='no_posts')
