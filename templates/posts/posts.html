@@ -3,7 +3,7 @@
 {% block main %}
     <div id="page-title">
         <p>
-            {% if 'posts' in request.path %}
+            {% if 'posts' in request.path or request.path == '/' %}
                 Posts
             {% elif 'favourites' in request.path %}
                 Saved posts

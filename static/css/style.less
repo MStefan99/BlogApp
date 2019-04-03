@@ -143,7 +143,8 @@ body {
         }
 
         img {
-          height: inherit;
+          max-height: 30vh;
+          max-width: 100%;
         }
       }
     }
@@ -240,6 +241,14 @@ body {
               color: @color_text;
             }
           }
+        }
+      }
+
+      #post-save {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline solid;
         }
       }
     }

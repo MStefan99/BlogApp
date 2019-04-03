@@ -75,24 +75,6 @@ def web_delete():
     return render_template('user/delete.html')
 
 
-@app.route('/')
-@app.route('/posts/')
-def web_posts():
-    posts = get_posts()
-    current_page = request.args.get('page')
-
-    if not current_page:
-        current_page = 0
-    else:
-        current_page = int(current_page)
-    pages_number = len(posts) // 10 + 1
-
-    if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 10]
-
-    return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
-
-
 @app.route('/post/<string:post_link>/')
 def web_post(post_link):
     user = get_user()
@@ -103,54 +85,25 @@ def web_post(post_link):
                            tags=post['tags'].split(','))
 
 
+@app.route('/')
+@app.route('/posts/')
 @app.route('/favourites/')
-def web_favourites():
-    user = get_user()
-    if not user:
-        return render_template('status/error.html', code='logged_out')
-
-    posts = get_favourites(user)
-    if not posts:
-        return render_template('posts/posts.html', code='no_posts')
-    current_page = request.args.get('page')
-
-    if not current_page:
-        current_page = 0
-    else:
-        current_page = int(current_page)
-    pages_number = len(posts) // 10 + 1
-
-    if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 10]
-
-    return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
-
-
 @app.route('/search/')
-def web_search_text():
-    query = request.args.get('q')
-    posts = search_posts_by_text(query)
+@app.route('/tag/<string:tag>')
+def web_posts(tag=''):
 
-    if not posts:
-        return render_template('posts/posts.html', code='no_posts')
-    current_page = request.args.get('page')
-
-    if not current_page:
-        current_page = 0
+    if 'favourites' in request.path:
+        user = get_user()
+        if not user:
+            return render_template('status/error.html', code='logged_out')
+        posts = get_favourites(user)
+    elif 'search' in request.path:
+        query = request.args.get('q')
+        posts = search_posts_by_text(query)
+    elif 'tag' in request.path:
+        posts = search_posts_by_tag(tag)
     else:
-        current_page = int(current_page)
-    pages_number = len(posts) // 10 + 1
-
-    if len(posts) > 10:
-        posts = posts[current_page * 10:current_page * 10 + 10]
-
-    return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
-
-
-@app.route('/tag/')
-def web_search_tag():
-    tag = request.args.get('q')
-    posts = search_posts_by_tag(tag)
+        posts = get_posts()
 
     if not posts:
         return render_template('posts/posts.html', code='no_posts')

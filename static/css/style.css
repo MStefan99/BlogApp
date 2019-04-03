@@ -125,7 +125,8 @@ body main #posts-container .post-thumbnail .post-thumbnail-info .post-thumbnail-
   font-weight: 700;
 }
 body main #posts-container .post-thumbnail img {
-  height: inherit;
+  max-height: 30vh;
+  max-width: 100%;
 }
 body main #page-selector {
   display: flex;
@@ -197,6 +198,12 @@ body main #post-container #post-main #post-tags #tag a {
   cursor: pointer;
   user-select: none;
   color: #272727;
+}
+body main #post-container #post-save {
+  cursor: pointer;
+}
+body main #post-container #post-save:hover {
+  text-decoration: underline solid;
 }
 body form *:focus {
   outline: none;
