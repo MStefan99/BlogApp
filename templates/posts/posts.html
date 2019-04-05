@@ -1,5 +1,4 @@
 {% extends 'layout.html' %}
-{% set search_query = request.args.get('q') if 'search' in request.path else None %}
 {% block main %}
     <div id="page-title">
         <p>
@@ -43,20 +42,26 @@
         {% if pages_number > 1 %}
             <div id="page-selector">
                 {% if current_page > 0 %}
-                    <a href="{{ request.path }}?page={{ current_page - 1 }}{{
-                            '&q=' + search_query if search_query }}">Previous page</a>
+                    <a href="{{ request.path }}?page={{ current_page - 1 }}
+                        {%- for key, val in request.args.items() if key !='page' %}
+                        {{- '&' + key + '=' + val }}
+                        {%- endfor %}">Previous page</a>
                 {% endif %}
                 {% for page in range(0, pages_number) %}
                     {% if current_page != page %}
-                        <a href="{{ request.path }}?page={{ page }}{{
-                                '&q=' + search_query if search_query }}">{{ page + 1 }}</a>
+                        <a href="{{ request.path }}?page={{ page }}
+                            {%- for key, val in request.args.items() if key !='page' %}
+                            {{- '&' + key + '=' + val }}
+                            {%- endfor %}">{{ page + 1 }}</a>
                     {% else %}
                         <p>{{ page + 1 }}</p>
                     {% endif %}
                 {% endfor %}
                 {% if current_page < pages_number - 1 %}
-                    <a href="{{ request.path }}?page={{ current_page + 1 }}{{
-                            '&q=' + search_query if search_query }}">Next page</a>
+                    <a href="{{ request.path }}?page={{ current_page + 1 }}
+                        {%- for key, val in request.args.items() if key !='page' %}
+                        {{- '&' + key + '=' + val }}
+                        {%- endfor %}">Next page</a>
                 {% endif %}
             </div>
         {% endif %}
