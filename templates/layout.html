@@ -16,15 +16,16 @@
     <!-- WARNING: Favicon missing! -->
     <link rel="icon" type="image/png" sizes="16x16" href="https://blog.mstefan99.com/static/images/ico.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content={{ post['theme_color'] if post else '#66d9e3' }}>
+    <meta name="theme-color" content={{ post['theme_color'] if post else 'var(--color-accent)' }}>
     <meta charset="utf-8">
 
-    <title>{{ 'galera.dev ' + post['title'] if post else 'galera.dev ' + request.path[1:-1].capitalize() }}</title>
+    <title>{{ 'galera.dev ' + post['title'] if post else 'galera.dev ' + request.path[1:-1]
+    .capitalize().replace('_', ' ') }}</title>
     <meta name="description" content="{{ post['tagline'] if post else 'galera.dev blog' }}">
     <meta name="author" content="{{ post['author'] if post else 'galera.dev' }}">
     <style>
-        body header {
-            background-color: {{ post['theme_color'] if post else 'var(--color-accent)' }};
+        :root {
+        {{ '--color-accent: ' + post['theme_color'] + ';' if post }}
         }
     </style>
 </head>
@@ -53,9 +54,15 @@
         {% endif %}
         {% if request.path != '/favourites/' %}
             <li class="nav-element">
-                <a id="posts-container" class="nav-button" href="/favourites/">Favourites</a>
+                <a id="favourites" class="nav-button" href="/favourites/">Favourites</a>
             </li>
         {% endif %}
+    <li class="nav-element">
+        <form action="/search/" method="get">
+            <button type="submit">Search</button>
+            <input type="text" name="q" autocomplete="off" required>
+        </form>
+    </li>
     </ul>
 </header>
 <main>

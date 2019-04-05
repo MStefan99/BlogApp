@@ -5,7 +5,7 @@ function add_to_favourites(post_id) {
   var button = document.getElementById("post-save");
 
   xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState === 4 && this.status === 200) {
       document.getElementById("post-save").innerHTML = "Remove  from favourites";
     }
   };
@@ -24,7 +24,7 @@ function remove_from_favourites(post_id) {
   var button = document.getElementById("post-save");
 
   xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState === 4 && this.status === 200) {
       document.getElementById("post-save").innerHTML = "Save to favourites";
     }
   };
