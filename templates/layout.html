@@ -68,6 +68,7 @@
 <main>
     {% block main %}
     {% endblock %}
+    <script src="{{ url_for('static', filename='js_compiled/header.min.js') }}"></script>
 </main>
 {% block login %}
 {% endblock %}
