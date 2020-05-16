@@ -91,7 +91,6 @@ def web_post(post_link):
 @app.route('/search/')
 @app.route('/tag/<string:tag>')
 def web_posts(tag=''):
-
     if 'favourites' in request.path:
         user = get_user()
         if not user:

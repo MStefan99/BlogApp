@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 
 from blog.utils.check import check_username, check_login, check_email
 from blog.utils.posts import get_posts, get_favourites, check_favourite, save_post, remove_post
-from blog.utils.search import find_post_by_link, find_post_by_id
+from blog.utils.search import find_post_by_id
 from blog.utils.syntax_check import check_username_syntax, check_email_syntax
 from blog.utils.users import get_user
 from blog_app import app
