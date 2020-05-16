@@ -1,43 +1,43 @@
 {% extends 'layout.html' %}
 {% block login %}
-    <div class="popup-message">
-        <p>
-            {% if code == 'username_exists' %}
-                Username already exists.
-            {% elif code == 'email_exists' %}
-                Email already exists.
-            {% elif code == 'form_not_filled' %}
-                Please fill in all the fields.
-            {% elif code == 'wrong_login' %}
-                Username or email not found.
-            {% elif code == 'wrong_password' %}
-                Wrong password.
-            {% elif code == 'passwords_do_not_match' %}
-                Passwords do not match.
-            {% elif code == 'emails_do_not_match' %}
-                Emails do not match.
-            {% elif code == 'logged_out' %}
-                You need to <a href="/sign in/">sign in</a> to view this page.
-            {% elif code == 'wrong_route' %}
-                Oops! This page is empty, but you can always visit our
-                <a href="/">homepage</a>!
-            {% elif code == 'verification_failed' %}
-                Something went wrong.
-                Your email may already be verified,
-                but if not, try again or change the email.
-            {% elif code == 'user_not_found' %}
-                User not found.
-            {% elif code == 'wrong_email_syntax' %}
-                Wrong email format.
-            {% elif code == 'wrong_username_syntax' %}
-                Your username must be at least 3 symbols long<br>
-                and include only letters, numbers or characters "-", "_" and ".".<br>
-                Spaces not allowed.
-            {% elif code == 'wrong_password_syntax' %}
-                Your password must be at least 8 characters long<br>
-                and include at least one letter and one number.<br>
-                Spaces not allowed.
-            {% endif %}
-        </p>
-    </div>
+	<div class="popup-message">
+		<p>
+			{% if code == 'username_exists' %}
+				Username already exists.
+			{% elif code == 'email_exists' %}
+				Email already exists.
+			{% elif code == 'form_not_filled' %}
+				Please fill in all the fields.
+			{% elif code == 'wrong_login' %}
+				Username or email not found.
+			{% elif code == 'wrong_password' %}
+				Wrong password.
+			{% elif code == 'passwords_do_not_match' %}
+				Passwords do not match.
+			{% elif code == 'emails_do_not_match' %}
+				Emails do not match.
+			{% elif code == 'logged_out' %}
+				You need to <a href="/sign in/">sign in</a> to view this page.
+			{% elif code == 'wrong_route' %}
+				Oops! This page is empty, but you can always visit our
+				<a href="/">homepage</a>!
+			{% elif code == 'verification_failed' %}
+				Something went wrong.
+				Your email may already be verified,
+				but if not, try again or change the email.
+			{% elif code == 'user_not_found' %}
+				User not found.
+			{% elif code == 'wrong_email_syntax' %}
+				Wrong email format.
+			{% elif code == 'wrong_username_syntax' %}
+				Your username must be at least 3 symbols long<br>
+				and include only letters, numbers or characters "-", "_" and ".".<br>
+				Spaces not allowed.
+			{% elif code == 'wrong_password_syntax' %}
+				Your password must be at least 8 characters long<br>
+				and include at least one letter and one number.<br>
+				Spaces not allowed.
+			{% endif %}
+		</p>
+	</div>
 {% endblock %}

@@ -1,23 +1,23 @@
 {% extends 'layout.html' %}
 {% block login %}
-    <form action="/smart sign in/" class="popup-form validated" method="post">
-        <div class="form-section">
-            <label class="form-title">Sign in</label>
-        </div>
-        <div class="form-section">
-            <label class="form-section-title required">Username or email</label>
-            <input type="text" name="login" autocomplete="email"
-                   placeholder="Enter your username or email" required>
-            <p class="credentials-check login-check"></p>
-        </div>
-        <div class="form-section">
-            <button type="submit">Continue</button>
-        </div>
-        <div class="form-section">
-            <p class="credentials-check required-check"></p>
-        </div>
-        <input style="visibility: collapse; padding: 0; margin: 0; border: none;" type="password"
-               name="current-password" autocomplete="current-password"> <!-- Hidden field for autocomplete -->
-    </form>
-    <script src="{{ url_for('static', filename='js_compiled/validate_form.min.js') }}"></script>
+	<form action="/smart sign in/" class="popup-form validated" method="post">
+		<div class="form-section">
+			<label class="form-title">Sign in</label>
+		</div>
+		<div class="form-section">
+			<label class="form-section-title required">Username or email</label>
+			<input type="text" name="login" autocomplete="email"
+			       placeholder="Enter your username or email" required>
+			<p class="credentials-check login-check"></p>
+		</div>
+		<div class="form-section">
+			<button type="submit">Continue</button>
+		</div>
+		<div class="form-section">
+			<p class="credentials-check required-check"></p>
+		</div>
+		<input style="visibility: collapse; padding: 0; margin: 0; border: none;" type="password"
+		       name="current-password" autocomplete="current-password"> <!-- Hidden field for autocomplete -->
+	</form>
+	<script src="{{ url_for('static', filename='js/validate_form.js') }}"></script>
 {% endblock %}
