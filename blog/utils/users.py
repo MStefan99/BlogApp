@@ -94,7 +94,7 @@ def verify_email(key):
 
     if user:
         delete_hash(user['verification_link'])
-        cursor.execute('update users set verification_link = null, verified = true, verified_email = ? '
+        cursor.execute('update users set verification_link = null, verified = 1, verified_email = ? '
                        'where id = ?', [user['email'], user['id']])
         DATABASE.commit()
         return True
