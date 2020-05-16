@@ -17,7 +17,10 @@ def web_add_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    return save_post(user, post)
+    if save_post(user, post):
+        return 'OK', 201
+    else:
+        return 'ALREADY EXISTS', 422
 
 
 @app.route('/del_post/', methods=['POST'])
@@ -26,7 +29,10 @@ def web_del_post():
     post_id = request.form.get('post')
     post = find_post_by_id(post_id)
 
-    return remove_post(user, post)
+    if remove_post(user, post):
+        return 'OK', 200
+    else:
+        return 'ALREADY EXISTS', 422
 
 
 @app.route('/check_username/', methods=['POST'])
