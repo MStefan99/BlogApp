@@ -11,26 +11,24 @@ from blog_app import app
 from .path import PATH
 
 
-@app.route(f'{PATH}/login/', methods=['POST'])
-def api_login_post():
-    login = request.form.get('login')
-    login = login.strip() if login else None
+@app.route(f'{PATH}/users/<login>/', methods=['GET'])
+def api_login_post(login):
     current_password = request.form.get('current-password')
     user = find_user_by_login(login)
 
-    if not login or not current_password:
-        return make_response('MISSING ARGS', 422)
+    if not current_password:
+        return 'NO PASSWORD', 400
     elif not user:
-        return make_response('INVALID LOGIN', 422)
+        return 'NO USER', 422
     elif user and password_correct(user, current_password):
         resp = make_response('OK', 200)
         resp.set_cookie(COOKIE_NAME, user['cookieid'], max_age=60 * 60 * 24 * 30)
         return resp
     else:
-        return make_response('WRONG PASSWORD', 422)
+        return 'WRONG PASSWORD', 422
 
 
-@app.route(f'{PATH}/register/', methods=['PUT'])
+@app.route(f'{PATH}/users/', methods=['POST'])
 def api_register_put():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -44,56 +42,56 @@ def api_register_put():
     form_filled = username and new_password and email
 
     if not form_filled:
-        return make_response('MISSING ARGS', 422)
+        return 'MISSING ARGS', 400
     elif not email_syntax_ok:
-        return make_response('INVALID EMAIL SYNTAX', 422)
+        return 'INVALID EMAIL SYNTAX', 400
     elif not username_syntax_ok:
-        return make_response('INVALID USERNAME SYNTAX', 422)
+        return 'INVALID USERNAME SYNTAX', 400
     elif not password_syntax_ok:
-        return make_response('INVALID PASSWORD SYNTAX', 422)
+        return 'INVALID PASSWORD SYNTAX', 400
     elif username_exists:
-        return make_response('USERNAME EXISTS', 422)
+        return 'USERNAME EXISTS', 422
     elif email_exists:
-        return make_response('EMAIL EXISTS', 422)
+        return 'EMAIL EXISTS', 422
     else:
         cookie_id = generate_hash()
         add_new_user(username, email, new_password, cookie_id)
-        resp = make_response(make_response('OK', 201))
+        resp = make_response('OK', 201)
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
-@app.route(f'{PATH}/recover_create/', methods=['POST'])
-def api_recover_create_post():
-    login = request.form.get('login')
+@app.route(f'{PATH}/users/<login>/recover/', methods=['POST'])
+def api_recover_create_post(login):
     user = find_user_by_login(login)
 
     if user:
         create_recover_link(user)
-        return make_response('OK', 200)
+        return 'OK', 200
     else:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422
 
 
-@app.route(f'{PATH}/recover/', methods=['PUT'])
-def api_recover_put():
-    key = request.form.get('key')
+@app.route(f'{PATH}/users/<key>/recover/', methods=['PATCH'])
+def api_recover_put(key):
     user = find_user_by_recover_key(key)
     new_password = request.form.get('new-password')
 
     if not user:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422
     elif not new_password:
-        return make_response('MISSING ARGS', 422)
+        return 'NO PASSWORD', 400
+    elif not syntax_check.check_password_syntax(new_password):
+        return 'INVALID PASSWORD SYNTAX', 400
     else:
         cookie_id = generate_hash()
         update_user(user, password_reset=True, new_password=new_password, cookie_id=cookie_id)
-        resp = make_response(make_response('OK', 200))
+        resp = make_response('OK', 200)
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
 
-@app.route(f'{PATH}/settings/', methods=['POST'])
+@app.route(f'{PATH}/users/', methods=['PUT'])
 def api_settings_post():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -107,17 +105,17 @@ def api_settings_post():
     password_syntax_ok = syntax_check.check_password_syntax(new_password)
 
     if not user:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422
     elif email and not email_syntax_ok:
-        return make_response('INVALID EMAIL SYNTAX', 422)
+        return 'INVALID EMAIL SYNTAX', 400
     elif username and not username_syntax_ok:
-        return make_response('INVALID USERNAME SYNTAX', 422)
+        return 'INVALID USERNAME SYNTAX', 400
     elif new_password and not password_syntax_ok:
-        return make_response('INVALID PASSWORD SYNTAX', 422)
+        return 'INVALID PASSWORD SYNTAX', 400
     elif username_exists:
-        return make_response('USERNAME EXISTS', 422)
+        return 'USERNAME EXISTS', 422
     elif email_exists:
-        return make_response('EMAIL EXISTS', 422)
+        return 'EMAIL EXISTS', 422
 
     if username:
         update_user(user, username=username)
@@ -126,40 +124,38 @@ def api_settings_post():
     if new_password:
         cookie_id = generate_hash()
         update_user(user, new_password=new_password, cookie_id=cookie_id)
-        resp = make_response(make_response('OK', 200))
+        resp = make_response('OK', 200)
         resp.set_cookie(COOKIE_NAME, cookie_id, max_age=60 * 60 * 24 * 30)
         return resp
 
-    return make_response('OK', 200)
+    return 'OK', 200
 
 
-@app.route(f'{PATH}/account/', methods=['GET'])
+@app.route(f'{PATH}/users/', methods=['GET'])
 def api_account_get():
     user = get_user()
-
     keys = 'username', 'email', 'verified'
 
     if not user:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422
     else:
         return jsonify({key: user[key] for key in keys})
 
 
-@app.route(f'{PATH}/delete/', methods=['PUT'])
+@app.route(f'{PATH}/users/', methods=['DELETE'])
 def api_delete_put():
     user = get_user()
 
     if not user:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422
     else:
         delete_user(user)
-        return make_response('OK', 200)
+        return 'OK', 200
 
 
-@app.route(f'{PATH}/verify/', methods=['PUT'])
-def api_verify_post():
-    key = request.form.get('key')
+@app.route(f'{PATH}/users/<key>/verify/', methods=['PATCH'])
+def api_verify_post(key):
     if verify_email(key):
-        return make_response('OK', 200)
+        return 'OK', 200
     else:
-        return make_response('NO USER', 422)
+        return 'NO USER', 422

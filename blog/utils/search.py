@@ -24,7 +24,6 @@ def find_user_by_cookie(cookie_id):
 
 
 def find_user_by_login(login):
-    login = login.lower()
     cursor = DATABASE.cursor()
     cursor.execute('select * from users where lower(username) = lower(?) or '
                    'lower(email) = lower(?)', [login, login])

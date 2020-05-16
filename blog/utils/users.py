@@ -1,4 +1,4 @@
-from flask import request, make_response, redirect
+from flask import request, redirect
 from passlib.hash import pbkdf2_sha512
 
 from blog.globals import DATABASE, COOKIE_NAME
@@ -73,7 +73,7 @@ def check_cookie():
     cookie_id = request.cookies.get('MSTID')
     if cookie_id:
         user = find_user_by_cookie(cookie_id)
-        resp = make_response(redirect(request.path, code=302))
+        resp = redirect(request.path, code=302)
         resp.set_cookie('MSTID', 'Bye!', expires=0)
         try:
             if not user['cookieid'] == cookie_id:

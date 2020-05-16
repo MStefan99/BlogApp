@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlite3 import IntegrityError
 
 from blog.globals import DATABASE
 
@@ -38,9 +39,9 @@ def save_post(user, post):
                        'values (?, ?, ?)',
                        [user['id'], post['id'], time.strftime('%Y-%m-%d %H:%M:%S')])
         DATABASE.commit()
-    except Exception:  # TODO: replace with narrower exception
-        return 'ALREADY EXISTS'
-    return 'OK'
+    except IntegrityError:
+        return False
+    return True
 
 
 def remove_post(user, post):
@@ -50,7 +51,7 @@ def remove_post(user, post):
                    'and post_id = ?',
                    [user['id'], post['id']])
     DATABASE.commit()
-    return 'OK'
+    return True
 
 
 def search_posts_by_text(query):

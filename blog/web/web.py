@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, make_response
+from flask import render_template, request, redirect
 
 from blog.globals import COOKIE_NAME
 from blog.utils.posts import get_posts, check_favourite, get_favourites, search_posts_by_text, search_posts_by_tag
@@ -33,7 +33,7 @@ def web_register():
 
 @app.route('/logout/')
 def web_logout():
-    resp = make_response(redirect('/', code=302))
+    resp = redirect('/', code=302)
     resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
 
     return resp
@@ -75,7 +75,7 @@ def web_delete():
     return render_template('user/delete.html')
 
 
-@app.route('/post/<string:post_link>/')
+@app.route('/post/<post_link>/')
 def web_post(post_link):
     user = get_user()
     post = find_post_by_link(post_link)
@@ -89,7 +89,7 @@ def web_post(post_link):
 @app.route('/posts/')
 @app.route('/favourites/')
 @app.route('/search/')
-@app.route('/tag/<string:tag>')
+@app.route('/tag/<tag>')
 def web_posts(tag=''):
     if 'favourites' in request.path:
         user = get_user()
