@@ -92,9 +92,7 @@ modules.xml
 
 # Cache files
 *.pyc
-
 # Database files
 *.sqlite
-
 # Environment path
 venv

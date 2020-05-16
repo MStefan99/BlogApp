@@ -1,4 +1,4 @@
 import sys
-sys.path.insert(0, '/var/www/blog.mstefan99.com')
+sys.path.insert(0, '/var/www/html')
 
 from blog_app import app as application
