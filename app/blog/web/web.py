@@ -1,13 +1,14 @@
-from flask import render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect
 
 from blog.globals import COOKIE_NAME
 from blog.utils.posts import get_posts, check_favourite, get_favourites, search_posts_by_text, search_posts_by_tag
 from blog.utils.search import find_user_by_cookie, find_post_by_link
 from blog.utils.users import get_user
-from blog_app import app
+
+web_pages = Blueprint('web-routes', __name__)
 
 
-@app.route('/sign in/')
+@web_pages.route('/sign in/')
 def web_web_sign_in():
     cookie_id = request.cookies.get(COOKIE_NAME)
 
@@ -21,17 +22,17 @@ def web_web_sign_in():
         return render_template('user/select.html')
 
 
-@app.route('/login/')
+@web_pages.route('/login/')
 def web_login():
     return render_template('user/login.html')
 
 
-@app.route('/register/')
+@web_pages.route('/register/')
 def web_register():
     return render_template('user/register.html')
 
 
-@app.route('/logout/')
+@web_pages.route('/logout/')
 def web_logout():
     resp = redirect('/', code=302)
     resp.set_cookie(COOKIE_NAME, 'Bye!', expires=0)
@@ -39,7 +40,7 @@ def web_logout():
     return resp
 
 
-@app.route('/account/')
+@web_pages.route('/account/')
 def web_account():
     user = get_user()
 
@@ -49,7 +50,7 @@ def web_account():
         return render_template('status/error.html', code='logged_out')
 
 
-@app.route('/settings/')
+@web_pages.route('/settings/')
 def web_settings():
     user = get_user()
 
@@ -59,23 +60,23 @@ def web_settings():
         return render_template('status/error.html', code='logged_out')
 
 
-@app.route('/recover_create/')
+@web_pages.route('/recover_create/')
 def web_recover_create():
     return render_template('user/recover-create.html')
 
 
-@app.route('/recover/')
+@web_pages.route('/recover/')
 def web_recover():
     key = request.args.get('key')
     return render_template('user/recover.html', key=key)
 
 
-@app.route('/delete/')
+@web_pages.route('/delete/')
 def web_delete():
     return render_template('user/delete.html')
 
 
-@app.route('/post/<post_link>/')
+@web_pages.route('/post/<post_link>/')
 def web_post(post_link):
     user = get_user()
     post = find_post_by_link(post_link)
@@ -85,11 +86,11 @@ def web_post(post_link):
                            tags=post['tags'].split(','))
 
 
-@app.route('/')
-@app.route('/posts/')
-@app.route('/favourites/')
-@app.route('/search/')
-@app.route('/tag/<tag>')
+@web_pages.route('/')
+@web_pages.route('/posts/')
+@web_pages.route('/favourites/')
+@web_pages.route('/search/')
+@web_pages.route('/tag/<tag>')
 def web_posts(tag=''):
     if 'favourites' in request.path:
         user = get_user()
@@ -120,10 +121,6 @@ def web_posts(tag=''):
     return render_template('posts/posts.html', posts=posts, current_page=current_page, pages_number=pages_number)
 
 
-@app.route('/secret/')
+@web_pages.route('/secret/')
 def web_secret():
     return render_template('status/secret.html')
-
-
-if __name__ == '__main__':
-    app.run()

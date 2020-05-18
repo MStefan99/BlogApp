@@ -1,8 +1,7 @@
-create table posts
+create table if not exists posts
 (
     id          integer not null
-        constraint posts_pk
-            primary key autoincrement,
+        primary key autoincrement,
     title       text    not null,
     tagline     text    not null,
     image       text,

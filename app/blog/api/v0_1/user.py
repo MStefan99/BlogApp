@@ -1,4 +1,4 @@
-from flask import request, make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify
 
 from blog.globals import COOKIE_NAME
 from blog.utils import syntax_check
@@ -7,11 +7,11 @@ from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
-from blog_app import app
-from .path import PATH
+
+api_v01_user = Blueprint('api v0.1 user', __name__)
 
 
-@app.route(f'{PATH}/users/<login>/', methods=['GET'])
+@api_v01_user.route(f'/users/<login>/', methods=['GET'])
 def api_login_post(login):
     current_password = request.form.get('current-password')
     user = find_user_by_login(login)
@@ -28,7 +28,7 @@ def api_login_post(login):
         return 'WRONG PASSWORD', 422
 
 
-@app.route(f'{PATH}/users/', methods=['POST'])
+@api_v01_user.route(f'/users/', methods=['POST'])
 def api_register_put():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -61,7 +61,7 @@ def api_register_put():
         return resp
 
 
-@app.route(f'{PATH}/users/<login>/recover/', methods=['POST'])
+@api_v01_user.route(f'/users/<login>/recover/', methods=['POST'])
 def api_recover_create_post(login):
     user = find_user_by_login(login)
 
@@ -72,7 +72,7 @@ def api_recover_create_post(login):
         return 'NO USER', 422
 
 
-@app.route(f'{PATH}/users/<key>/recover/', methods=['PATCH'])
+@api_v01_user.route(f'/users/<key>/recover/', methods=['PATCH'])
 def api_recover_put(key):
     user = find_user_by_recover_key(key)
     new_password = request.form.get('new-password')
@@ -91,7 +91,7 @@ def api_recover_put(key):
         return resp
 
 
-@app.route(f'{PATH}/users/', methods=['PUT'])
+@api_v01_user.route(f'/users/', methods=['PUT'])
 def api_settings_post():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -131,7 +131,7 @@ def api_settings_post():
     return 'OK', 200
 
 
-@app.route(f'{PATH}/users/', methods=['GET'])
+@api_v01_user.route(f'/users/', methods=['GET'])
 def api_account_get():
     user = get_user()
     keys = 'username', 'email', 'verified'
@@ -142,7 +142,7 @@ def api_account_get():
         return jsonify({key: user[key] for key in keys})
 
 
-@app.route(f'{PATH}/users/', methods=['DELETE'])
+@api_v01_user.route(f'/users/', methods=['DELETE'])
 def api_delete_put():
     user = get_user()
 
@@ -153,7 +153,7 @@ def api_delete_put():
         return 'OK', 200
 
 
-@app.route(f'{PATH}/users/<key>/verify/', methods=['PATCH'])
+@api_v01_user.route(f'/users/<key>/verify/', methods=['PATCH'])
 def api_verify_post(key):
     if verify_email(key):
         return 'OK', 200

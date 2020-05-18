@@ -95,4 +95,4 @@ modules.xml
 # Database files
 *.sqlite
 # Environment path
-venv
+app/venv

@@ -1,4 +1,4 @@
-from flask import render_template, request, make_response, redirect
+from flask import Blueprint, render_template, request, make_response, redirect
 
 from blog.globals import COOKIE_NAME
 from blog.utils import syntax_check
@@ -7,10 +7,11 @@ from blog.utils.hash import generate_hash
 from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
-from blog_app import app
+
+web_processors = Blueprint('web-processors', __name__)
 
 
-@app.route('/smart sign in/', methods=['POST'])
+@web_processors.route('/smart sign in/', methods=['POST'])
 def web_select_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
@@ -23,7 +24,7 @@ def web_select_processor():
         return render_template('user/register.html', login=login)
 
 
-@app.route('/login_processor/', methods=['POST'])
+@web_processors.route('/login_processor/', methods=['POST'])
 def web_login_processor():
     login = request.form.get('login')
     login = login.strip() if login else None
@@ -42,7 +43,7 @@ def web_login_processor():
         return render_template('status/error.html', code='wrong_password')
 
 
-@app.route('/register_processor/', methods=['POST'])
+@web_processors.route('/register_processor/', methods=['POST'])
 def web_register_processor():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -78,7 +79,7 @@ def web_register_processor():
         return resp
 
 
-@app.route('/recover_create_processor/', methods=['POST'])
+@web_processors.route('/recover_create_processor/', methods=['POST'])
 def web_recover_create_processor():
     login = request.form.get('login')
     user = find_user_by_login(login)
@@ -90,7 +91,7 @@ def web_recover_create_processor():
         return render_template('status/error.html', code='wrong_login')
 
 
-@app.route('/recover_processor/', methods=['POST'])
+@web_processors.route('/recover_processor/', methods=['POST'])
 def web_recover_processor():
     key = request.form.get('key')
     user = find_user_by_recover_key(key)
@@ -113,7 +114,7 @@ def web_recover_processor():
         return resp
 
 
-@app.route('/settings_processor/', methods=['POST'])
+@web_processors.route('/settings_processor/', methods=['POST'])
 def web_settings_processor():
     username = request.form.get('username')
     email = request.form.get('email')
@@ -161,7 +162,7 @@ def web_settings_processor():
     return render_template('status/success.html', code='edit_success')
 
 
-@app.route('/delete_confirm/')
+@web_processors.route('/delete_confirm/')
 def web_delete_confirm():
     user = get_user()
 
@@ -172,7 +173,7 @@ def web_delete_confirm():
         return redirect('/logout/', code=302)
 
 
-@app.route('/verify/')
+@web_processors.route('/verify/')
 def web_verify():
     key = request.args.get('key')
     if verify_email(key):

@@ -1,21 +1,21 @@
-from flask import jsonify
+from flask import Blueprint, jsonify
 
 from blog.utils.check import check_username, check_login, check_email
 from blog.utils.posts import get_posts, get_favourites, save_post, remove_post
 from blog.utils.search import find_post_by_id
 from blog.utils.syntax_check import check_username_syntax, check_email_syntax
 from blog.utils.users import get_user
-from blog_app import app
-from .path import PATH
+
+api_v01_common = Blueprint('api v0.1 common', __name__)
 
 
-@app.route(f'{PATH}/posts/', methods=['GET'])
+@api_v01_common.route(f'/posts/', methods=['GET'])
 def api_posts_get():
     posts = get_posts()
     return jsonify(posts)
 
 
-@app.route(f'{PATH}/favourites/', methods=['GET'])
+@api_v01_common.route(f'/favourites/', methods=['GET'])
 def api_favourites_get():
     user = get_user()
 
@@ -26,7 +26,7 @@ def api_favourites_get():
         return jsonify(posts)
 
 
-@app.route(f'{PATH}/posts/<post_id>/', methods=['GET'])
+@api_v01_common.route(f'/posts/<post_id>/', methods=['GET'])
 def api_post_get(post_id):
     post = find_post_by_id(post_id)
 
@@ -36,7 +36,7 @@ def api_post_get(post_id):
         return jsonify(post)
 
 
-@app.route(f'{PATH}/posts/<post_id>/star/', methods=['PUT'])
+@api_v01_common.route(f'/posts/<post_id>/star/', methods=['PUT'])
 def api_favourite_post(post_id):
     user = get_user()
     post = find_post_by_id(post_id)
@@ -52,7 +52,7 @@ def api_favourite_post(post_id):
             return 'ALREADY EXISTS', 200
 
 
-@app.route(f'{PATH}/posts/<post_id>/star/', methods=['DELETE'])
+@api_v01_common.route(f'/posts/<post_id>/star/', methods=['DELETE'])
 def api_favourite_delete(post_id):
     user = get_user()
     post = find_post_by_id(post_id)
@@ -66,7 +66,7 @@ def api_favourite_delete(post_id):
         return 'OK', 200
 
 
-@app.route(f'{PATH}/check_username/<username>/', methods=['GET'])
+@api_v01_common.route(f'/check_username/<username>/', methods=['GET'])
 def api_username_exists_get(username):
     if not check_username_syntax(username):
         return 'INVALID SYNTAX'
@@ -76,7 +76,7 @@ def api_username_exists_get(username):
         return 'OK'
 
 
-@app.route(f'{PATH}/check_login/<login>/', methods=['GET'])
+@api_v01_common.route(f'/check_login/<login>/', methods=['GET'])
 def api_login_exists_get(login):
     if check_login(login):
         return 'ALREADY EXISTS'
@@ -84,7 +84,7 @@ def api_login_exists_get(login):
         return 'OK'
 
 
-@app.route(f'{PATH}/check_email/<email>/', methods=['GET'])
+@api_v01_common.route(f'/check_email/<email>/', methods=['GET'])
 def api_email_exists_get(email):
     if not check_email_syntax(email):
         return 'INVALID SYNTAX'
