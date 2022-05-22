@@ -33,13 +33,13 @@ class LoginActivity : AppCompatActivity() {
                     onBackPressed()
                 },
                 {
-                    if (it.networkResponse.data != null) {
+                    it.networkResponse.data?.let {data ->
                         Toast.makeText(
                             this,
-                            "Network error ${it.networkResponse.statusCode} ${kotlin.text.String(it.networkResponse.data)}",
+                            "Network error ${it.networkResponse.statusCode} ${String(data)}",
                             Toast.LENGTH_LONG
                         ).show()
-                    } else {
+                    } ?: run {
                         Toast.makeText(
                             this,
                             "Network error ${it.networkResponse.statusCode}",

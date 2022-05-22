@@ -44,13 +44,13 @@ class AccountFragment : Fragment() {
 
             }, {
                 tv_username.text = "Not logged in"
-                if (it.networkResponse.data != null) {
+                it.networkResponse.data?.let {data ->
                     Toast.makeText(
                         activity,
-                        "Network error ${it.networkResponse.statusCode} ${kotlin.text.String(it.networkResponse.data)}",
+                        "Network error ${it.networkResponse.statusCode} ${String(data)}",
                         Toast.LENGTH_LONG
                     ).show()
-                } else {
+                } ?: run {
                     Toast.makeText(
                         activity,
                         "Network error ${it.networkResponse.statusCode}",

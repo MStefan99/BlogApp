@@ -20,9 +20,9 @@ class PostsAdapter(private val aContext: Context, private val aResource: Int, ob
     )
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val title = getItem(position)!!.title
-        val tagline = getItem(position)!!.tagline
-        val splashBitmap = getItem(position)!!.splashBitmap
+        val title = getItem(position)?.title
+        val tagline = getItem(position)?.tagline
+        val splashBitmap = getItem(position)?.splashBitmap
         val holder: ViewHolder
         val view: View
 
