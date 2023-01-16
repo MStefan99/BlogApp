@@ -1,0 +1,29 @@
+@color_background: #f2f2f2;
+@color_main: #ffffff;
+@color_secondary: #29272e;
+@color_disabled: #686868;
+
+@color_accent: #67dbe6;
+@color_accent_light: lighten(@color_accent, 10%);
+@color_accent_dark: darken(@color_accent, 10%);
+
+@color_text: #272727;
+@color_text_secondary: #ffffff;
+@color_text_disabled: #4f4f4f;
+
+@color_ok: #2bf27f;
+@color_error: #f22746;
+
+@color_scrollbar: #666666;
+@color_scrollbar_hover: darken(@color_scrollbar, 10%);
+@color_scrollbar_active: darken(@color_scrollbar, 20%);
+
+
+//CSS variable declaration
+
+&:root {
+	--color-background: @color_background;
+	--color-accent: @color_accent;
+	--color-ok: @color_ok;
+	--color-error: @color_error;
+}

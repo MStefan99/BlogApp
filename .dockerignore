@@ -1,0 +1,7 @@
+app/venv
+
+app/database/db.sqlite
+app/database/.gitignore
+
+app/static/css/*.css
+app/static/css/*.map

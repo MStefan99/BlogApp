@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{ code }} {{ title }}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://blog.mstefan99.com/static/images/ico.png">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/error.css') }}">
+	<link href="https://fonts.googleapis.com/css?family=Delius" rel="stylesheet">
+</head>
+<body onload="setup()">
+<div id="stars">
+	{% for i in range(1,13) %}
+		<div id="s{{ i }}" class="star" draggable="true"></div>
+	{% endfor %}
+</div>
+
+<div id="star-text">No, that's a star! That's not your page!<br>But we're looking for it...</div>
+<main>
+	<p id="msg">{{ title }}</p>
+	<div id="error">
+		<p id="f1">{{ code // 100 }}</p>
+		{% if code // 10 % 10 == 0 %}
+			<div id="mars">
+				<div id="circle">
+					<div id="satellite"></div>
+				</div>
+				<div class="ring ring-back"></div>
+				<div class="ring ring-front"></div>
+			</div>
+		{% else %}
+			<p id="f2">{{ code // 10 % 10 }}</p>
+		{% endif %}
+		<p id="f3">{{ code % 10 }}</p>
+	</div>
+	<p class="error-msg">{{ message }}</p>
+	<p class="error-msg" id="pc-only">But you can drag the stars around!</p>
+	<a href="/" id="btn">
+		<p style="margin: 0;">Back to galera.dev!</p>
+	</a>
+</main>
+<div id="error-info"><p style="white-space: nowrap">If you <i><b>really want</b></i> to know<br>what happened...</p>
+	<p>{{ error }}</p></div>
+<script src="{{ url_for('static', filename='js/error.js') }}"></script>
+</body>
+</html>

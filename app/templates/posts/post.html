@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block main %}
+	<div id="post-container">
+		<div id="post-splash"
+		     style="background-color: {{ post['theme_color'] if post['theme_color'] else 'var(--default-post-color)' }}">
+			<div id="post-info">
+				<div id="post-title">
+					<p>{{ post['title'] }}</p>
+				</div>
+				<div id="post-tagline">
+					<p>{{ post['tagline'] }}</p>
+				</div>
+				<div id="post-date">
+					<p>{{ post['date'] }}</p>
+				</div>
+				<div id="post-author">
+					<p>{{ post['author'] }}</p>
+				</div>
+			</div>
+			<img src="{{ post['splash'] }}" id="post-splash-image" alt="Post thumbnail">
+		</div>
+		{% if request.cookies.get('MSTID') %}
+			{% if is_favourite %}
+				<p id="post-save" onclick="remove_from_favourites({{ post['id']|string }})">Remove from favourites</p>
+			{% else %}
+				<p id="post-save" onclick="add_to_favourites({{ post['id']|string }})">Save to favourites</p>
+			{% endif %}
+		{% else %}
+			<p>You need to <a id="post-save" href="/sign in/">sign in</a> to save posts</p>
+		{% endif %}
+		<div id="post-main">
+			<div id="post-content">
+				<p id="post-content">{{ post['content'] }}</p>
+			</div>
+			<div id="post-tags">
+				{% for tag in tags %}
+					<div id="tag">
+						<a href="{{ '/tag/' + tag[2:] }}">{{ tag }}</a>
+						<!-- TODO: make tags clickable and searchable -->
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<script src="{{ url_for('static', filename='js/favourites.js') }}"></script>
+{% endblock %}
