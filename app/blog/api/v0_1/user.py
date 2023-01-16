@@ -8,7 +8,7 @@ from blog.utils.search import find_user_by_login, find_user_by_recover_key
 from blog.utils.users import password_correct, add_new_user, create_recover_link, update_user, get_user, verify_email, \
     delete_user
 
-api_v01_user = Blueprint('api v0.1 user', __name__)
+api_v01_user = Blueprint('api v0_1 user', __name__)
 
 
 @api_v01_user.route(f'/users/<login>/', methods=['GET'])

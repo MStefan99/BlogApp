@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-api_v01_error = Blueprint('api v0.1 error', __name__)
+api_v01_error = Blueprint('api v0_1 error', __name__)
 
 
 @api_v01_error.errorhandler(500)

@@ -6,7 +6,7 @@ from blog.utils.search import find_post_by_id
 from blog.utils.syntax_check import check_username_syntax, check_email_syntax
 from blog.utils.users import get_user
 
-api_v01_common = Blueprint('api v0.1 common', __name__)
+api_v01_common = Blueprint('api v0_1 common', __name__)
 
 
 @api_v01_common.route(f'/posts/', methods=['GET'])
